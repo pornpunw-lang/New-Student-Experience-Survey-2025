@@ -108,7 +108,7 @@ export default function App() {
           <div>
             <h1 className="text-base md:text-lg font-bold leading-none uppercase tracking-wide">Bangkok University</h1>
             <p className="text-[10px] md:text-xs opacity-80 uppercase tracking-widest mt-0.5">
-              {lang === 'TH' ? 'ระบบสำรวจความคิดเห็นนักศึกษาปีแรก 2568' : 'New Student Experience Survey 2025'}
+              {lang === 'TH' ? 'ระบบสำรวจความคิดเห็นนักศึกษาปีแรก 2568 : New Student Experience Survey 2025' : 'ระบบสำรวจความคิดเห็นนักศึกษาปีแรก 2568 : New Student Experience Survey 2025'}
             </p>
           </div>
         </div>
