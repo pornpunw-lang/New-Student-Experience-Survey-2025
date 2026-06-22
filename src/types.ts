@@ -18,12 +18,15 @@ export interface SurveyResponse {
 
 export interface FacultyData {
   name: string;
+  nameEn?: string;
   majors: string[];
+  majorsEn?: string[];
 }
 
 export interface SurveyOption {
   id: string;
   label: string;
+  labelEn: string;
 }
 
 export interface StatisticsItem {

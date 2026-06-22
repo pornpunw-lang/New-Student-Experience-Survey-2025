@@ -6,118 +6,417 @@
 import { FacultyData, SurveyOption, SurveyResponse } from '../types';
 
 export const SURVEY_OPTIONS: SurveyOption[] = [
-  { id: '01', label: 'มีสาขาวิชาให้เลือกเรียนหลากหลายและตรงกับความต้องการของผู้เรียน' },
-  { id: '02', label: 'มีสังคมเพื่อน/รุ่นพี่ที่ดี' },
-  { id: '03', label: 'สาขาวิชาที่เปิดสอนนำไปใช้ประโยชน์ในการทำงานได้จริง' },
-  { id: '04', label: 'อาจารย์มีคุณภาพ/ชื่อเสียงของอาจารย์' },
-  { id: '05', label: 'คุณภาพการเรียนการสอน' },
-  { id: '06', label: 'สภาพแวดล้อมและอาคารสถานที่สวยงาม' },
-  { id: '07', label: 'อุปกรณ์การเรียนการสอนที่ทันสมัย' },
-  { id: '08', label: 'มีทุนอุดหนุนการศึกษา/ทุนกู้ยืมเพื่อการศึกษา' },
-  { id: '09', label: 'ได้สร้างเครือข่ายเพื่อประโยชน์ต่อการทำงานในอนาคต' },
-  { id: '10', label: 'กิจกรรมเสริมหลักสูตร/กิจกรรมกีฬาที่หลากหลาย' },
-  { id: '11', label: 'จบการศึกษาแล้วมีงานทำ/หางานง่าย' },
-  { id: '12', label: 'ได้ทำกิจกรรมกับเพื่อนๆ' },
-  { id: '13', label: 'ได้เรียนรู้จากอาจารย์ที่เก่งทั้งอาจารย์ประจำและอาจารย์พิเศษ' },
-  { id: '14', label: 'ได้เรียนรู้จากการลงมือปฏิบัติจริง' },
-  { id: '15', label: 'จบการศึกษาแล้วสามารถประกอบอาชีพอิสระได้' },
-  { id: '16', label: 'เรียนสนุก' },
-  { id: '17', label: 'สิ่งสนับสนุนการเรียนรู้มีความทันสมัยและเพียงพอต่อความต้องการ' },
-  { id: '18', label: 'อุปกรณ์การเรียนในห้องปฏิบัติการมีความทันสมัยและเพียงพอต่อความต้องการ' },
-  { id: '19', label: 'การได้รับการบริการและการดูแลที่ดีจากมหาวิทยาลัย' },
-  { id: '20', label: 'การดูแลความปลอดภัยภายในมหาวิทยาลัย' },
-  { id: '21', label: 'มีการเรียนการสอนในหลักสูตรนานาชาติ/ภาษาอังกฤษ ต้องการทักษะภาษาอังกฤษและภาษาต่างประเทศ' },
-  { id: '22', label: 'อื่น ๆ' },
+  {
+    id: '01',
+    label: 'มีสาขาวิชาให้เลือกเรียนหลากหลายและตรงกับความต้องการของผู้เรียน',
+    labelEn: 'A wide range of academic programs that match your interests'
+  },
+  {
+    id: '02',
+    label: 'มีสังคมเพื่อน/รุ่นพี่ที่ดี',
+    labelEn: 'A supportive community of friends/senior students'
+  },
+  {
+    id: '03',
+    label: 'สาขาวิชาที่เปิดสอนนำไปใช้ประโยชน์ในการทำงานได้จริง',
+    labelEn: 'Study programs that are practically useful for future careers'
+  },
+  {
+    id: '04',
+    label: 'อาจารย์มีคุณภาพ/ชื่อเสียงของอาจารย์',
+    labelEn: 'Highly qualified faculties with a strong academic reputation'
+  },
+  {
+    id: '05',
+    label: 'คุณภาพการเรียนการสอน',
+    labelEn: 'High-quality teaching and learning'
+  },
+  {
+    id: '06',
+    label: 'สภาพแวดล้อมและอาคารสถานที่สวยงาม',
+    labelEn: 'An attractive campus environment and modern facilities'
+  },
+  {
+    id: '07',
+    label: 'อุปกรณ์การเรียนการสอนที่ทันสมัย',
+    labelEn: 'Modern teaching and learning equipment'
+  },
+  {
+    id: '08',
+    label: 'มีทุนอุดหนุนการศึกษา/ทุนกู้ยืมเพื่อการศึกษา',
+    labelEn: 'Scholarships and student loan opportunities'
+  },
+  {
+    id: '09',
+    label: 'ได้สร้างเครือข่ายเพื่อประโยชน์ต่อการทำงานในอนาคต',
+    labelEn: 'Opportunities to build professional networks for future careers'
+  },
+  {
+    id: '10',
+    label: 'กิจกรรมเสริมหลักสูตร/กิจกรรมกีฬาที่หลากหลาย',
+    labelEn: 'A variety of extracurricular/sports activities'
+  },
+  {
+    id: '11',
+    label: 'จบการศึกษาแล้วมีงานทำ/หางานง่าย',
+    labelEn: 'Strong career prospects/employability after graduation'
+  },
+  {
+    id: '12',
+    label: 'ได้ทำกิจกรรมกับเพื่อนๆ',
+    labelEn: 'Opportunities to participate in activities with friends'
+  },
+  {
+    id: '13',
+    label: 'ได้เรียนรู้จากอาจารย์ที่เก่งทั้งอาจารย์ประจำและอาจารย์พิเศษ',
+    labelEn: 'Learning from both experienced full-time and visiting lecturers'
+  },
+  {
+    id: '14',
+    label: 'ได้เรียนรู้จากการลงมือปฏิบัติจริง',
+    labelEn: 'Hands-on, practical learning experiences'
+  },
+  {
+    id: '15',
+    label: 'จบการศึกษาแล้วสามารถประกอบอาชีพอิสระได้',
+    labelEn: 'The ability to pursue self-employment after graduation'
+  },
+  {
+    id: '16',
+    label: 'เรียนสนุก',
+    labelEn: 'An enjoyable and engaging learning experience'
+  },
+  {
+    id: '17',
+    label: 'สิ่งสนับสนุนการเรียนรู้มีความทันสมัยและเพียงพอต่อความต้องการ',
+    labelEn: 'Access to modern and sufficient learning resources'
+  },
+  {
+    id: '18',
+    label: 'อุปกรณ์การเรียนในห้องปฏิบัติการมีความทันสมัยและเพียงพอต่อความต้องการ',
+    labelEn: 'Access to advanced and well-equipped laboratories'
+  },
+  {
+    id: '19',
+    label: 'การได้รับการบริการและการดูแลที่ดีจากมหาวิทยาลัย',
+    labelEn: 'Good student services and care provided by the university'
+  },
+  {
+    id: '20',
+    label: 'การดูแลความปลอดภัยภายในมหาวิทยาลัย',
+    labelEn: 'A safe and secure campus environment'
+  },
+  {
+    id: '21',
+    label: 'มีการเรียนการสอนในหลักสูตรนานาชาติ/ภาษาอังกฤษ ต้องการทักษะภาษาอังกฤษและภาษาต่างประเทศ',
+    labelEn: 'International or English-language programs with opportunities to improve English and other foreign language skills'
+  },
+  {
+    id: '22',
+    label: 'อื่น ๆ โปรดระบุ ……………………………….',
+    labelEn: 'Other :'
+  }
 ];
 
+export const BU_FACULTIES_BY_DEGREE: Record<'Bachelor' | 'Master' | 'Doctoral', FacultyData[]> = {
+  Bachelor: [
+    {
+      name: 'คณะบัญชี',
+      nameEn: 'School of Accounting',
+      majors: ['สาขาวิชาบัญชี'],
+      majorsEn: ['Accounting Program']
+    },
+    {
+      name: 'คณะบริหารธุรกิจ',
+      nameEn: 'School of Business Administration',
+      majors: [
+        'สาขาวิชาการตลาด',
+        'สาขาวิชาการตลาด (หลักสูตรนานาชาติ)',
+        'สาขาวิชาการเงิน',
+        'สาขาวิชาการจัดการ',
+        'สาขาวิชาการจัดการธุรกิจระหว่างประเทศ',
+        'สาขาวิชาการจัดการโลจิสติกส์และโซ่อุปทาน',
+        'สาขาวิชาการวางแผนการเงินและการลงทุน',
+        'สาขาวิชาการตลาดดิจิทัล',
+        'สาขาวิชาบริหารธุรกิจ (หลักสูตรนานาชาติ)'
+      ],
+      majorsEn: [
+        'Marketing',
+        'Marketing (International Program)',
+        'Finance',
+        'Management',
+        'International Business Management',
+        'Logistics and Supply Chain Management',
+        'Financial and Investment Planning',
+        'Digital Marketing',
+        'Business Administration (International Program)'
+      ]
+    },
+    {
+      name: 'คณะนิเทศศาสตร์',
+      nameEn: 'School of Communication Arts',
+      majors: [
+        'สาขาวิชาสื่อสารและการสื่อใหม่',
+        'สาขาวิชาวิทยุกระจายเสียง วิทยุโทรทัศน์ และการผลิตสื่อสตรีมมิ่ง',
+        'สาขาวิชาการผลิตสื่อนวัตกรรม (หลักสูตรนานาชาติ)',
+        'สาขาวิชาการผลิตเนื้อหาสร้างสรรค์และประสบการณ์ดิจิทัล',
+        'สาขาวิชาสื่อและการสื่อสาร (หลักสูตรนานาชาติ)',
+        'สาขาวิชาศิลปะการแสดง',
+        'สาขาวิชาการผลิตอีเว้นท์และการจัดการนิทรรศการและการประชุม'
+      ],
+      majorsEn: [
+        'Communication and New Media',
+        'Broadcasting and Streaming Media Production',
+        'Innovative Media Production (International Program)',
+        'Creative Content Production and Digital Experience',
+        'Media and Communication (International Program)',
+        'Performing Arts',
+        'Event Production and MICE Management'
+      ]
+    },
+    {
+      name: 'คณะนิติศาสตร์',
+      nameEn: 'School of Law',
+      majors: ['สาขาวิชานิติศาสตร์'],
+      majorsEn: ['Law Program']
+    },
+    {
+      name: 'คณะมนุษยศาสตร์และการจัดการการท่องเที่ยว',
+      nameEn: 'School of Humanities and Tourism Management',
+      majors: [
+        'สาขาวิชาภาษาอังกฤษ',
+        'สาขาวิชาการจัดการการท่องเที่ยวและเรือสำราญ',
+        'สาขาวิชาการจัดการโรงแรม',
+        'สาขาวิชาการจัดการธุรกิจสายการบิน',
+        'สาขาวิชาภาษาจีนเพื่อธุรกิจ',
+        'สาขาวิชาภาษาอังกฤษธุรกิจ (หลักสูตรนานาชาติ)',
+        'สาขาวิชาการจัดการท่องเที่ยวและการบริการนานาชาติ (หลักสูตรนานาชาติ)',
+        'สาขาวิชาศิลปะการประกอบอาหารและออกแบบอาหาร (หลักสูตรนานาชาติ)'
+      ],
+      majorsEn: [
+        'English',
+        'Tourism and Cruise Management',
+        'Hotel Management',
+        'Airline Business Management',
+        'Business Chinese',
+        'Business English (International Program)',
+        'International Tourism and Hospitality Management (International Program)',
+        'Culinary Arts and Design (International Program)'
+      ]
+    },
+    {
+      name: 'คณะเศรษฐศาสตร์และการลงทุน',
+      nameEn: 'School of Economics and Investment',
+      majors: ['สาขาวิชาเศรษฐศาสตร์'],
+      majorsEn: ['Economics Program']
+    },
+    {
+      name: 'คณะศิลปกรรมศาสตร์',
+      nameEn: 'School of Fine and Applied Arts',
+      majors: [
+        'สาขาวิชาการออกแบบนิเทศศิลป์',
+        'สาขาวิชาการออกแบบแฟชั่น',
+        'สาขาวิชาศิลปะและการออกแบบ',
+        'สาขาวิชาการออกแบบนิเทศศิลป์เชิงสร้างสรรค์ (หลักสูตรนานาชาติ)'
+      ],
+      majorsEn: [
+        'Communication Design',
+        'Fashion Design',
+        'Art and Design',
+        'Creative Communication Design (International Program)'
+      ]
+    },
+    {
+      name: 'คณะสถาปัตยกรรมศาสตร์',
+      nameEn: 'School of Architecture',
+      majors: [
+        'สาขาวิชาสถาปัตยกรรม',
+        'สาขาวิชาศิลปะการออกแบบภายใน'
+      ],
+      majorsEn: [
+        'Architecture Program',
+        'Interior Design'
+      ]
+    },
+    {
+      name: 'คณะการสร้างเจ้าของธุรกิจและการบริหารจัดการ',
+      nameEn: 'School of Entrepreneurship and Management',
+      majors: [
+        'สาขาวิชาการเป็นเจ้าของธุรกิจ',
+        'สาขาวิชาการเป็นเจ้าของธุรกิจ (หลักสูตรนานาชาติ)'
+      ],
+      majorsEn: [
+        'Entrepreneurship',
+        'Entrepreneurship (International Program)'
+      ]
+    },
+    {
+      name: 'คณะดิจิทัลมีเดียและศิลปะภาพยนตร์',
+      nameEn: 'School of Digital Media and Cinematic Arts',
+      majors: [
+        'สาขาวิชาภาพยนตร์',
+        'สาขาวิชาดิจิทัลมีเดีย',
+        'สาขาวิชาภาพยนตร์และธุรกิจภาพยนตร์ ซีรีส์ และเนื้อหาสากล (หลักสูตรนานาชาติ)'
+      ],
+      majorsEn: [
+        'Film',
+        'Digital Media',
+        'Film, Series and Global Content Production and Business (International Program)'
+      ]
+    },
+    {
+      name: 'คณะเทคโนโลยีสารสนเทศและนวัตกรรม',
+      nameEn: 'School of Information Technology and Innovation',
+      majors: [
+        'สาขาวิชาวิทยาการคอมพิวเตอร์',
+        'สาขาวิชาเทคโนโลยีสารสนเทศ',
+        'สาขาวิชาเกมและสื่อเชิงโต้ตอบ'
+      ],
+      majorsEn: [
+        'Computer Science',
+        'Information Technology',
+        'Games and Interactive Media'
+      ]
+    },
+    {
+      name: 'คณะวิศวกรรมศาสตร์',
+      nameEn: 'School of Engineering',
+      majors: [
+        'สาขาวิชาวิศวกรรมไฟฟ้า',
+        'สาขาวิชาวิศวกรรมคอมพิวเตอร์และหุ่นยนต์',
+        'สาขาวิชาเทคโนโลยีมัลติมีเดียและเอ็นเตอร์เทนเมนต์',
+        'สาขาวิชาวิศวกรรมปัญญาประดิษฐ์และวิทยาการข้อมูล'
+      ],
+      majorsEn: [
+        'Electrical Engineering',
+        'Computer and Robotics Engineering',
+        'Multimedia and Entertainment Engineering',
+        'Artificial Intelligence Engineering and Data Science'
+      ]
+    }
+  ],
+  Master: [
+    {
+      name: 'คณะบริหารธุรกิจ',
+      nameEn: 'School of Business Administration',
+      majors: [
+        'สาขาวิชาบริหารธุรกิจ (หลักสูตรภาษาไทย)',
+        'สาขาวิชาบริหารธุรกิจ (หลักสูตรภาษาอังกฤษ)',
+        'สาขาวิชาการจัดการศึกษาผ่านระบบเทคโนโลยีสารสนเทศ',
+        'สาขาวิชาการจัดการนวัตกรรม (หลักสูตรนานาชาติ)'
+      ],
+      majorsEn: [
+        'Business Administration',
+        'Business Administration (English Program)',
+        'Educational Management through Information Technology',
+        'Innovation Management (International Program)'
+      ]
+    },
+    {
+      name: 'คณะนิเทศศาสตร์',
+      nameEn: 'School of Communication Arts',
+      majors: [
+        'สาขาวิชาการบริหารแบรนด์และการสื่อสารเชิงกลยุทธ์',
+        'สาขาวิชาการสื่อสารสากล (หลักสูตรนานาชาติ)',
+        'สาขาวิชาการบริหารการสื่อสารการตลาดดิจิทัล'
+      ],
+      majorsEn: [
+        'Strategic Brand and Communication Management',
+        'Global Communication (International Program)',
+        'Digital Marketing Communications'
+      ]
+    },
+    {
+      name: 'คณะนิติศาสตร์',
+      nameEn: 'School of Law',
+      majors: ['สาขาวิชานิติศาสตร์'],
+      majorsEn: ['Laws Program']
+    },
+    {
+      name: 'คณะมนุษยศาสตร์และการจัดการการท่องเที่ยว',
+      nameEn: 'School of Humanities and Tourism Management',
+      majors: ['สาขาวิชานวัตกรรมการจัดการการท่องเที่ยวและบริการ'],
+      majorsEn: ['Tourism and Hospitality Management Innovation (International Program)']
+    },
+    {
+      name: 'คณะสถาปัตยกรรมศาสตร์',
+      nameEn: 'School of Architecture',
+      majors: ['สาขาวิชาสถาปัตยกรรม'],
+      majorsEn: ['Architecture Program']
+    },
+    {
+      name: 'คณะการสร้างเจ้าของธุรกิจและการบริหารจัดการ',
+      nameEn: 'School of Entrepreneurship and Management',
+      majors: ['สาขาวิชาความเป็นผู้ประกอบการและวิสาหกิจเกิดใหม่'],
+      majorsEn: ['Entrepreneurship and Emerging Enterprises']
+    },
+    {
+      name: 'คณะเทคโนโลยีสารสนเทศและนวัตกรรม',
+      nameEn: 'School of Information Technology and Innovation',
+      majors: ['สาขาวิชาเทคโนโลยีสารสนเทศและวิทยาการข้อมูล'],
+      majorsEn: ['Information Technology and Data Science']
+    },
+    {
+      name: 'คณะวิศวกรรมศาสตร์',
+      nameEn: 'School of Engineering',
+      majors: ['สาขาวิชาวิศวกรรมไฟฟ้าและคอมพิวเตอร์ (หลักสูตรนานาชาติ)'],
+      majorsEn: ['Electrical & Computer Engineering (International Program)']
+    }
+  ],
+  Doctoral: [
+    {
+      name: 'คณะบริหารธุรกิจ',
+      nameEn: 'School of Business Administration',
+      majors: ['สาขาวิชาการจัดการความรู้และนวัตกรรม (หลักสูตรนานาชาติ)'],
+      majorsEn: ['Knowledge Management and Innovation Management (International Program)']
+    },
+    {
+      name: 'คณะนิเทศศาสตร์',
+      nameEn: 'School of Communication Arts',
+      majors: [
+        'สาขาวิชาการสื่อสารสากล (หลักสูตรนานาชาติ)',
+        'สาขาวิชาการบริหารแบรนด์และการสื่อสารเชิงกลยุทธ์'
+      ],
+      majorsEn: [
+        'Global Communication (International Program)',
+        'Strategic Brand and Communication Management'
+      ]
+    },
+    {
+      name: 'คณะวิศวกรรมศาสตร์',
+      nameEn: 'School of Engineering',
+      majors: ['สาขาวิชาวิศวกรรมไฟฟ้าและคอมพิวเตอร์ (หลักสูตรนานาชาติ)'],
+      majorsEn: ['Electrical and Computer Engineering (International Program)']
+    }
+  ]
+};
+
+// Flattened for compatibility
 export const BU_FACULTIES: FacultyData[] = [
-  {
-    name: 'คณะนิเทศศาสตร์ (Communication Arts)',
-    majors: [
-      'บรอดแคสติ้งและวารสารศาสตร์ดิจิทัล (Broadcasting and Digital Journalism)',
-      'การผลิตอีสปอร์ต (eSports Production)',
-      'ศิลปะการแสดง (Performing Arts)',
-      'การผลิตสื่อสร้างสรรค์และภาพยนตร์ (Creative Media and Cinematic Arts)',
-      'การประชาสัมพันธ์และกลุ่มวิชาโฆษณาสื่อสารแบรนด์ (Public Relations and Brand Communications)',
-      'สื่อสารการตลาดดิจิทัล (Digital Marketing Communications)',
-    ],
-  },
-  {
-    name: 'คณะเทคโนโลยีสารสนเทศและนวัตกรรม (ICT)',
-    majors: [
-      'วิทยาการคอมพิวเตอร์ (Computer Science)',
-      'วิทยาการคอมพิวเตอร์ - มุ่งเน้นความปลอดภัยไซเบอร์ (Cybersecurity)',
-      'เทคโนโลยีสารสนเทศ (Information Technology)',
-      'วิศวกรรมซอฟต์แวร์ (Software Engineering)',
-      'เกมและสื่ออินเทอร์แอคทีฟ (Games and Interactive Media)',
-    ],
-  },
-  {
-    name: 'คณะบริหารธุรกิจ (Business Administration)',
-    majors: [
-      'การตลาด (Marketing)',
-      'การบริหารธุรกิจระหว่างประเทศ (International Business)',
-      'การตลาดดิจิทัล (Digital Marketing)',
-      'การเงินและการลงทุนดิจิทัล (Finance and Digital Investment)',
-      'การจัดการและนวัตกรรมผู้ประกอบการ (Management and Entrepreneurial Innovation)',
-      'การจัดการโลจิสติกส์และโซ่อุปทาน (Logistics and Supply Chain Management)',
-    ],
-  },
-  {
-    name: 'คณะวิศวกรรมศาสตร์ (Engineering)',
-    majors: [
-      'วิศวกรรมคอมพิวเตอร์และเทคโนโลยีปัญญาประดิษฐ์ (Computer Engineering and AI Technology)',
-      'วิศวกรรมไฟฟ้าและพลังงานอัจฉริยะ (Electrical and Smart Energy Engineering)',
-      'วิศวกรรมมัลติมีเดียและเอ็นเตอร์เทนเมนต์ (Multimedia and Entertainment Engineering)',
-      'วิศวกรรมหุ่นยนต์และระบบอัตโนมัติ (Robotics and Automation Engineering)',
-    ],
-  },
-  {
-    name: 'คณะศิลปกรรมศาสตร์ (Fine and Applied Arts)',
-    majors: [
-      'การออกแบบกราฟิกและสื่อบันเทิง (Graphic and Entertainment Design)',
-      'การออกแบบแฟชั่น (Fashion Design)',
-      'การออกแบบเซรามิกและศิลปหัตถกรรมสร้างสรรค์ (Ceramic and Creative Craft Design)',
-      'การออกแบบตกแต่งภายใน (Interior Design)',
-      'ศิลปะจัดวางและความคิดสร้างสรรค์ (Fine Arts and Creative Thinking)',
-    ],
-  },
-  {
-    name: 'คณะการสร้างเจ้าของธุรกิจและการบริหารจัดการ (BUSEM)',
-    majors: [
-      'การเป็นเจ้าของธุรกิจ (Entrepreneurship)',
-      'การเป็นเจ้าของธุรกิจดิจิทัล (Digital Entrepreneurship)',
-    ],
-  },
-  {
-    name: 'คณะมนุษยศาสตร์และการจัดการการท่องเที่ยว (Tourism & Humanities)',
-    majors: [
-      'การจัดการการท่องเที่ยวและนวัตกรรมการบริการ (Tourism and Hospitality)',
-      'การจัดการธุรกิจสายการบิน (Airline Business)',
-      'ภาษาอังกฤษ (English)',
-      'ภาษาจีนเพื่อการสื่อสารส่วนบุคคลและธุรกิจ (Chinese for Business)',
-      'การจัดการโรงแรมและศิลปะการประกอบอาหาร (Hotel and Culinary Arts)',
-    ],
-  },
-  {
-    name: 'คณะบัญชี (Accounting)',
-    majors: ['การบัญชี (Accounting)', 'การบัญชีดิจิทัล (Digital Accounting)'],
-  },
-  {
-    name: 'คณะนิติศาสตร์ (Law)',
-    majors: ['นิติศาสตร์ (Law)', 'นิติศาสตร์ดิจิทัลและกฎหมายธุรกิจ (Digital Law and Business)'],
-  },
-  {
-    name: 'วิทยาลัยนานาชาติ (Bangkok University International - BUIC)',
-    majors: [
-      'Business English',
-      'International Business',
-      'Communication Arts - Innovative Media Production',
-      'Culinary Arts and Design',
-      'Hotel and Tourism Management',
-    ],
-  },
-];
+  ...BU_FACULTIES_BY_DEGREE.Bachelor,
+  ...BU_FACULTIES_BY_DEGREE.Master,
+  ...BU_FACULTIES_BY_DEGREE.Doctoral
+].reduce<FacultyData[]>((acc, current) => {
+  const existing = acc.find(item => item.name === current.name);
+  if (existing) {
+    current.majors.forEach((m, idx) => {
+      if (!existing.majors.includes(m)) {
+        existing.majors.push(m);
+        if (current.majorsEn && existing.majorsEn) {
+          existing.majorsEn.push(current.majorsEn[idx]);
+        }
+      }
+    });
+  } else {
+    acc.push({
+      name: current.name,
+      nameEn: current.nameEn,
+      majors: [...current.majors],
+      majorsEn: current.majorsEn ? [...current.majorsEn] : []
+    });
+  }
+  return acc;
+}, []);
 
 // Helper to generate a random selection of options weights
 // options with ID "11", "14", "03", "07", "05", "02" are highly selected to mirror common university surveys
@@ -141,14 +440,24 @@ export function generateMockSubmissions(count: number = 180): SurveyResponse[] {
     const hasStudentId = Math.random() > 0.15;
     const studentId = hasStudentId ? studentNum.toString() : undefined;
 
-    // Pick faculty
-    const facObj = BU_FACULTIES[Math.floor(Math.random() * BU_FACULTIES.length)];
+    // Realistic distribution of degree levels: Bachelors (80%), Masters (13%), Doctoral (7%)
+    const randDegree = Math.random();
+    let degreeLevel: 'Bachelor' | 'Master' | 'Doctoral' = 'Bachelor';
+    if (randDegree > 0.93) {
+      degreeLevel = 'Doctoral';
+    } else if (randDegree > 0.80) {
+      degreeLevel = 'Master';
+    }
+
+    // Pick faculty and major matching the degree level!
+    const availableFaculties = BU_FACULTIES_BY_DEGREE[degreeLevel];
+    const facObj = availableFaculties[Math.floor(Math.random() * availableFaculties.length)];
     const faculty = facObj.name;
     const major = facObj.majors[Math.floor(Math.random() * facObj.majors.length)];
 
-    // Program: BUIC is International, others primarily Thai (some International)
+    // Program: automatically detect based on major name
     let program: 'Thai' | 'International' = 'Thai';
-    if (faculty.includes('นานาชาติ') || faculty.includes('International') || Math.random() > 0.85) {
+    if (major.includes('นานาชาติ') || major.includes('ภาษาอังกฤษ') || major.toLowerCase().includes('international') || major.toLowerCase().includes('english')) {
       program = 'International';
     }
 
@@ -205,15 +514,6 @@ export function generateMockSubmissions(count: number = 180): SurveyResponse[] {
 
     // Distribute time leading to current time (2026-06-10)
     const subTime = new Date(baseTime + Math.random() * timeSpread);
-
-    // Realistic distribution of degree levels: Bachelors (80%), Masters (13%), Doctoral (7%)
-    const randDegree = Math.random();
-    let degreeLevel: 'Bachelor' | 'Master' | 'Doctoral' = 'Bachelor';
-    if (randDegree > 0.93) {
-      degreeLevel = 'Doctoral';
-    } else if (randDegree > 0.80) {
-      degreeLevel = 'Master';
-    }
 
     list.push({
       id: `BU68-${100000 + i}`,

@@ -236,7 +236,7 @@ export default function AdminDashboard({ submissions, onClearSubmissions, onRese
       const optionsJoined = sub.selectedOptions
         .map((optId) => {
           const opt = SURVEY_OPTIONS.find((o) => o.id === optId);
-          return `${optId}:${opt ? opt.label : ''}`;
+          return `${optId}:${opt ? `${opt.label} (${opt.labelEn})` : ''}`;
         })
         .join(' | ');
 
@@ -992,8 +992,11 @@ export default function AdminDashboard({ submissions, onClearSubmissions, onRese
                       if (!isSelected) return null;
                       return (
                         <div key={opt.id} className="flex gap-2.5 items-start text-xs p-2.5 bg-blue-50/40 rounded-xl border border-[#003366]/5">
-                          <Check className="w-4 h-4 text-emerald-600 stroke-[3] mt-0.5 shrink-0" />
-                          <span><strong className="text-slate-500 font-bold">{opt.id})</strong> {opt.label}</span>
+                          <Check className="w-4 h-4 text-emerald-600 stroke-[3] mt-1.5 shrink-0" />
+                          <div className="flex-1">
+                            <span className="font-semibold block text-slate-800"><strong className="text-slate-500 font-bold font-mono mr-1">{opt.id})</strong> {opt.label}</span>
+                            {opt.labelEn && <span className="block text-[10px] text-gray-500/80 mt-0.5 leading-normal">{opt.labelEn}</span>}
+                          </div>
                         </div>
                       );
                     })}
