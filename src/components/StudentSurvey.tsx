@@ -9,8 +9,6 @@ import {
   ClipboardList, 
   CheckCircle2, 
   User, 
-  GraduationCap, 
-  Mail, 
   BookOpen, 
   HelpCircle, 
   AlertCircle, 
@@ -124,22 +122,6 @@ export default function StudentSurvey({ onSurveySubmit, onAdminToggle, lang, set
         lang === 'TH'
           ? 'กรุณาเลือกสาขาวิชาของคุณก่อนดำเนินการขั้นตอนต่อไป'
           : 'Please select your major before proceeding to the next step.'
-      );
-      return;
-    }
-    if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      setValidationError(
-        lang === 'TH'
-          ? 'รูปแบบอีเมลไม่ถูกต้อง กรุณาตรวจสอบอีกครั้ง (หรือปล่อยว่างไว้หากไม่มี)'
-          : 'Invalid email format. Please check again (or leave blank if none).'
-      );
-      return;
-    }
-    if (studentId && !/^\d{10}$/.test(studentId.replace(/-/g, ''))) {
-      setValidationError(
-        lang === 'TH'
-          ? 'รหัสนักศึกษาควรเป็นตัวเลข 10 หลัก (หรือปล่อยว่างไว้ได้หากยังไม่มีกลุ่มรหัส)'
-          : 'Student ID must be a 10-digit number (or leave blank if none).'
       );
       return;
     }
@@ -486,103 +468,6 @@ export default function StudentSurvey({ onSurveySubmit, onAdminToggle, lang, set
                       </div>
                     </div>
                   </div>
-
-                  {/* Program / Curriculum Selection (Full Width) */}
-                  <div className="col-span-1 md:col-span-2 space-y-2">
-                    <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wider">
-                      {lang === 'TH' ? 'ประเภทหลักสูตรที่เข้าศึกษา' : 'Program Type'} <span className="text-red-500">*</span>
-                    </label>
-                    <div className="grid grid-cols-2 gap-4">
-                      <label 
-                        className={`flex items-center justify-between p-3.5 rounded-xl border-2 transition-all cursor-pointer ${
-                          program === 'Thai'
-                            ? 'border-[#003366] bg-blue-50/50 text-[#003366] font-semibold'
-                            : 'border-gray-200 hover:border-gray-300 text-gray-600 bg-white'
-                        }`}
-                        id="program-thai-label"
-                      >
-                        <span className="text-sm font-medium">{lang === 'TH' ? 'ภาคปกติ (ไทย)' : 'Regular Thai Program'}</span>
-                        <input
-                          type="radio"
-                          name="program"
-                          value="Thai"
-                          checked={program === 'Thai'}
-                          onChange={() => setProgram('Thai')}
-                          className="sr-only"
-                        />
-                        <div className={`w-4 h-4 rounded-full border flex items-center justify-center ${
-                          program === 'Thai' ? 'border-[#003366]' : 'border-gray-300'
-                        }`}>
-                          {program === 'Thai' && <div className="w-2.5 h-2.5 bg-[#003366] rounded-full" />}
-                        </div>
-                      </label>
-
-                      <label 
-                        className={`flex items-center justify-between p-3.5 rounded-xl border-2 transition-all cursor-pointer ${
-                          program === 'International'
-                            ? 'border-[#003366] bg-blue-50/50 text-[#003366] font-semibold'
-                            : 'border-gray-200 hover:border-gray-300 text-gray-600 bg-white'
-                        }`}
-                        id="program-inter-label"
-                      >
-                        <span className="text-sm font-medium">{lang === 'TH' ? 'หลักสูตรภาษาอังกฤษ/นานาชาติ' : 'English / International Program'}</span>
-                        <input
-                          type="radio"
-                          name="program"
-                          value="International"
-                          checked={program === 'International'}
-                          onChange={() => setProgram('International')}
-                          className="sr-only"
-                        />
-                        <div className={`w-4 h-4 rounded-full border flex items-center justify-center ${
-                          program === 'International' ? 'border-[#003366]' : 'border-gray-300'
-                        }`}>
-                          {program === 'International' && <div className="w-2.5 h-2.5 bg-[#003366] rounded-full" />}
-                        </div>
-                      </label>
-                    </div>
-                  </div>
-
-                  {/* Student ID Field (Optional) */}
-                  <div className="space-y-2">
-                    <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wider" htmlFor="student-id-input">
-                      {lang === 'TH' ? 'รหัสนักศึกษา' : 'Student ID'} <span className="text-xs text-gray-400 font-normal">{lang === 'TH' ? '(ถ้ามี เช่น 168XXXXXXXX)' : '(If available, e.g. 168XXXXXXXX)'}</span>
-                    </label>
-                    <div className="relative">
-                      <input
-                        id="student-id-input"
-                        type="text"
-                        maxLength={13}
-                        placeholder={lang === 'TH' ? 'กรอกรหัสนักศึกษา 10 หลัก' : 'Enter 10-digit Student ID'}
-                        value={studentId}
-                        onChange={(e) => setStudentId(e.target.value)}
-                        className="w-full bg-[#F5F7FA] border border-gray-200 rounded-xl pl-10 pr-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#003366] focus:bg-white transition-all text-gray-800"
-                      />
-                      <div className="absolute inset-y-0 left-3.5 flex items-center pointer-events-none text-gray-400">
-                        <GraduationCap className="w-4.5 h-4.5" />
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Student Email Field (Optional) */}
-                  <div className="col-span-1 md:col-span-2 space-y-2">
-                    <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wider" htmlFor="email-input">
-                      {lang === 'TH' ? 'อีเมลมหาวิทยาลัย' : 'University Email'} <span className="text-xs text-gray-400 font-normal">{lang === 'TH' ? '(ถ้ามี เช่น xxx.xxxx@bumail.net หรือ @bu.ac.th)' : '(If available, e.g. x.y@bumail.net)'}</span>
-                    </label>
-                    <div className="relative">
-                      <input
-                        id="email-input"
-                        type="email"
-                        placeholder="example@bumail.net"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        className="w-full bg-[#F5F7FA] border border-gray-200 rounded-xl pl-10 pr-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#003366] focus:bg-white transition-all text-gray-800"
-                      />
-                      <div className="absolute inset-y-0 left-3.5 flex items-center pointer-events-none text-gray-400">
-                        <Mail className="w-4.5 h-4.5" />
-                      </div>
-                    </div>
-                  </div>
                 </div>
               </div>
 
@@ -651,7 +536,6 @@ export default function StudentSurvey({ onSurveySubmit, onAdminToggle, lang, set
                       ? (lang === 'TH' ? 'ภาคปกติ' : 'Regular Thai')
                       : (lang === 'TH' ? 'นานาชาติ/อังกฤษ' : 'English/International')}
                   </span>
-                  {studentId && <span><strong>{lang === 'TH' ? 'รหัส:' : 'ID:'}</strong> {studentId}</span>}
                 </div>
 
                 <div className="space-y-4">

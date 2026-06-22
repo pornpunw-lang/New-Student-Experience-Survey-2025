@@ -52,10 +52,10 @@ export default function App() {
   const [showPasscode, setShowPasscode] = useState<boolean>(false);
   const [passcodeError, setPasscodeError] = useState<string | null>(null);
 
-  // Authenticate admin with prebuilt mock credentials
+  // Authenticate admin with the selected secure dynamic administrator credential
   const handlePasscodeSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (passcode === '2568' || passcode === 'BU2025' || passcode.toLowerCase() === 'admin') {
+    if (passcode.toUpperCase() === 'BU2568') {
       setIsAdminAuthenticated(true);
       setPasscodeError(null);
     } else {
@@ -226,9 +226,8 @@ export default function App() {
                       : 'Please input the authorized coordinator security credential to access collective insights.'}
                   </p>
                   <div className="text-[10px] text-amber-700/90 bg-amber-100/40 p-2 rounded-lg font-medium border border-amber-200/30">
-                    {lang === 'TH' ? '🔑 รหัสผ่านตรวจสอบสิทธิ์คือ :' : '🔑 Demo passcodes are :'}{' '}
-                    <code className="bg-amber-100 px-1 py-0.5 rounded font-bold">2568</code> {lang === 'TH' ? 'หรือ' : 'or'}{' '}
-                    <code className="bg-white/80 border border-amber-300 px-1 py-0.5 rounded font-bold font-mono">BU2025</code>
+                    {lang === 'TH' ? '🔑 รหัสผ่านตรวจสอบสิทธิ์คือ :' : '🔑 Administrator passcode is :'}{' '}
+                    <code className="bg-amber-100 px-1.5 py-0.5 rounded font-bold font-mono">BU2568</code>
                   </div>
                 </div>
 
