@@ -52,7 +52,7 @@ const FACULTY_CONTACTS: Record<string, FacultyContact> = {
       { name: 'ผศ.กานดาวรรณ แก้วผาบ', email: 'kandawan.k@bu.ac.th' },
       { name: 'ผศ.ภัสพร ตังใจกตัญญู', email: 'manee.t@bu.ac.th' }
     ],
-    baseTarget: 150,
+    baseTarget: 309,
     email: 'karuntarat.b@bu.ac.th'
   },
   'คณะบริหารธุรกิจ': {
@@ -65,7 +65,7 @@ const FACULTY_CONTACTS: Record<string, FacultyContact> = {
       { name: 'ดร.นิตนา ฐานิตธนกร', email: 'nittana.s@bu.ac.th' },
       { name: 'ผศ.ดร.นิสิต มโนตั้งวรพันธุ์', email: 'nisit.m@bu.ac.th' }
     ],
-    baseTarget: 380,
+    baseTarget: 1864,
     email: 'krairoek.p@bu.ac.th'
   },
   'วิทยาลัยนานาชาติ': {
@@ -76,7 +76,7 @@ const FACULTY_CONTACTS: Record<string, FacultyContact> = {
     viceDeans: [
       { name: 'ดร.ณัฏฐวรรณ ปัญญวิโรจน์', email: 'natthawan.p@bu.ac.th' }
     ],
-    baseTarget: 220,
+    baseTarget: 814,
     email: 'kulisara.p@bu.ac.th'
   },
   'คณะนิเทศศาสตร์': {
@@ -89,7 +89,7 @@ const FACULTY_CONTACTS: Record<string, FacultyContact> = {
       { name: 'ผศ.ณัฐา ฉางชูโต', email: 'natta.s@bu.ac.th' },
       { name: 'ผศ.อาชวิชญ์ กฤษณสุวรรณ', email: 'aachavit.k@bu.ac.th' }
     ],
-    baseTarget: 410,
+    baseTarget: 2228,
     email: 'arichai.a@bu.ac.th'
   },
   'คณะนิติศาสตร์': {
@@ -101,7 +101,7 @@ const FACULTY_CONTACTS: Record<string, FacultyContact> = {
       { name: 'ปกรณ์ ปาลวงษ์พานิช', email: 'pakorn.p@bu.ac.th' },
       { name: 'ปริญญาภรณ์ เต็งประเสริฐ', email: 'pariyaporn.t@bu.ac.th' }
     ],
-    baseTarget: 140,
+    baseTarget: 284,
     email: 'parada.k@bu.ac.th'
   },
   'คณะมนุษยศาสตร์และการจัดการการท่องเที่ยว': {
@@ -114,7 +114,7 @@ const FACULTY_CONTACTS: Record<string, FacultyContact> = {
       { name: 'ดร.นนทวรรณ ส่งเสริม', email: 'nonthawan.s@bu.ac.th' },
       { name: 'ณัฐพร ชื่นสุวรรณ์', email: 'nattaporn.c@bu.ac.th' }
     ],
-    baseTarget: 320,
+    baseTarget: 899,
     email: 'jermsuda.m@bu.ac.th'
   },
   'วิทยาลัยนานาชาติจีน': {
@@ -125,7 +125,7 @@ const FACULTY_CONTACTS: Record<string, FacultyContact> = {
     viceDeans: [
       { name: 'เจียง โหมว', email: 'jiang.m@bu.ac.th' }
     ],
-    baseTarget: 120,
+    baseTarget: 124,
     email: 'jiasing.c@bu.ac.th'
   },
   'คณะเศรษฐศาสตร์และการลงทุน': {
@@ -136,7 +136,7 @@ const FACULTY_CONTACTS: Record<string, FacultyContact> = {
     viceDeans: [
       { name: 'ดร.สุสณี ศุภกรโกศัย', email: 'sumanee.s@bu.ac.th' }
     ],
-    baseTarget: 110,
+    baseTarget: 259,
     email: 'karnjana.s@bu.ac.th'
   },
   'คณะศิลปกรรมศาสตร์': {
@@ -148,7 +148,7 @@ const FACULTY_CONTACTS: Record<string, FacultyContact> = {
       { name: 'ผศ.ดร.ณัฐสุภา เจริญยงวัฒนา', email: 'natsupa.j@bu.ac.th' },
       { name: 'ผศ.แทน พิธียานุวัฒน์', email: 'tan.p@bu.ac.th' }
     ],
-    baseTarget: 160,
+    baseTarget: 256,
     email: 'pattarawut.s@bu.ac.th'
   },
   'คณะสถาปัตยกรรมศาสตร์': {
@@ -160,7 +160,7 @@ const FACULTY_CONTACTS: Record<string, FacultyContact> = {
       { name: 'พรหมพร ศรีวิลาส', email: 'promporn.s@bu.ac.th' },
       { name: 'ผศ.ดร.ภาสิต ลีนิวา', email: 'pasit.l@bu.ac.th' }
     ],
-    baseTarget: 130,
+    baseTarget: 129,
     email: 'pichai.w@bu.ac.th'
   },
   'คณะการสร้างเจ้าของธุรกิจและการบริหารจัดการ': {
@@ -172,7 +172,7 @@ const FACULTY_CONTACTS: Record<string, FacultyContact> = {
       { name: 'ดร.กัญจนา พัฒนวรพันธุ์', email: 'kanjana.pa@bu.ac.th' },
       { name: 'ผศ.นนิดา สร้อยดอกสน', email: 'nanida.u@bu.ac.th' }
     ],
-    baseTarget: 180,
+    baseTarget: 359,
     email: 'wutnipong.s@bu.ac.th'
   },
   'คณะดิจิทัลมีเดียและศิลปะภาพยนตร์': {
@@ -185,7 +185,7 @@ const FACULTY_CONTACTS: Record<string, FacultyContact> = {
       { name: 'พีร์ภานุวัฒน์ วนิชย์', email: 'pea.p@bu.ac.th' },
       { name: 'นิธิศ ศวิดลธรากุล', email: 'nitis.s@bu.ac.th' }
     ],
-    baseTarget: 250,
+    baseTarget: 780,
     email: 'peerachai.k@bu.ac.th'
   },
   'คณะเทคโนโลยีสารสนเทศและนวัตกรรม': {
@@ -198,7 +198,7 @@ const FACULTY_CONTACTS: Record<string, FacultyContact> = {
       { name: 'ขวัญฤทัย กุลกิจเจริญ', email: 'kwanruthai.k@bu.ac.th' },
       { name: 'พจนีย์ จันทรศุภวงศ์', email: 'pojanee.j@bu.ac.th' }
     ],
-    baseTarget: 280,
+    baseTarget: 603,
     email: 'pakapan.l@bu.ac.th'
   },
   'คณะวิศวกรรมศาสตร์': {
@@ -209,7 +209,7 @@ const FACULTY_CONTACTS: Record<string, FacultyContact> = {
     viceDeans: [
       { name: 'ผศ.ดร.ปกรณ์ ยุบลโกศล', email: 'pakorn.u@bu.ac.th' }
     ],
-    baseTarget: 200,
+    baseTarget: 356,
     email: 'wisarn.p@bu.ac.th'
   }
 };
@@ -229,6 +229,116 @@ const getFacultyContact = (facultyName: string): FacultyContact => {
     baseTarget: 120,
     email: 'dean@bu.ac.th'
   };
+};
+
+const MAJOR_TARGETS: Record<string, number> = {
+  // คณะบัญชี
+  'สาขาวิชาบัญชี': 309,
+
+  // คณะบริหารธุรกิจ
+  'สาขาวิชาการตลาด': 288,
+  'สาขาวิชาการเงิน': 118,
+  'สาขาวิชาการจัดการ': 264,
+  'สาขาวิชาการจัดการธุรกิจระหว่างประเทศ': 460,
+  'สาขาวิชาการจัดการโลจิสติกส์และโซ่อุปทาน': 293,
+  'สาขาวิชาการตลาดดิจิทัล': 441,
+  
+  // บัณฑิตวิทยาลัย / คณะบริหารธุรกิจ (Master/Doctoral)
+  'สาขาวิชาบริหารธุรกิจ (หลักสูตรภาษาไทย)': 79,
+  'สาขาวิชาบริหารธุรกิจ (หลักสูตรภาษาอังกฤษ)': 49,
+  'สาขาวิชาการจัดการศึกษาผ่านระบบเทคโนโลยีสารสนเทศ': 0,
+  'สาขาวิชาการจัดการนวัตกรรม (หลักสูตรนานาชาติ)': 8,
+  'สาขาวิชาการจัดการความรู้และนวัตกรรม (หลักสูตรนานาชาติ)': 4,
+
+  // วิทยาลัยนานาชาติ
+  'สาขาวิชาการตลาด (หลักสูตรนานาชาติ)': 49,
+  'สาขาวิชาบริหารธุรกิจ (หลักสูตรนานาชาติ)': 273,
+  'สาขาวิชาการผลิตสื่อสร้างสรรค์ (หลักสูตรนานาชาติ)': 109,
+  'สาขาวิชาสื่อและการสื่อสาร (หลักสูตรนานาชาติ)': 50,
+  'สาขาวิชาภาษาอังกฤษธุรกิจ (หลักสูตรนานาชาติ)': 41,
+  'สาขาวิชาการท่องเที่ยวและการบริการนานาชาติ (หลักสูตรนานาชาติ)': 148,
+  'สาขาวิชาศิลปะการประกอบอาหารและออกแบบอาหาร (หลักสูตรนานาชาติ)': 76,
+  'สาขาวิชาการออกแบบนิเทศศิลป์เชิงสร้างสรรค์ (หลักสูตรนานาชาติ)': 68,
+  'สาขาวิชาการเป็นเจ้าของธุรกิจ (หลักสูตรนานาชาติ)': 81,
+
+  // คณะนิเทศศาสตร์
+  'สาขาวิชาสื่อสารและการสื่อใหม่': 640,
+  'สาขาวิชาการสื่อสารและสื่อใหม่': 640,
+  'สาขาวิชาวิทยุกระจายเสียง วิทยุโทรทัศน์ และการผลิตสื่อสตรีมมิ่ง': 515,
+  'สาขาวิชาการผลิตเนื้อหาสร้างสรรค์และประสบการณ์ดิจิทัล': 193,
+  'สาขาวิชาศิลปะการแสดง': 253,
+  'สาขาวิชาการผลิตอีเว้นท์ และการจัดการนิทรรศการและการประชุม': 526,
+  'สาขาวิชาการบริหารแบรนด์และการสื่อสารเชิงกลยุทธ์': 43,
+  'สาขาวิชาการสื่อสารสากล (หลักสูตรนานาชาติ)': 33,
+  'สาขาวิชาการสื่อสารการตลาดดิจิทัล': 25,
+  'สาขาวิชาการจัดการสื่อสารสากล (หลักสูตรนานาชาติ)': 0,
+
+  // คณะนิติศาสตร์
+  'สาขาวิชานิติศาสตร์': 284,
+
+  // คณะมนุษยศาสตร์และการจัดการการท่องเที่ยว
+  'สาขาวิชาภาษาอังกฤษ': 299,
+  'สาขาวิชาการจัดการการท่องเที่ยวและเรือสำราญ': 101,
+  'สาขาวิชาการจัดการการโรงแรม': 190,
+  'สาขาวิชาการจัดการธุรกิจสายการบิน': 309,
+  'สาขาวิชาศิลปะและการออกแบบ': 102,
+  'สาขาวิชานวัตกรรมการจัดการการท่องเที่ยวและบริการ': 0,
+
+  // วิทยาลัยนานาชาติจีน
+  'สาขาวิชาภาษาจีนธุรกิจ': 124,
+
+  // คณะเศรษฐศาสตร์และการลงทุน
+  'สาขาวิชาเศรษฐศาสตร์': 142,
+  'สาขาวิชาการวางแผนการเงินและการลงทุน': 117,
+
+  // คณะศิลปกรรมศาสตร์
+  'สาขาวิชาการออกแบบนิเทศศิลป์': 96,
+  'สาขาวิชาการออกแบบแฟชั่น': 58,
+
+  // คณะสถาปัตยกรรมศาสตร์
+  'สาขาวิชาสถาปัตยกรรม': 70,
+  'สาขาวิชาศิลปะออกแบบภายใน': 51,
+  'สาขาวิชาสถาปัตยกรรมภายใน': 8,
+
+  // คณะการสร้างเจ้าของธุรกิจและการบริหารจัดการ
+  'สาขาวิชาการเป็นเจ้าของธุรกิจ': 256,
+  'สาขาวิชาความเป็นผู้ประกอบการ': 22,
+
+  // คณะดิจิทัลมีเดียและศิลปะภาพยนตร์
+  'สาขาวิชาภาพยนตร์': 515,
+  'สาขาวิชาดิจิทัลมีเดีย': 182,
+  'สาขาวิชาการผลิตภาพยนตร์และธุรกิจภาพยนตร์ ซีรีส์ และเนื้อหาสากล (หลักสูตรนานาชาติ)': 83,
+
+  // คณะเทคโนโลยีสารสนเทศและนวัตกรรม
+  'สาขาวิชาวิทยาการคอมพิวเตอร์': 305,
+  'สาขาวิชาเทคโนโลยีสารสนเทศ': 82,
+  'สาขาวิชาเกมและสื่อเชิงโต้ตอบ': 215,
+  'สาขาวิชาเทคโนโลยีสารสนเทศและวิทยาการข้อมูล': 1,
+
+  // คณะวิศวกรรมศาสตร์
+  'สาขาวิชาวิศวกรรมไฟฟ้า': 74,
+  'สาขาวิชาวิศวกรรมคอมพิวเตอร์และหุ่นยนต์': 142,
+  'สาขาวิชาวิศวกรรมมัลติมีเดียและเอ็นเตอร์เทนเมนต์': 61,
+  'สาขาวิชาวิศวกรรมปัญญาประดิษฐ์และวิทยาการข้อมูล': 78,
+  'สาขาวิชาวิศวกรรมไฟฟ้าและคอมพิวเตอร์ (หลักสูตรนานาชาติ)': 1
+};
+
+const getMajorTarget = (majorName: string): number => {
+  const normalized = majorName.trim();
+  if (MAJOR_TARGETS[normalized] !== undefined) {
+    return MAJOR_TARGETS[normalized];
+  }
+  // Try mapping common variations/substrings
+  const foundKey = Object.keys(MAJOR_TARGETS).find(k => {
+    // If the keys have slight text variations, match them
+    const cleanK = k.replace(/[\s\(\)\/]/g, '').toLowerCase();
+    const cleanNorm = normalized.replace(/[\s\(\)\/]/g, '').toLowerCase();
+    return cleanK.includes(cleanNorm) || cleanNorm.includes(cleanK);
+  });
+  if (foundKey) {
+    return MAJOR_TARGETS[foundKey];
+  }
+  return 15; // default fallback for unrecognized majors
 };
 
 interface AdminDashboardProps {
@@ -497,18 +607,19 @@ export default function AdminDashboard({ submissions, onClearSubmissions, onRese
 
     const facSubmissions = submissions.filter(sub => sub.faculty === facName);
     const contact = getFacultyContact(facName);
-    const target = Math.max(contact.baseTarget, facSubmissions.length + 15);
+    const target = Math.max(contact.baseTarget, facSubmissions.length);
     const responded = facSubmissions.length;
-    const nonResponded = target - responded;
-    const rate = Number(((responded / target) * 100).toFixed(1));
+    const nonResponded = Math.max(0, target - responded);
+    const rate = target > 0 ? Number(((responded / target) * 100).toFixed(1)) : 0;
 
     let majorStatsStr = '';
     facObj.majors.forEach(m => {
       const majorSubmissions = facSubmissions.filter(sub => sub.major === m);
-      const majorTarget = Math.max(Math.round(target / facObj.majors.length), majorSubmissions.length + 3);
+      const baseMajorTarget = getMajorTarget(m);
+      const majorTarget = Math.max(baseMajorTarget, majorSubmissions.length);
       const mResponded = majorSubmissions.length;
-      const mNonResponded = majorTarget - mResponded;
-      const mRate = Number(((mResponded / majorTarget) * 100).toFixed(1));
+      const mNonResponded = Math.max(0, majorTarget - mResponded);
+      const mRate = majorTarget > 0 ? Number(((mResponded / majorTarget) * 100).toFixed(1)) : 0;
       majorStatsStr += `  - ${m.split(' - ')[0]}: ตอบแล้ว ${mResponded} จากเป้าหมาย ${majorTarget} คน (ยังไม่ตอบ ${mNonResponded} คน, คืบหน้า ${mRate}%)\n`;
     });
 
@@ -1045,10 +1156,10 @@ export default function AdminDashboard({ submissions, onClearSubmissions, onRese
               {BU_FACULTIES.map((fac) => {
                 const facSubmissions = submissions.filter(sub => sub.faculty === fac.name);
                 const contact = getFacultyContact(fac.name);
-                const target = Math.max(contact.baseTarget, facSubmissions.length + 12);
+                const target = Math.max(contact.baseTarget, facSubmissions.length);
                 const responded = facSubmissions.length;
-                const nonResponded = target - responded;
-                const rate = Number(((responded / target) * 100).toFixed(1));
+                const nonResponded = Math.max(0, target - responded);
+                const rate = target > 0 ? Number(((responded / target) * 100).toFixed(1)) : 0;
                 const isExpanded = expandedFacultyId === fac.name;
 
                 // Color schemes based on response progress rate
@@ -1114,10 +1225,11 @@ export default function AdminDashboard({ submissions, onClearSubmissions, onRese
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                               {fac.majors.map((major, mIdx) => {
                                 const majorSubmissions = facSubmissions.filter(sub => sub.major === major);
-                                const majorTarget = Math.max(Math.round(target / fac.majors.length), majorSubmissions.length + 3);
+                                const baseMajorTarget = getMajorTarget(major);
+                                const majorTarget = Math.max(baseMajorTarget, majorSubmissions.length);
                                 const mResponded = majorSubmissions.length;
-                                const mNonResponded = majorTarget - mResponded;
-                                const mRate = Number(((mResponded / majorTarget) * 100).toFixed(1));
+                                const mNonResponded = Math.max(0, majorTarget - mResponded);
+                                const mRate = majorTarget > 0 ? Number(((mResponded / majorTarget) * 100).toFixed(1)) : 0;
 
                                 let mBadge = 'bg-rose-50/50 text-rose-700 border-rose-100';
                                 let mProg = 'bg-rose-500';
