@@ -62,7 +62,7 @@ export default function App() {
       setPasscodeError(
         lang === 'TH'
           ? 'รหัสผ่านสำหรับสิทธิ์ผู้ดูแลระบบไม่ถูกต้อง กรุณาอ้างอิงรหัสแนะนำในกรอบเตือนความจำ'
-          : 'Incorrect passcode. Please refer to the reminder password below.'
+          : 'Incorrect passcode. Please refer to the recommended password card below.'
       );
     }
   };
@@ -109,10 +109,10 @@ export default function App() {
             <h1 className="text-base md:text-lg font-bold leading-none uppercase tracking-wide">Bangkok University</h1>
             <div className="text-[10px] md:text-xs opacity-90 mt-1 select-none">
               <div className="font-semibold tracking-wide">
-                ระบบสำรวจความคิดเห็นนักศึกษาปีแรก 2568
+                ระบบสำรวจความคิดเห็นนักศึกษาใหม่ 2568
               </div>
               <div className="opacity-75 tracking-wider font-normal mt-0.5">
-                Survey on First-Year Students' Opinions - Academic Year 2025
+                NEW STUDENT EXPERIENCE SURVEY 2025
               </div>
             </div>
           </div>
@@ -143,13 +143,39 @@ export default function App() {
             }`}
           >
             <PieIcon className="w-4 h-4" />
-            <span>{lang === 'TH' ? 'แผงผู้ดูแลระบบ (Admin)' : 'Admin Dashboard'}</span>
+            <span>{lang === 'TH' ? 'แผงผู้ดูแลระบบ (Admin)' : 'Admin Panel (Admin)'}</span>
             {submissions.length > 0 && (
               <span className="bg-[#e21b56] text-white text-[9px] px-1.5 py-0.5 rounded-full font-bold">
                 {submissions.length}
               </span>
             )}
           </button>
+
+          {/* COMPACT GLOBAL LANGUAGE SEGMENTED SWITCHER */}
+          <div className="flex items-center bg-white/10 p-1 rounded-xl border border-white/15 ml-1 select-none">
+            <button
+              type="button"
+              onClick={() => setLang('TH')}
+              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all duration-200 cursor-pointer ${
+                lang === 'TH'
+                  ? 'bg-white text-[#003366] shadow-sm'
+                  : 'text-slate-200 hover:text-white hover:bg-white/5'
+              }`}
+            >
+              TH
+            </button>
+            <button
+              type="button"
+              onClick={() => setLang('EN')}
+              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all duration-200 cursor-pointer ${
+                lang === 'EN'
+                  ? 'bg-white text-[#003366] shadow-sm'
+                  : 'text-slate-200 hover:text-white hover:bg-white/5'
+              }`}
+            >
+              EN
+            </button>
+          </div>
         </div>
       </header>
 
@@ -160,7 +186,7 @@ export default function App() {
           <span>
             {lang === 'TH'
               ? 'ระบบสำรวจปีการศึกษา 2568: มหาวิทยาลัยกรุงเทพ (รวบรวมความคาดหวังเพื่อพัฒนาการเรียนการสอน)'
-              : 'AY 2025 Experience Survey: Bangkok University (Gathering expectations to improve learner support)'}
+              : '2025 First-Year Students Survey: Bangkok University (Gathering expectations to improve teaching & services)'}
           </span>
         </div>
         <div className="flex items-center gap-4">
@@ -175,7 +201,7 @@ export default function App() {
           <span className="hidden sm:inline-block">
             {lang === 'TH'
               ? `วันที่ปรับปรุง: ${new Date().toLocaleDateString('th-TH')}`
-              : `Last Updated: ${new Date().toLocaleDateString('en-US')}`}
+              : `Updated: ${new Date().toLocaleDateString('en-US')}`}
           </span>
         </div>
       </div>
@@ -215,7 +241,7 @@ export default function App() {
 
                 <div className="space-y-1">
                   <h2 className="text-lg font-extrabold text-gray-800">
-                    {lang === 'TH' ? 'แผงควบคุมผู้ดูแลระบบ' : 'Administrator Control Center'}
+                    {lang === 'TH' ? 'แผงควบคุมผู้ดูแลระบบ' : 'Admin Control Panel'}
                   </h2>
                   <p className="text-[10px] text-gray-400 tracking-wider uppercase">Restricted Coordinator Access Platform</p>
                 </div>
@@ -223,15 +249,15 @@ export default function App() {
                 <div className="bg-amber-50/70 border border-amber-200/60 text-amber-900 p-4 rounded-2xl text-left leading-relaxed space-y-2.5">
                   <div className="flex gap-2 items-center text-xs font-bold text-amber-800">
                     <ShieldAlert className="w-4 h-4 shrink-0 text-amber-600" />
-                    <span>{lang === 'TH' ? 'ระบบคัดกรองความปลอดภัยระดับแผนก' : 'Department Security Verification'}</span>
+                    <span>{lang === 'TH' ? 'ระบบคัดกรองความปลอดภัยระดับแผนก' : 'Department Security Screening'}</span>
                   </div>
                   <p className="text-[11px] text-amber-800 font-normal">
                     {lang === 'TH'
                       ? 'กรุณากรอกรหัสผ่านเพื่อจำกัดสิทธิ์เข้าถึงข้อมูลเชิงสถิติและความคาดหวังของนักศึกษาใหม่'
-                      : 'Please input the authorized coordinator security credential to access collective insights.'}
+                      : 'Please enter the administrator passcode to access student statistical data.'}
                   </p>
                   <div className="text-[10px] text-amber-700/90 bg-amber-100/40 p-2 rounded-lg font-medium border border-amber-200/30">
-                    {lang === 'TH' ? '🔑 รหัสผ่านตรวจสอบสิทธิ์คือ :' : '🔑 Administrator passcode is :'}{' '}
+                    {lang === 'TH' ? '🔑 รหัสผ่านตรวจสอบสิทธิ์คือ :' : '🔑 Authenticated passcode is :'}{' '}
                     <code className="bg-amber-100 px-1.5 py-0.5 rounded font-bold font-mono">BU2568</code>
                   </div>
                 </div>
@@ -239,7 +265,7 @@ export default function App() {
                 <form onSubmit={handlePasscodeSubmit} className="space-y-4 text-left">
                   <div className="space-y-1.5">
                     <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-widest" htmlFor="admin-passcode-input">
-                      {lang === 'TH' ? 'รหัสผ่านผู้ดูแลระบบ (Admin Passcode)' : 'Administrator Passcode'}
+                      {lang === 'TH' ? 'รหัสผ่านผู้ดูแลระบบ (Admin Passcode)' : 'Admin Passcode'}
                     </label>
                     <div className="relative">
                       <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400">
@@ -282,7 +308,7 @@ export default function App() {
                     type="submit"
                     className="w-full bg-[#003366] text-white hover:bg-[#002244] active:scale-[0.98] transition-all font-bold text-xs py-2.5 rounded-xl shadow-md cursor-pointer flex items-center justify-center gap-1.5"
                   >
-                    <span>{lang === 'TH' ? 'ยืนยันสิทธิ์ผู้ดูแลระบบ' : 'Confirm Authorized Credentials'}</span>
+                    <span>{lang === 'TH' ? 'ยืนยันสิทธิ์ผู้ดูแลระบบ' : 'Confirm Admin Privileges'}</span>
                     <ArrowRight className="w-3.5 h-3.5" />
                   </button>
                 </form>
@@ -293,7 +319,7 @@ export default function App() {
                     onClick={() => setActiveView('user')}
                     className="text-[11px] text-gray-400 hover:text-[#003366] hover:underline transition-all cursor-pointer font-medium font-sans"
                   >
-                    {lang === 'TH' ? '← กลับเข้าสู่หน้าสกรีนทำแบบสอบถามนักศึกษา' : '← Return to Student Survey Form'}
+                    {lang === 'TH' ? '← กลับเข้าสู่หน้าสกรีนทำแบบสอบถามนักศึกษา' : '← Back to Student Survey'}
                   </button>
                 </div>
               </div>
@@ -316,6 +342,7 @@ export default function App() {
                   setActiveView('user');
                   setPasscode('');
                 }}
+                lang={lang}
               />
             </motion.div>
           )}
@@ -333,11 +360,11 @@ export default function App() {
           <span>
             {lang === 'TH'
               ? 'พัฒนาโดยสำนักเทคโนโลยีสารสนเทศ มนุษยสัมพันธ์ มหาวิทยาลัยกรุงเทพ'
-              : 'Developed by Bangkok University Information Technology Bureau'}
+              : 'Developed by the Information Technology Division, Bangkok University'}
           </span>
           <span className="flex items-center gap-1">
             <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
-            <span>{lang === 'TH' ? 'สถานะระบบเสถียร' : 'System status stable'}</span>
+            <span>{lang === 'TH' ? 'สถานะระบบเสถียร' : 'System Stable'}</span>
           </span>
         </div>
       </footer>

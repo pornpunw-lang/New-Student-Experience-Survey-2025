@@ -114,7 +114,7 @@ export const SURVEY_OPTIONS: SurveyOption[] = [
   {
     id: '22',
     label: 'อื่น ๆ โปรดระบุ ……………………………….',
-    labelEn: 'Other :'
+    labelEn: 'Other (Please specify) :'
   }
 ];
 
@@ -122,13 +122,13 @@ export const BU_FACULTIES_BY_DEGREE: Record<'Bachelor' | 'Master' | 'Doctoral', 
   Bachelor: [
     {
       name: 'คณะบัญชี',
-      nameEn: 'School of Accounting',
+      nameEn: 'Accounting',
       majors: ['สาขาวิชาบัญชี'],
       majorsEn: ['Accounting Program']
     },
     {
       name: 'คณะบริหารธุรกิจ',
-      nameEn: 'School of Business Administration',
+      nameEn: 'Business Administration',
       majors: [
         'สาขาวิชาการตลาด',
         'สาขาวิชาการเงิน',
@@ -176,7 +176,7 @@ export const BU_FACULTIES_BY_DEGREE: Record<'Bachelor' | 'Master' | 'Doctoral', 
     },
     {
       name: 'คณะนิเทศศาสตร์',
-      nameEn: 'School of Communication Arts',
+      nameEn: 'Communication Arts',
       majors: [
         'สาขาวิชาสื่อสารและการสื่อใหม่',
         'สาขาวิชาวิทยุกระจายเสียง วิทยุโทรทัศน์ และการผลิตสื่อสตรีมมิ่ง',
@@ -194,13 +194,13 @@ export const BU_FACULTIES_BY_DEGREE: Record<'Bachelor' | 'Master' | 'Doctoral', 
     },
     {
       name: 'คณะนิติศาสตร์',
-      nameEn: 'School of Law',
+      nameEn: 'Law',
       majors: ['สาขาวิชานิติศาสตร์'],
       majorsEn: ['Law Program']
     },
     {
       name: 'คณะมนุษยศาสตร์และการจัดการการท่องเที่ยว',
-      nameEn: 'School of Humanities and Tourism Management',
+      nameEn: 'Humanities and Tourism Management',
       majors: [
         'สาขาวิชาภาษาอังกฤษ',
         'สาขาวิชาการจัดการการท่องเที่ยวและเรือสำราญ',
@@ -218,19 +218,19 @@ export const BU_FACULTIES_BY_DEGREE: Record<'Bachelor' | 'Master' | 'Doctoral', 
     },
     {
       name: 'วิทยาลัยนานาชาติจีน',
-      nameEn: 'Bangkok University Chinese International',
+      nameEn: 'Chinese International College',
       majors: ['สาขาวิชาภาษาจีนธุรกิจ'],
       majorsEn: ['Business Chinese']
     },
     {
       name: 'คณะเศรษฐศาสตร์และการลงทุน',
-      nameEn: 'School of Economics and Investment',
+      nameEn: 'Economics and Investment',
       majors: ['สาขาวิชาเศรษฐศาสตร์'],
       majorsEn: ['Economics Program']
     },
     {
       name: 'คณะศิลปกรรมศาสตร์',
-      nameEn: 'School of Fine and Applied Arts',
+      nameEn: 'Fine and Applied Arts',
       majors: [
         'สาขาวิชาการออกแบบนิเทศศิลป์',
         'สาขาวิชาการออกแบบแฟชั่น'
@@ -242,7 +242,7 @@ export const BU_FACULTIES_BY_DEGREE: Record<'Bachelor' | 'Master' | 'Doctoral', 
     },
     {
       name: 'คณะสถาปัตยกรรมศาสตร์',
-      nameEn: 'School of Architecture',
+      nameEn: 'Architecture',
       majors: [
         'สาขาวิชาสถาปัตยกรรม',
         'สาขาวิชาศิลปะออกแบบภายใน'
@@ -254,13 +254,13 @@ export const BU_FACULTIES_BY_DEGREE: Record<'Bachelor' | 'Master' | 'Doctoral', 
     },
     {
       name: 'คณะการสร้างเจ้าของธุรกิจและการบริหารจัดการ',
-      nameEn: 'School of Entrepreneurship and Management',
+      nameEn: 'Entrepreneurship and Management',
       majors: ['สาขาวิชาการเป็นเจ้าของธุรกิจ'],
       majorsEn: ['Entrepreneurship']
     },
     {
       name: 'คณะดิจิทัลมีเดียและศิลปะภาพยนตร์',
-      nameEn: 'School of Digital Media and Cinematic Arts',
+      nameEn: 'Digital Media and Cinematic Arts',
       majors: [
         'สาขาวิชาภาพยนตร์',
         'สาขาวิชาดิจิทัลมีเดีย',
@@ -274,7 +274,7 @@ export const BU_FACULTIES_BY_DEGREE: Record<'Bachelor' | 'Master' | 'Doctoral', 
     },
     {
       name: 'คณะเทคโนโลยีสารสนเทศและนวัตกรรม',
-      nameEn: 'School of Information Technology and Innovation',
+      nameEn: 'Information Technology and Innovation',
       majors: [
         'สาขาวิชาวิทยาการคอมพิวเตอร์',
         'สาขาวิชาเทคโนโลยีสารสนเทศ',
@@ -288,7 +288,7 @@ export const BU_FACULTIES_BY_DEGREE: Record<'Bachelor' | 'Master' | 'Doctoral', 
     },
     {
       name: 'คณะวิศวกรรมศาสตร์',
-      nameEn: 'School of Engineering',
+      nameEn: 'Engineering',
       majors: [
         'สาขาวิชาวิศวกรรมไฟฟ้า',
         'สาขาวิชาวิศวกรรมคอมพิวเตอร์และหุ่นยนต์',
@@ -306,7 +306,7 @@ export const BU_FACULTIES_BY_DEGREE: Record<'Bachelor' | 'Master' | 'Doctoral', 
   Master: [
     {
       name: 'คณะบริหารธุรกิจ',
-      nameEn: 'School of Business Administration',
+      nameEn: 'Business Administration',
       majors: [
         'สาขาวิชาบริหารธุรกิจ (หลักสูตรภาษาไทย)',
         'สาขาวิชาบริหารธุรกิจ (หลักสูตรภาษาอังกฤษ)',
@@ -322,7 +322,7 @@ export const BU_FACULTIES_BY_DEGREE: Record<'Bachelor' | 'Master' | 'Doctoral', 
     },
     {
       name: 'คณะนิเทศศาสตร์',
-      nameEn: 'School of Communication Arts',
+      nameEn: 'Communication Arts',
       majors: [
         'สาขาวิชาการบริหารแบรนด์และการสื่อสารเชิงกลยุทธ์',
         'สาขาวิชาการสื่อสารสากล (หลักสูตรนานาชาติ)',
@@ -336,37 +336,37 @@ export const BU_FACULTIES_BY_DEGREE: Record<'Bachelor' | 'Master' | 'Doctoral', 
     },
     {
       name: 'คณะนิติศาสตร์',
-      nameEn: 'School of Law',
+      nameEn: 'Law',
       majors: ['สาขาวิชานิติศาสตร์'],
       majorsEn: ['Laws Program']
     },
     {
       name: 'คณะมนุษยศาสตร์และการจัดการการท่องเที่ยว',
-      nameEn: 'School of Humanities and Tourism Management',
+      nameEn: 'Humanities and Tourism Management',
       majors: ['สาขาวิชานวัตกรรมการจัดการการท่องเที่ยวและบริการ'],
       majorsEn: ['Tourism and Hospitality Management Innovation (International Program)']
     },
     {
       name: 'คณะสถาปัตยกรรมศาสตร์',
-      nameEn: 'School of Architecture',
+      nameEn: 'Architecture',
       majors: ['สาขาวิชาสถาปัตยกรรม'],
       majorsEn: ['Architecture Program']
     },
     {
       name: 'คณะการสร้างเจ้าของธุรกิจและการบริหารจัดการ',
-      nameEn: 'School of Entrepreneurship and Management',
+      nameEn: 'Entrepreneurship and Management',
       majors: ['สาขาวิชาความเป็นผู้ประกอบการ'],
       majorsEn: ['Entrepreneurship and Emerging Enterprises']
     },
     {
       name: 'คณะเทคโนโลยีสารสนเทศและนวัตกรรม',
-      nameEn: 'School of Information Technology and Innovation',
+      nameEn: 'Information Technology and Innovation',
       majors: ['สาขาวิชาเทคโนโลยีสารสนเทศและวิทยาการข้อมูล'],
       majorsEn: ['Information Technology and Data Science']
     },
     {
       name: 'คณะวิศวกรรมศาสตร์',
-      nameEn: 'School of Engineering',
+      nameEn: 'Engineering',
       majors: ['สาขาวิชาวิศวกรรมไฟฟ้าและคอมพิวเตอร์ (หลักสูตรนานาชาติ)'],
       majorsEn: ['Electrical & Computer Engineering (International Program)']
     }
@@ -374,13 +374,13 @@ export const BU_FACULTIES_BY_DEGREE: Record<'Bachelor' | 'Master' | 'Doctoral', 
   Doctoral: [
     {
       name: 'คณะบริหารธุรกิจ',
-      nameEn: 'School of Business Administration',
+      nameEn: 'Business Administration',
       majors: ['สาขาวิชาการจัดการความรู้และนวัตกรรม (หลักสูตรนานาชาติ)'],
       majorsEn: ['Knowledge Management and Innovation Management (International Program)']
     },
     {
       name: 'คณะนิเทศศาสตร์',
-      nameEn: 'School of Communication Arts',
+      nameEn: 'Communication Arts',
       majors: [
         'สาขาวิชาการจัดการสื่อสารสากล (หลักสูตรนานาชาติ)',
         'สาขาวิชาการบริหารแบรนด์และการสื่อสารเชิงกลยุทธ์'
@@ -392,7 +392,7 @@ export const BU_FACULTIES_BY_DEGREE: Record<'Bachelor' | 'Master' | 'Doctoral', 
     },
     {
       name: 'คณะวิศวกรรมศาสตร์',
-      nameEn: 'School of Engineering',
+      nameEn: 'Engineering',
       majors: ['สาขาวิชาวิศวกรรมไฟฟ้าและคอมพิวเตอร์ (หลักสูตรนานาชาติ)'],
       majorsEn: ['Electrical and Computer Engineering (International Program)']
     }
@@ -427,20 +427,19 @@ export const BU_FACULTIES: FacultyData[] = [
 }, []);
 
 // Helper to generate a random selection of options weights
-// options with ID "11", "14", "03", "07", "05", "02" are highly selected to mirror common university surveys
 export function generateMockSubmissions(count: number = 180): SurveyResponse[] {
   const list: SurveyResponse[] = [];
   const baseTime = new Date('2026-06-01T08:00:00Z').getTime();
   const timeSpread = 9 * 24 * 60 * 60 * 1000; // 9 days leading to present (June 10)
 
   const otherTexts = [
-    'มีรถตู้รับส่งระหว่างวิทยาเขตเพียงพอและจอดเป็นเวลา',
-    'ห้องสมุดปิดดึกช่วงสอบ',
-    'มีร้านอาหารอร่อยๆ หลากหลายแบบโรงอาหารปรับปรุงใหม่',
-    'พื้นที่ Co-working space ที่เปิด 24 ชั่วโมง',
-    'สนามฟุตบอลและสปอร์ตคลับที่ทันสมัยกว่าเดิม',
-    'สนับสนุนการประกวดแข่งขันระดับนานาชาติ',
-    'มี Wi-Fi ความเร็วสูงทั่วทุกจุดของอาคารเรียน',
+    'มีรถตู้รับส่งระหว่างวิทยาเขตเพียงพอและจอดเป็นเวลา / Adequate and scheduled campus shuttle vans',
+    'ห้องสมุดปิดดึกช่วงสอบ / Library closing late during exams',
+    'มีร้านอาหารอร่อยๆ หลากหลายแบบโรงอาหารปรับปรุงใหม่ / Diverse food options in the newly renovated canteen',
+    'พื้นที่ Co-working space ที่เปิด 24 ชั่วโมง / 24-hour Co-working spaces',
+    'สนามฟุตบอลและสปอร์ตคลับที่ทันสมัยกว่าเดิม / Modernized football field and sports club',
+    'สนับสนุนการประกวดแข่งขันระดับนานาชาติ / Support for international competitions',
+    'มี Wi-Fi ความเร็วสูงทั่วทุกจุดของอาคารเรียน / High-speed Wi-Fi throughout all buildings',
   ];
 
   for (let i = 0; i < count; i++) {
@@ -520,7 +519,7 @@ export function generateMockSubmissions(count: number = 180): SurveyResponse[] {
       otherText = otherTexts[Math.floor(Math.random() * otherTexts.length)];
     }
 
-    // Distribute time leading to current time (2026-06-10)
+    // Distribute time leading to current time
     const subTime = new Date(baseTime + Math.random() * timeSpread);
 
     list.push({

@@ -111,17 +111,13 @@ export default function StudentSurvey({ onSurveySubmit, onAdminToggle, lang, set
   const handleProceedToStep2 = () => {
     if (!faculty) {
       setValidationError(
-        lang === 'TH'
-          ? 'กรุณาเลือกคณะของคุณก่อนดำเนินการขั้นตอนต่อไป'
-          : 'Please select your faculty before proceeding to the next step.'
+        'กรุณาเลือกคณะของคุณก่อนดำเนินการขั้นตอนต่อไป / Please select your faculty before proceeding to the next step.'
       );
       return;
     }
     if (!major) {
       setValidationError(
-        lang === 'TH'
-          ? 'กรุณาเลือกสาขาวิชาของคุณก่อนดำเนินการขั้นตอนต่อไป'
-          : 'Please select your major before proceeding to the next step.'
+        'กรุณาเลือกสาขาวิชาของคุณก่อนดำเนินการขั้นตอนต่อไป / Please select your major before proceeding to the next step.'
       );
       return;
     }
@@ -154,18 +150,14 @@ export default function StudentSurvey({ onSurveySubmit, onAdminToggle, lang, set
 
     if (selectedOptions.length === 0) {
       setValidationError(
-        lang === 'TH'
-          ? 'กรุณาเลือกความคาดหวังอย่างน้อย 1 ข้อ'
-          : 'Please select at least 1 expectation option.'
+        'กรุณาเลือกความคาดหวังอย่างน้อย 1 ข้อ / Please select at least 1 expectation option.'
       );
       return;
     }
 
     if (selectedOptions.includes('22') && !otherText.trim()) {
       setValidationError(
-        lang === 'TH'
-          ? 'เนื่องจากคุณเลือก "อื่น ๆ" กรุณาระบุรายละเอียดเพิ่มเติมในช่องข้อความ'
-          : 'Since you selected "Other", please specify details in the text box.'
+        'เนื่องจากคุณเลือก "อื่น ๆ" กรุณาระบุรายละเอียดเพิ่มเติมในช่องข้อความ / Since you selected "Other", please specify your expectation in the text box.'
       );
       return;
     }
@@ -210,53 +202,10 @@ export default function StudentSurvey({ onSurveySubmit, onAdminToggle, lang, set
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
-      {/* Elegant Global Language Segmented Switcher */}
-      <div className="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between bg-white shadow-sm border border-gray-200/60 p-4 rounded-2xl gap-3">
-        <div className="flex items-center gap-2.5">
-          <div className="p-1.5 bg-blue-50 text-[#003366] rounded-xl">
-            <Globe className="w-4 h-4" />
-          </div>
-          <div>
-            <span className="text-xs font-bold text-[#003366] block">🌐 ภาษาแบบสอบถาม / Survey Language</span>
-            <span className="text-[10px] text-gray-400 block mt-0.5">เลือกภาษาเพื่อเปลี่ยนเนื้อหาทั้งหมด / Choose your preferred language</span>
-          </div>
-        </div>
-        <div className="inline-flex rounded-xl p-1 bg-slate-100 border border-slate-200/60 shadow-inner shrink-0">
-          <button
-            type="button"
-            onClick={() => {
-              setLang('TH');
-              if (validationError) setValidationError(null);
-            }}
-            className={`px-5 py-2 rounded-lg text-xs font-bold transition-all duration-200 cursor-pointer ${
-              lang === 'TH'
-                ? 'bg-[#003366] text-white shadow-md'
-                : 'text-slate-600 hover:text-[#003366] hover:bg-slate-200/50'
-            }`}
-          >
-            ภาษาไทย (TH)
-          </button>
-          <button
-            type="button"
-            onClick={() => {
-              setLang('EN');
-              if (validationError) setValidationError(null);
-            }}
-            className={`px-5 py-2 rounded-lg text-xs font-bold transition-all duration-200 cursor-pointer ${
-              lang === 'EN'
-                ? 'bg-[#003366] text-white shadow-md'
-                : 'text-slate-600 hover:text-[#003366] hover:bg-slate-200/50'
-            }`}
-          >
-            English (EN)
-          </button>
-        </div>
-      </div>
-
       {/* Dynamic progress bar widget */}
       <div className="mb-8" id="survey-progress-container">
         <div className="flex justify-between text-xs text-[#003366] font-medium mb-2">
-          <span>{lang === 'TH' ? 'ความคืบหน้าในการตอบแบบสอบถาม' : 'Survey Completion Progress'}</span>
+          <span>ความคืบหน้าในการตอบแบบสอบถาม / Survey Progress</span>
           <span>{progressPercent}%</span>
         </div>
         <div className="w-full h-2.5 bg-gray-200 rounded-full overflow-hidden">
@@ -288,42 +237,29 @@ export default function StudentSurvey({ onSurveySubmit, onAdminToggle, lang, set
                     <ClipboardList className="w-6 h-6 text-white" />
                   </span>
                   <span className="text-xs font-semibold bg-white/20 text-[#ffffff] px-2.5 py-1 rounded-full uppercase tracking-wider">
-                    {lang === 'TH' ? 'ปีการศึกษา 2568' : 'Academic Year 2025'}
+                    ปีการศึกษา 2568 / Academic Year 2025
                   </span>
                 </div>
                 <h2 className="text-xl md:text-2xl font-bold mt-4 font-sans tracking-tight">
-                  {lang === 'TH'
-                    ? 'แบบสอบถามความต้องการและความคาดหวังของนักศึกษาใหม่'
-                    : 'Survey on Needs and Expectations of New Students'}
+                  แบบสอบถามความต้องการและความคาดหวังของนักศึกษาใหม่
+                  <span className="block text-sm md:text-base font-normal opacity-90 mt-1">
+                    Survey on Expectations and Needs of First-Year Students
+                  </span>
                 </h2>
-                <p className="text-white/80 text-sm mt-2 leading-relaxed">
-                  {lang === 'TH'
-                    ? 'ยินดีต้อนรับเข้าสู่รั้วมหาวิทยาลัยกรุงเทพ! ความคิดเห็นของคุณมีความสำคัญยิ่งในการนำไปปรับปรุง พัฒนาการจัดการเรียนการสอน การบริการนักศึกษา สิ่งอำนวยความสะดวก และกิจกรรมต่าง ๆ ของมหาวิทยาลัยให้มีประสิทธิภาพสูงสุด'
-                    : 'Welcome to Bangkok University! Your feedback and expectations are highly valuable for our continuing improvement of teaching, learning, student services, facilities, and campus activities to achieve maximum efficiency.'}
+                <p className="text-white/80 text-xs sm:text-sm mt-3 leading-relaxed">
+                  ยินดีต้อนรับเข้าสู่รั้วมหาวิทยาลัยกรุงเทพ! ความคิดเห็นของคุณมีความสำคัญยิ่งในการนำไปปรับปรุง พัฒนาการจัดการเรียนการสอน การบริการนักศึกษา สิ่งอำนวยความสะดวก และกิจกรรมต่าง ๆ ของมหาวิทยาลัยให้มีประสิทธิภาพสูงสุด
+                </p>
+                <p className="text-white/70 text-xs mt-1.5 leading-relaxed italic border-t border-white/10 pt-1.5">
+                  Welcome to Bangkok University! Your feedback is highly valuable for improving our academic programs, student support, facilities, and activities.
                 </p>
               </div>
               <div className="p-6 bg-[#F5F7FA] border-t border-gray-100 flex flex-col sm:flex-row gap-4 justify-between items-start sm:items-center">
                 <div className="flex items-center gap-2 text-xs text-gray-500 font-medium">
                   <ShieldCheck className="w-4 h-4 text-emerald-600" />
                   <span>
-                    {lang === 'TH'
-                      ? 'ข้อมูลทั้งหมดจะถูกประมวลผลในภาพรวมและเก็บรักษาเป็นความลับ'
-                      : 'All data will be collected in aggregate and kept strictly confidential.'}
+                    ข้อมูลทั้งหมดจะถูกประมวลผลในภาพรวมและเก็บรักษาเป็นความลับ / All response data is confidential and processed collectively.
                   </span>
                 </div>
-                <button
-                  type="button"
-                  id="toggle-panel-shortcut"
-                  onClick={onAdminToggle}
-                  className="text-xs text-[#003366] hover:underline flex items-center gap-1 font-medium bg-white/80 px-3 py-1.5 rounded-lg border border-gray-200"
-                >
-                  <Award className="w-3.5 h-3.5" />
-                  <span>
-                    {lang === 'TH'
-                      ? 'สำหรับผู้ดูแลระบบ ? คลิกเข้า Dashboard'
-                      : 'For Administrators? Click to View Dashboard'}
-                  </span>
-                </button>
               </div>
             </div>
 
@@ -334,15 +270,14 @@ export default function StudentSurvey({ onSurveySubmit, onAdminToggle, lang, set
                   <div className="flex items-center gap-2 text-[#003366] font-semibold text-lg">
                     <User className="w-5 h-5" />
                     <h3>
-                      {lang === 'TH'
-                        ? 'ส่วนที่ 1: ข้อมูลทั่วไปของผู้ตอบแบบสอบถาม'
-                        : 'Section 1: Respondent General Profile'}
+                      ส่วนที่ 1: ข้อมูลทั่วไปของผู้ตอบแบบสอบถาม
+                      <span className="block text-xs font-normal text-gray-400 mt-0.5">
+                        Part 1: General Information
+                      </span>
                     </h3>
                   </div>
                   <p className="text-xs text-gray-400 mt-1">
-                    {lang === 'TH'
-                      ? 'กรอกข้อมูลส่วนตัวเพื่อเริ่มต้นทำแบบสอบถาม'
-                      : 'Provide your details to begin the survey'}
+                    กรอกข้อมูลส่วนตัวเพื่อเริ่มต้นทำแบบสอบถาม / Fill in your details to start the survey
                   </p>
                 </div>
 
@@ -357,7 +292,7 @@ export default function StudentSurvey({ onSurveySubmit, onAdminToggle, lang, set
                   {/* Degree Level Selection (Full Width) */}
                   <div className="col-span-1 md:col-span-2 space-y-2">
                     <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wider">
-                      {lang === 'TH' ? 'ระดับการศึกษา' : 'Degree Level'} <span className="text-red-500">*</span>
+                      ระดับการศึกษา / Degree Level <span className="text-red-500">*</span>
                     </label>
                     <div className="grid grid-cols-3 gap-2">
                       <button
@@ -370,8 +305,8 @@ export default function StudentSurvey({ onSurveySubmit, onAdminToggle, lang, set
                             : 'border-gray-200 hover:border-gray-300 text-gray-600 bg-white'
                         }`}
                       >
-                        <span className="text-xs sm:text-sm font-bold">{lang === 'TH' ? 'ปริญญาตรี' : 'Bachelor\'s'}</span>
-                        <span className="text-[9px] opacity-70 font-normal mt-0.5">Bachelor</span>
+                        <span className="text-xs sm:text-sm font-bold">ปริญญาตรี</span>
+                        <span className="text-[10px] opacity-70 font-normal mt-0.5">Bachelor's Degree</span>
                       </button>
 
                       <button
@@ -384,8 +319,8 @@ export default function StudentSurvey({ onSurveySubmit, onAdminToggle, lang, set
                             : 'border-gray-200 hover:border-gray-300 text-gray-600 bg-white'
                         }`}
                       >
-                        <span className="text-xs sm:text-sm font-bold">{lang === 'TH' ? 'ปริญญาโท' : 'Master\'s'}</span>
-                        <span className="text-[9px] opacity-70 font-normal mt-0.5">Master</span>
+                        <span className="text-xs sm:text-sm font-bold">ปริญญาโท</span>
+                        <span className="text-[10px] opacity-70 font-normal mt-0.5">Master's Degree</span>
                       </button>
 
                       <button
@@ -398,8 +333,8 @@ export default function StudentSurvey({ onSurveySubmit, onAdminToggle, lang, set
                             : 'border-gray-200 hover:border-gray-300 text-gray-600 bg-white'
                         }`}
                       >
-                        <span className="text-xs sm:text-sm font-bold">{lang === 'TH' ? 'ปริญญาเอก' : 'Doctorate'}</span>
-                        <span className="text-[9px] opacity-70 font-normal mt-0.5">Doctoral</span>
+                        <span className="text-xs sm:text-sm font-bold">ปริญญาเอก</span>
+                        <span className="text-[10px] opacity-70 font-normal mt-0.5">Doctoral Degree</span>
                       </button>
                     </div>
                   </div>
@@ -407,7 +342,7 @@ export default function StudentSurvey({ onSurveySubmit, onAdminToggle, lang, set
                   {/* Faculty Selection Dropdown */}
                   <div className="space-y-2">
                     <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wider" htmlFor="faculty-select">
-                      {lang === 'TH' ? 'คณะการเข้าศึกษา' : 'Faculty'} <span className="text-red-500">*</span>
+                      คณะการเข้าศึกษา / Faculty <span className="text-red-500">*</span>
                     </label>
                     <div className="relative">
                       <select
@@ -418,11 +353,11 @@ export default function StudentSurvey({ onSurveySubmit, onAdminToggle, lang, set
                         className="w-full bg-[#F5F7FA] border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#003366] focus:bg-white transition-all appearance-none cursor-pointer text-gray-800"
                       >
                         <option value="">
-                          {lang === 'TH' ? '-- เลือกคณะของคุณ --' : '-- Select Your Faculty --'}
+                          -- เลือกคณะของคุณ / Select your faculty --
                         </option>
                         {BU_FACULTIES_BY_DEGREE[degreeLevel].map((fac) => (
                           <option key={fac.name} value={fac.name}>
-                            {lang === 'TH' ? fac.name : (fac.nameEn || fac.name)}
+                            {fac.nameEn ? `${fac.name} (${fac.nameEn})` : fac.name}
                           </option>
                         ))}
                       </select>
@@ -435,7 +370,7 @@ export default function StudentSurvey({ onSurveySubmit, onAdminToggle, lang, set
                   {/* Major Selection Dropdown */}
                   <div className="space-y-2">
                     <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wider" htmlFor="major-select">
-                      {lang === 'TH' ? 'สาขาวิชา' : 'Major'} <span className="text-red-500">*</span>
+                      สาขาวิชา / Major <span className="text-red-500">*</span>
                     </label>
                     <div className="relative">
                       <select
@@ -450,15 +385,15 @@ export default function StudentSurvey({ onSurveySubmit, onAdminToggle, lang, set
                       >
                         <option value="">
                           {faculty 
-                            ? (lang === 'TH' ? '-- เลือกสาขาวิชา --' : '-- Select Your Major --') 
-                            : (lang === 'TH' ? 'กรุณาเลือกคณะก่อน' : 'Please select a faculty first')}
+                            ? '-- เลือกสาขาวิชา / Select your major --' 
+                            : 'กรุณาเลือกคณะก่อน / Please select a faculty first'}
                         </option>
                         {filteredMajors.map((m, idx) => {
                           const selectedFac = BU_FACULTIES_BY_DEGREE[degreeLevel].find((f) => f.name === faculty);
                           const majorEn = (selectedFac && selectedFac.majorsEn && selectedFac.majorsEn[idx]) || m;
                           return (
                             <option key={m} value={m}>
-                              {lang === 'TH' ? m : majorEn}
+                              {majorEn && majorEn !== m ? `${m} (${majorEn})` : m}
                             </option>
                           );
                         })}
@@ -476,9 +411,9 @@ export default function StudentSurvey({ onSurveySubmit, onAdminToggle, lang, set
                 <button
                   type="submit"
                   id="proceed-step2-btn"
-                  className="bg-[#003366] text-white font-medium hover:bg-[#002244] active:scale-[0.98] transition-all px-8 py-3.5 rounded-xl shadow-lg shadow-blue-900/10 flex items-center gap-2 text-sm justify-center w-full sm:w-auto font-sans"
+                  className="bg-[#003366] text-white font-medium hover:bg-[#002244] active:scale-[0.98] transition-all px-8 py-3.5 rounded-xl shadow-lg shadow-blue-900/10 flex items-center gap-2 text-sm justify-center w-full sm:w-auto font-sans cursor-pointer"
                 >
-                  <span>{lang === 'TH' ? 'ผ่านไปยังแบบสอบถาม' : 'Proceed to Expectations Survey'}</span>
+                  <span>ผ่านไปยังแบบสอบถาม / Proceed to Survey</span>
                   <ChevronRight className="w-4 h-4" />
                 </button>
               </div>
@@ -501,94 +436,56 @@ export default function StudentSurvey({ onSurveySubmit, onAdminToggle, lang, set
                   <div className="flex items-center gap-2 text-[#003366] font-semibold text-lg">
                     <BookOpen className="w-5 h-5 animate-pulse text-blue-800" />
                     <h3>
-                      {lang === 'TH'
-                        ? 'ส่วนที่ 2: ความคาดหวังเมื่อมาเรียน ม.กรุงเทพ'
-                        : 'Section 2: Goals & Expectations at Bangkok University'}
+                      ส่วนที่ 2: ความคาดหวังเมื่อมาเรียน ม.กรุงเทพ
+                      <span className="block text-xs font-normal text-gray-400 mt-0.5 font-sans">
+                        Part 2: Expectations when studying at Bangkok University
+                      </span>
                     </h3>
                   </div>
                   <div className="text-xs bg-amber-50 border border-amber-200 text-amber-800 px-3 py-1.5 rounded-lg flex items-center gap-1.5 font-medium shrink-0">
                     <HelpCircle className="w-3.5 h-3.5 text-amber-600" />
-                    <span>{lang === 'TH' ? 'เลือกคำตอบได้มากกว่า 1 ข้อ' : 'More than one answer can be chosen'}</span>
+                    <span>เลือกคำตอบได้มากกว่า 1 ข้อ / Multiple Choices (Select as many as applicable)</span>
                   </div>
                 </div>
 
                 {/* Info badge describing the student's selected info */}
                 <div className="bg-[#F5F7FA] p-3.5 rounded-xl text-xs text-gray-600 flex flex-wrap gap-x-6 gap-y-2 items-center border border-gray-100">
-                  <span className="font-semibold text-[#003366]">{lang === 'TH' ? 'ข้อมูลผู้ตอบ:' : 'Profile Overview:'}</span>
+                  <span className="font-semibold text-[#003366]">ข้อมูลผู้ตอบ / Respondent Info:</span>
                   <span>
-                    <strong>{lang === 'TH' ? 'ระดับ:' : 'Degree:'}</strong>{' '}
+                    <strong>ระดับ / Degree:</strong>{' '}
                     {degreeLevel === 'Bachelor'
-                      ? (lang === 'TH' ? 'ปริญญาตรี' : 'Bachelor\'s')
+                      ? "ปริญญาตรี (Bachelor's Degree)"
                       : degreeLevel === 'Master'
-                        ? (lang === 'TH' ? 'ปริญญาโท' : 'Master\'s')
-                        : (lang === 'TH' ? 'ปริญญาเอก' : 'Doctorate')}
+                        ? "ปริญญาโท (Master's Degree)"
+                        : "ปริญญาเอก (Doctoral Degree)"}
                   </span>
                   <span>
-                    <strong>{lang === 'TH' ? 'คณะ:' : 'Faculty:'}</strong>{' '}
+                    <strong>คณะ / Faculty:</strong>{' '}
                     {(() => {
                       const facObj = BU_FACULTIES.find((f) => f.name === faculty);
-                      return lang === 'TH' ? faculty : (facObj?.nameEn || faculty);
+                      return facObj?.nameEn ? `${faculty} (${facObj.nameEn})` : faculty;
                     })()}
                   </span>
                   <span>
-                    <strong>{lang === 'TH' ? 'หลักสูตร:' : 'Program:'}</strong>{' '}
+                    <strong>หลักสูตร / Program:</strong>{' '}
                     {program === 'Thai'
-                      ? (lang === 'TH' ? 'ภาคปกติ' : 'Regular Thai')
-                      : (lang === 'TH' ? 'นานาชาติ/อังกฤษ' : 'English/International')}
+                      ? 'ภาคปกติ (Thai Program)'
+                      : 'นานาชาติ/อังกฤษ (International Program)'}
                   </span>
                 </div>
 
                 <div className="space-y-4">
-                  {/* Elegant Language Segmented Switcher */}
-                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between bg-slate-50 border border-gray-150 p-3 rounded-2xl gap-3">
-                    <span className="text-xs font-semibold text-[#003366] flex items-center gap-1.5 pl-1">
-                      <span>🌐 {lang === 'TH' ? 'ภาษาแบบสอบถาม :' : 'Survey Question Language :'}</span>
-                    </span>
-                    <div className="inline-flex rounded-xl p-1 bg-white border border-gray-200 shadow-sm shrink-0">
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setLang('TH');
-                          if (validationError) setValidationError(null);
-                        }}
-                        className={`px-4 py-1.5 rounded-lg text-xs font-bold transition-all duration-200 cursor-pointer ${
-                          lang === 'TH'
-                            ? 'bg-[#003366] text-white shadow-sm'
-                            : 'text-slate-600 hover:text-[#003366] hover:bg-slate-50'
-                        }`}
-                      >
-                        ภาษาไทย (TH)
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setLang('EN');
-                          if (validationError) setValidationError(null);
-                        }}
-                        className={`px-4 py-1.5 rounded-lg text-xs font-bold transition-all duration-200 cursor-pointer ${
-                          lang === 'EN'
-                            ? 'bg-[#003366] text-white shadow-sm'
-                            : 'text-slate-600 hover:text-[#003366] hover:bg-slate-50'
-                        }`}
-                      >
-                        English (EN)
-                      </button>
-                    </div>
-                  </div>
-
                   {/* Questionnaire Prompt header */}
                   <div className="bg-blue-50/20 border border-[#003366]/5 rounded-2xl p-4 md:p-5 mt-2 space-y-1">
                     <p className="text-[#003366] text-[11px] font-bold tracking-wider uppercase">คำถามข้อที่ 1 / Question 1</p>
                     <p className="text-sm md:text-base font-extrabold text-slate-800 leading-relaxed font-sans">
-                      {lang === 'TH' ? (
-                        <>
-                          1. สิ่งที่นักศึกษาต้องการและคาดหวังเมื่อเข้ามาศึกษาในมหาวิทยาลัยกรุงเทพ <span className="text-red-500 font-bold">*</span> <span className="text-slate-500 text-xs font-medium block sm:inline mt-1 sm:mt-0">(เลือกตอบได้มากกว่า 1 ข้อ)</span>
-                        </>
-                      ) : (
-                        <>
-                          1. What are your expectations when studying at Bangkok University? <span className="text-red-500 font-bold">*</span> <span className="text-slate-500 text-xs font-medium block sm:inline mt-1 sm:mt-0">(You may select more than one item.)</span>
-                        </>
-                      )}
+                      1. สิ่งที่นักศึกษาต้องการและคาดหวังเมื่อเข้ามาศึกษาในมหาวิทยาลัยกรุงเทพ <span className="text-red-500 font-bold">*</span> 
+                      <span className="block text-xs text-slate-500 font-medium mt-1 leading-relaxed italic font-normal">
+                        What are your expectations and needs when studying at Bangkok University?
+                      </span>
+                      <span className="block text-xs text-slate-500 font-medium mt-1 font-normal">
+                        (เลือกตอบได้มากกว่า 1 ข้อ / Select as many as applicable)
+                      </span>
                     </p>
                   </div>
 
@@ -663,16 +560,12 @@ export default function StudentSurvey({ onSurveySubmit, onAdminToggle, lang, set
                       >
                         <div className="bg-amber-50/40 border border-amber-200 rounded-2xl p-5 space-y-2 mt-2">
                           <label className="block text-xs font-semibold text-amber-900 uppercase tracking-wider" htmlFor="additional-comments">
-                            {lang === 'TH' ? (
-                              <>โปรดระบุรายละเอียดอื่น ๆ เพิ่มเติมความหวังของคุณ <span className="text-red-500">*</span></>
-                            ) : (
-                              <>Please specify details of your other expectations <span className="text-red-500">*</span></>
-                            )}
+                            โปรดระบุรายละเอียดอื่น ๆ เพิ่มเติมความหวังของคุณ / Please specify details of your other expectations <span className="text-red-500">*</span>
                           </label>
                           <textarea
                             id="additional-comments"
                             rows={3}
-                            placeholder={lang === 'TH' ? 'ระบุความคิดเห็นของคุณเพิ่มเติมที่นี่...' : 'Provide your feedback additional comments here...'}
+                            placeholder="ระบุความคิดเห็นของคุณเพิ่มเติมที่นี่... / Provide your comments or additional explanations here..."
                             value={otherText}
                             onChange={(e) => setOtherText(e.target.value)}
                             className="w-full bg-white border border-amber-250 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#003366] text-gray-800 shadow-sm"
@@ -693,7 +586,7 @@ export default function StudentSurvey({ onSurveySubmit, onAdminToggle, lang, set
                   className="border border-[#003366]/30 text-[#003366] hover:bg-slate-50 transition-all font-medium px-6 py-3.5 rounded-xl flex items-center justify-center gap-2 text-sm w-full sm:w-auto cursor-pointer"
                 >
                   <ChevronLeft className="w-4 h-4" />
-                  <span>{lang === 'TH' ? 'ย้อนกลับไปแก้ไขข้อมูลทั่วไป' : 'Go Back to Profile Info'}</span>
+                  <span>ย้อนกลับไปแก้ไขข้อมูลทั่วไป / Back to Edit General Info</span>
                 </button>
 
                 <button
@@ -705,12 +598,12 @@ export default function StudentSurvey({ onSurveySubmit, onAdminToggle, lang, set
                   {submitting ? (
                     <>
                       <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                      <span>{lang === 'TH' ? 'กำลังส่งแบบสอบถาม...' : 'Submitting expectations...'}</span>
+                      <span>กำลังส่งแบบสอบถาม... / Submitting survey...</span>
                     </>
                   ) : (
                     <>
                       <Sparkles className="w-4 h-4 text-amber-300 animate-pulse" />
-                      <span>{lang === 'TH' ? 'ส่งแบบสอบถามสำเร็จ' : 'Submit Survey'}</span>
+                      <span>ส่งแบบสอบถามสำเร็จ / Submit Survey</span>
                     </>
                   )}
                 </button>
@@ -741,23 +634,27 @@ export default function StudentSurvey({ onSurveySubmit, onAdminToggle, lang, set
             </div>
 
             <div className="space-y-2">
-              <span className="text-xs font-semibold bg-emerald-50 text-emerald-800 px-3 py-1.5 rounded-full border border-emerald-200">
-                {lang === 'TH' ? 'ส่งข้อมูลเรียบร้อยแล้ว' : 'Survey Submitted Successfully'}
+              <span className="text-xs font-semibold bg-emerald-50 text-emerald-800 px-3 py-1.5 rounded-full border border-emerald-200 inline-block">
+                ส่งข้อมูลเรียบร้อยแล้ว / Survey Submitted Successfully
               </span>
               <h2 className="text-xl md:text-2xl font-extrabold text-gray-900 font-sans tracking-tight">
-                {lang === 'TH' ? 'ขอบคุณสำหรับการตอบแบบสอบถาม' : 'Thank you for your response'}
+                ขอบคุณสำหรับการตอบแบบสอบถาม
+                <span className="block text-sm md:text-base font-normal text-gray-500 mt-1">
+                  Thank you for your response
+                </span>
               </h2>
               <p className="text-gray-500 text-sm max-w-md mx-auto leading-relaxed">
-                {lang === 'TH'
-                  ? 'ข้อมูลความคาดหวังของท่านถูกบันทึกเรียบร้อยแล้ว มหาวิทยาลัยจะนำข้อมูลเหล่านี้พัฒนาการบริการและสิ่งสนับสนุนการเรียนรู้สืบไป'
-                  : 'Your expectations have been successfully recorded. Bangkok University will utilize this information to improve our student services and learning support resource environments.'}
+                ข้อมูลความคาดหวังของท่านถูกบันทึกเรียบร้อยแล้ว มหาวิทยาลัยจะนำข้อมูลเหล่านี้พัฒนาการบริการและสิ่งสนับสนุนการเรียนรู้สืบไป
+              </p>
+              <p className="text-gray-400 text-xs max-w-md mx-auto leading-relaxed italic border-t border-gray-100 pt-2">
+                Your expectations have been recorded. Bangkok University will use this data to improve student support, learning materials, and facilities.
               </p>
             </div>
 
             {/* Reference info panel */}
             <div className="bg-[#F5F7FA] border border-gray-200/60 rounded-2xl p-5 space-y-3 text-left max-w-md mx-auto">
               <div className="flex justify-between items-center pb-2 border-b border-gray-200 text-xs text-gray-500">
-                <span>{lang === 'TH' ? 'หมายเลขอ้างอิงการตอบแบบสอบถาม' : 'Survey Reference Number'}</span>
+                <span>หมายเลขอ้างอิงการตอบแบบสอบถาม / Survey Reference Certificate</span>
                 <span className="font-mono text-gray-400">Reference ID</span>
               </div>
               <div className="flex justify-between items-center pt-1">
@@ -767,9 +664,10 @@ export default function StudentSurvey({ onSurveySubmit, onAdminToggle, lang, set
                 </span>
               </div>
               <div className="text-[11px] text-gray-400 leading-normal">
-                {lang === 'TH'
-                  ? 'คุณสามารถกดยกยอดสถิตินี้ไปแสดงในหน้ารายงาน Dashboard แบบ Real-time ทันที'
-                  : 'Your expectation feedback is instantly integrated and synchronized to our live reporting dashboard metrics.'}
+                คุณสามารถกดยกยอดสถิตินี้ไปแสดงในหน้ารายงาน Dashboard แบบ Real-time ทันที
+              </div>
+              <div className="text-[10px] text-gray-400 leading-normal italic border-t border-gray-200/60 pt-1.5">
+                Your details have been successfully stored and synchronized in real-time with the administrative dashboard.
               </div>
             </div>
 
@@ -779,7 +677,7 @@ export default function StudentSurvey({ onSurveySubmit, onAdminToggle, lang, set
                 onClick={onAdminToggle}
                 className="bg-[#003366] text-white hover:bg-[#002244] active:scale-[0.98] transition-all font-semibold px-8 py-3.5 rounded-xl text-sm flex items-center gap-2 justify-center w-full sm:w-auto shadow-md cursor-pointer"
               >
-                <span>{lang === 'TH' ? 'เปิดดูแดชบอร์ดสรุปผล' : 'Open Statistics Dashboard'}</span>
+                <span>เปิดดูแดชบอร์ดสรุปผล / View Dashboard Summary</span>
                 <ChevronRight className="w-4 h-4" />
               </button>
 
@@ -788,7 +686,7 @@ export default function StudentSurvey({ onSurveySubmit, onAdminToggle, lang, set
                 onClick={handleResetForm}
                 className="bg-transparent text-gray-500 hover:text-gray-700 border border-gray-300 hover:border-gray-400 transition-all font-medium px-6 py-3.5 rounded-xl text-sm justify-center w-full sm:w-auto cursor-pointer"
               >
-                <span>{lang === 'TH' ? 'ทำแบบสอบถามเพิ่มอีก' : 'Submit Another Survey'}</span>
+                <span>ทำแบบสอบถามเพิ่มอีก / Submit Another Response</span>
               </button>
             </div>
           </motion.div>

@@ -32,6 +32,7 @@ export interface SurveyOption {
 export interface StatisticsItem {
   id: string;
   label: string;
+  labelEn?: string;
   count: number;
   percentage: number;
 }
