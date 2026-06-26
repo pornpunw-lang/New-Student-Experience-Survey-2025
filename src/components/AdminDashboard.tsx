@@ -32,24 +32,189 @@ import {
 import { SurveyResponse, StatisticsItem } from '../types';
 import { SURVEY_OPTIONS, BU_FACULTIES } from '../data/mockData';
 
-const FACULTY_CONTACTS: Record<string, { dean: string; coordinator: string; email: string; baseTarget: number }> = {
-  'คณะบัญชี': { dean: 'ดร.พงษ์ภัทร พิชญสุนทร', coordinator: 'คุณศุภราภรณ์ วงศ์วัฒนา', email: 'suparaporn.w@bu.ac.th', baseTarget: 150 },
-  'คณะบริหารธุรกิจ': { dean: 'ผศ.ดร.รัชนีวรรณ เลิศภิญญพงศ์', coordinator: 'คุณชลธิชา จิตพรรณนา', email: 'chonticha.j@bu.ac.th', baseTarget: 380 },
-  'วิทยาลัยนานาชาติ': { dean: 'ดร.กุลิสรา ปรีชาเวช', coordinator: 'คุณณิชากร สวัสดิสาร', email: 'nichakorn.s@bu.ac.th', baseTarget: 220 },
-  'คณะนิเทศศาสตร์': { dean: 'รศ.ดร.สมชาย นิลวงศ์', coordinator: 'คุณพัชชานันท์ รักสงบ', email: 'phatchanan.r@bu.ac.th', baseTarget: 410 },
-  'คณะนิติศาสตร์': { dean: 'ผศ.พงษ์เดช วิวัฒน์อนันต์', coordinator: 'คุณสุนทรี อารีจิต', email: 'suntree.a@bu.ac.th', baseTarget: 140 },
-  'คณะมนุษยศาสตร์และการจัดการการท่องเที่ยว': { dean: 'ดร.ธัญลักษณ์ เลิศภราดร', coordinator: 'คุณจริยา แสนดี', email: 'jariya.s@bu.ac.th', baseTarget: 320 },
-  'วิทยาลัยนานาชาติจีน': { dean: 'ดร.เจีย ซิง ชาง', coordinator: 'คุณนพดล แซ่หลี', email: 'noppadol.s@bu.ac.th', baseTarget: 120 },
-  'คณะเศรษฐศาสตร์และการลงทุน': { dean: 'ผศ.ดร.ภูษิต ดีอร่าม', coordinator: 'คุณรัญญา บุญยเกียรติ', email: 'ranya.b@bu.ac.th', baseTarget: 110 },
-  'คณะศิลปกรรมศาสตร์': { dean: 'ผศ.สกล เต็งวิเศษ', coordinator: 'คุณวิมลทิพย์ ผลศิลป์', email: 'wimolthip.p@bu.ac.th', baseTarget: 160 },
-  'คณะสถาปัตยกรรมศาสตร์': { dean: 'อาจารย์ทวีพงษ์ กัณฑวงษ์', coordinator: 'คุณอรนันท์ พลสุข', email: 'ornan.p@bu.ac.th', baseTarget: 130 },
-  'คณะการสร้างเจ้าของธุรกิจและการบริหารจัดการ': { dean: 'ดร.พีรพัฒน์ รุ่งโรจน์สุวรรณ', coordinator: 'คุณสมจิตต์ ตระกูลพานิช', email: 'somjit.t@bu.ac.th', baseTarget: 180 },
-  'คณะดิจิทัลมีเดียและศิลปะภาพยนตร์': { dean: 'ดร.อัศนัย อยู่สุภาพ', coordinator: 'คุณทิวานนท์ รักษาแก้ว', email: 'tiwanon.r@bu.ac.th', baseTarget: 250 },
-  'คณะเทคโนโลยีสารสนเทศและนวัตกรรม': { dean: 'ผศ.ดร.มนต์ศักดิ์ โซ่เจริญธรรม', coordinator: 'คุณดาริกา เทพพิทักษ์', email: 'darika.t@bu.ac.th', baseTarget: 280 },
-  'คณะวิศวกรรมศาสตร์': { dean: 'รศ.ดร.สมศักดิ์ มิตรสมาน', coordinator: 'คุณภิญโญ เรืองศรี', email: 'pinyo.r@bu.ac.th', baseTarget: 200 }
+interface FacultyContact {
+  dean: string;
+  deanEmail: string;
+  coordinator: string;
+  coordinatorEmail: string;
+  viceDeans: Array<{ name: string; email: string }>;
+  baseTarget: number;
+  email: string;
+}
+
+const FACULTY_CONTACTS: Record<string, FacultyContact> = {
+  'คณะบัญชี': {
+    dean: 'ดร.กรัณฑรัตน์ บุญญวัฒน์',
+    deanEmail: 'karuntarat.b@bu.ac.th',
+    coordinator: 'คุณชุติมา ศรีสุข',
+    coordinatorEmail: 'chutima.p@bu.ac.th',
+    viceDeans: [
+      { name: 'ผศ.กานดาวรรณ แก้วผาบ', email: 'kandawan.k@bu.ac.th' },
+      { name: 'ผศ.ภัสพร ตังใจกตัญญู', email: 'manee.t@bu.ac.th' }
+    ],
+    baseTarget: 150,
+    email: 'karuntarat.b@bu.ac.th'
+  },
+  'คณะบริหารธุรกิจ': {
+    dean: 'ดร.ไกรฤกษ์ ปิ่นแก้ว',
+    deanEmail: 'krairoek.p@bu.ac.th',
+    coordinator: 'คุณวงษ์ทอง วิมลภักดิ์',
+    coordinatorEmail: 'vongtong.r@bu.ac.th',
+    viceDeans: [
+      { name: 'ผศ.รพีพรรณ วงศ์ประเสริฐ', email: 'rapeepan.w@bu.ac.th' },
+      { name: 'ดร.นิตนา ฐานิตธนกร', email: 'nittana.s@bu.ac.th' },
+      { name: 'ผศ.ดร.นิสิต มโนตั้งวรพันธุ์', email: 'nisit.m@bu.ac.th' }
+    ],
+    baseTarget: 380,
+    email: 'krairoek.p@bu.ac.th'
+  },
+  'วิทยาลัยนานาชาติ': {
+    dean: 'ดร.กุลิสรา ปรีชาเวช',
+    deanEmail: 'kulisara.p@bu.ac.th',
+    coordinator: 'คุณณิชากร สวัสดิสาร',
+    coordinatorEmail: 'nichakorn.s@bu.ac.th',
+    viceDeans: [
+      { name: 'ดร.ณัฏฐวรรณ ปัญญวิโรจน์', email: 'natthawan.p@bu.ac.th' }
+    ],
+    baseTarget: 220,
+    email: 'kulisara.p@bu.ac.th'
+  },
+  'คณะนิเทศศาสตร์': {
+    dean: 'ผศ.ดร.อริชัย อรรคอุดม',
+    deanEmail: 'arichai.a@bu.ac.th',
+    coordinator: 'คุณสรวีย์ ตังวงศ์ถาวรกิจ',
+    coordinatorEmail: 'sorravee.t@bu.ac.th',
+    viceDeans: [
+      { name: 'สุนทรี ผลวิวัฒน์', email: 'suntree.p@bu.ac.th' },
+      { name: 'ผศ.ณัฐา ฉางชูโต', email: 'natta.s@bu.ac.th' },
+      { name: 'ผศ.อาชวิชญ์ กฤษณสุวรรณ', email: 'aachavit.k@bu.ac.th' }
+    ],
+    baseTarget: 410,
+    email: 'arichai.a@bu.ac.th'
+  },
+  'คณะนิติศาสตร์': {
+    dean: 'ดร.ภราดร แก้วภราดัย',
+    deanEmail: 'parada.k@bu.ac.th',
+    coordinator: 'คุณลลิรดา รักวงษ์ฤทธิ์',
+    coordinatorEmail: 'linrada.r@bu.ac.th',
+    viceDeans: [
+      { name: 'ปกรณ์ ปาลวงษ์พานิช', email: 'pakorn.p@bu.ac.th' },
+      { name: 'ปริญญาภรณ์ เต็งประเสริฐ', email: 'pariyaporn.t@bu.ac.th' }
+    ],
+    baseTarget: 140,
+    email: 'parada.k@bu.ac.th'
+  },
+  'คณะมนุษยศาสตร์และการจัดการการท่องเที่ยว': {
+    dean: 'เจิมสุดา มานะกุล',
+    deanEmail: 'jermsuda.m@bu.ac.th',
+    coordinator: 'คุณปวีณา พันธุ์ทอง',
+    coordinatorEmail: 'paweena.p@bu.ac.th',
+    viceDeans: [
+      { name: 'แสงเดือน รตินธร', email: 'saengduen.r@bu.ac.th' },
+      { name: 'ดร.นนทวรรณ ส่งเสริม', email: 'nonthawan.s@bu.ac.th' },
+      { name: 'ณัฐพร ชื่นสุวรรณ์', email: 'nattaporn.c@bu.ac.th' }
+    ],
+    baseTarget: 320,
+    email: 'jermsuda.m@bu.ac.th'
+  },
+  'วิทยาลัยนานาชาติจีน': {
+    dean: 'ดร.เจีย ซิง ชาง',
+    deanEmail: 'jiasing.c@bu.ac.th',
+    coordinator: 'คุณนพดล แซ่หลี',
+    coordinatorEmail: 'noppadol.s@bu.ac.th',
+    viceDeans: [
+      { name: 'เจียง โหมว', email: 'jiang.m@bu.ac.th' }
+    ],
+    baseTarget: 120,
+    email: 'jiasing.c@bu.ac.th'
+  },
+  'คณะเศรษฐศาสตร์และการลงทุน': {
+    dean: 'ผศ.ดร.กาญจนา ส่งวัฒนา',
+    deanEmail: 'karnjana.s@bu.ac.th',
+    coordinator: 'คุณวิลาวรรณ คำวัง',
+    coordinatorEmail: 'wilawan.k@bu.ac.th',
+    viceDeans: [
+      { name: 'ดร.สุสณี ศุภกรโกศัย', email: 'sumanee.s@bu.ac.th' }
+    ],
+    baseTarget: 110,
+    email: 'karnjana.s@bu.ac.th'
+  },
+  'คณะศิลปกรรมศาสตร์': {
+    dean: 'ดร.ภัทรวุฒิ ทรัพย์เย็น',
+    deanEmail: 'pattarawut.s@bu.ac.th',
+    coordinator: 'คุณอุไรวรรณ เนินผัน',
+    coordinatorEmail: 'uraiwan.s@bu.ac.th',
+    viceDeans: [
+      { name: 'ผศ.ดร.ณัฐสุภา เจริญยงวัฒนา', email: 'natsupa.j@bu.ac.th' },
+      { name: 'ผศ.แทน พิธียานุวัฒน์', email: 'tan.p@bu.ac.th' }
+    ],
+    baseTarget: 160,
+    email: 'pattarawut.s@bu.ac.th'
+  },
+  'คณะสถาปัตยกรรมศาสตร์': {
+    dean: 'อาจารย์พิชัย วงศ์ไวศยวรรณ',
+    deanEmail: 'pichai.w@bu.ac.th',
+    coordinator: 'คุณกัญญา ศรีใจยา',
+    coordinatorEmail: 'kanya.s@bu.ac.th',
+    viceDeans: [
+      { name: 'พรหมพร ศรีวิลาส', email: 'promporn.s@bu.ac.th' },
+      { name: 'ผศ.ดร.ภาสิต ลีนิวา', email: 'pasit.l@bu.ac.th' }
+    ],
+    baseTarget: 130,
+    email: 'pichai.w@bu.ac.th'
+  },
+  'คณะการสร้างเจ้าของธุรกิจและการบริหารจัดการ': {
+    dean: 'ดร.วุฒิพงษ์ วราไกรสวัสดิ์',
+    deanEmail: 'wutnipong.s@bu.ac.th',
+    coordinator: 'คุณพิมพ์ชนก จันทรแสงเจริญ',
+    coordinatorEmail: 'pimchanok.ch@bu.ac.th',
+    viceDeans: [
+      { name: 'ดร.กัญจนา พัฒนวรพันธุ์', email: 'kanjana.pa@bu.ac.th' },
+      { name: 'ผศ.นนิดา สร้อยดอกสน', email: 'nanida.u@bu.ac.th' }
+    ],
+    baseTarget: 180,
+    email: 'wutnipong.s@bu.ac.th'
+  },
+  'คณะดิจิทัลมีเดียและศิลปะภาพยนตร์': {
+    dean: 'ดร.พีรชัย ชัยรังสีศิลป์',
+    deanEmail: 'peerachai.k@bu.ac.th',
+    coordinator: 'คุณวันเพ็ญ จันทร์แจ่มใส',
+    coordinatorEmail: 'wanpen.c@bu.ac.th',
+    viceDeans: [
+      { name: 'ปริญญา ภักษา', email: 'paninya.p@bu.ac.th' },
+      { name: 'พีร์ภานุวัฒน์ วนิชย์', email: 'pea.p@bu.ac.th' },
+      { name: 'นิธิศ ศวิดลธรากุล', email: 'nitis.s@bu.ac.th' }
+    ],
+    baseTarget: 250,
+    email: 'peerachai.k@bu.ac.th'
+  },
+  'คณะเทคโนโลยีสารสนเทศและนวัตกรรม': {
+    dean: 'ดร.ผกาพรรณ ลิมป์ไตรรัตน์',
+    deanEmail: 'pakapan.l@bu.ac.th',
+    coordinator: 'คุณภูริช วิศยทักษิณ',
+    coordinatorEmail: 'phurin.v@bu.ac.th',
+    viceDeans: [
+      { name: 'สุขเสถียร วงศ์วิทยาศาสตร์', email: 'anon.su@bu.ac.th' },
+      { name: 'ขวัญฤทัย กุลกิจเจริญ', email: 'kwanruthai.k@bu.ac.th' },
+      { name: 'พจนีย์ จันทรศุภวงศ์', email: 'pojanee.j@bu.ac.th' }
+    ],
+    baseTarget: 280,
+    email: 'pakapan.l@bu.ac.th'
+  },
+  'คณะวิศวกรรมศาสตร์': {
+    dean: 'ผศ.ดร.วิศาล พัฒนศิริชูสิทธิ์',
+    deanEmail: 'wisarn.p@bu.ac.th',
+    coordinator: 'คุณอมรรัตน์ แสงวงษา',
+    coordinatorEmail: 'amornrat.s@bu.ac.th',
+    viceDeans: [
+      { name: 'ผศ.ดร.ปกรณ์ ยุบลโกศล', email: 'pakorn.u@bu.ac.th' }
+    ],
+    baseTarget: 200,
+    email: 'wisarn.p@bu.ac.th'
+  }
 };
 
-const getFacultyContact = (facultyName: string) => {
+const getFacultyContact = (facultyName: string): FacultyContact => {
   const shortName = facultyName.split(' (')[0].trim();
   const foundKey = Object.keys(FACULTY_CONTACTS).find(k => k.includes(shortName) || shortName.includes(k));
   if (foundKey) {
@@ -57,9 +222,12 @@ const getFacultyContact = (facultyName: string) => {
   }
   return {
     dean: 'คณบดีประจำคณะ',
+    deanEmail: 'dean@bu.ac.th',
     coordinator: 'ผู้ประสานงานฝ่ายการศึกษา',
-    email: 'coordinator@bu.ac.th',
-    baseTarget: 120
+    coordinatorEmail: 'coordinator@bu.ac.th',
+    viceDeans: [],
+    baseTarget: 120,
+    email: 'dean@bu.ac.th'
   };
 };
 
@@ -91,6 +259,8 @@ export default function AdminDashboard({ submissions, onClearSubmissions, onRese
   const [sendingEmail, setSendingEmail] = useState<boolean>(false);
   const [sendSuccess, setSendSuccess] = useState<boolean>(false);
   const [copiedText, setCopiedText] = useState<boolean>(false);
+  const [customToEmail, setCustomToEmail] = useState<string>('');
+  const [customCcEmail, setCustomCcEmail] = useState<string>('');
 
   // Query Filters State
   const [selectedFaculty, setSelectedFaculty] = useState<string>('');
@@ -343,19 +513,32 @@ export default function AdminDashboard({ submissions, onClearSubmissions, onRese
     });
 
     const subject = `[ด่วนที่สุด - ติดตามแบบสำรวจนักศึกษาใหม่ 2568] สรุปยอดผู้ตอบและไม่ตอบแบบสำรวจ: ${facName}`;
-    const body = `เรียน คณบดี${facName} (${contact.dean}) และผู้ประสานงานคณะ (${contact.coordinator})\nมหาวิทยาลัยกรุงเทพ\n\nเรื่อง: ขอความร่วมมือประชาสัมพันธ์และติดตามการตอบแบบสำรวจความคาดหวังของนักศึกษาใหม่ชั้นปีที่ 1 (ปีการศึกษา 2568)\n\nตามที่มหาวิทยาลัยได้พัฒนานวัตกรรมประเมิน "ระบบสำรวจความคิดเห็นนักศึกษาใหม่ ประจำปีการศึกษา 2568" เพื่อสำรวจความต้องการพัฒนากระบวนการเรียนการสอนและสภาพแวดล้อมสถาบันการเรียนรู้ให้สอดรับกับนโยบายพัฒนาทักษะสร้างสรรค์นั้น\n\nฝ่ายวิจัยและประเมินผลการศึกษา ใคร่ขอเรียนรายงานสรุปรายการนักศึกษาที่เข้าร่วมและยอดคงค้างของคณาจารย์ใน ${facName} ณ ปัจจุบัน ดังนี้:\n\n• เป้าหมายจดทะเบียนชั้นปีที่ 1 ทั้งหมด: ${target} คน\n• ดำเนินการตอบแล้ว: ${responded} คน (คิดเป็นร้อยละ ${rate}%)\n• อยู่ระหว่างค้างการตอบกลับ: ${nonResponded} คน (ยังไม่ได้ทำแบบสำรวจ)\n\nสถิติจำแนกความคืบหน้าเชิงสาขาวิชาเอกสังกัดคณะ:\n${majorStatsStr}\nในการนี้ เพื่ออานิสงส์แก่คณะวิชาและสถาบันให้บรรลุตามระบบจัดเก็บและพัฒนาคุณภาพ QA ฝ่ายวิชาการจึงเรียนขอความร่วมมือจากคณบดี ${contact.dean} และผู้ประสานงานคณะ ${contact.coordinator} ในการโปรดชี้นำและเน้นย้ำอาจารย์ที่ปรึกษา ช่วยเสริมแรงประชาสัมพันธ์แก่นักศึกษาใหม่ในสังกัดที่ยังคงค้าง ตอบแบบสำรวจออนไลน์ที่ระบบสำรวจโดยด่วนที่สุด\n\nขอแสดงความขอบคุณทางคณะและผู้บริหารในความร่วมมือเป็นอย่างดีเสมอมาครับ\n\nด้วยความเคารพอย่างสูง\nฝ่ายวิจัยการศึกษาและประกันคุณภาพวิชาการ มหาวิทยาลัยกรุงเทพ\nติดต่อพัฒนาและดูแลระบบ: support.survey@bu.ac.th`;
+    const body = `เรียน คณบดี${facName} (${contact.dean}) และผู้ประสานงานคณะ (${contact.coordinator})\nมหาวิทยาลัยกรุงเทพ\n\nเรื่อง: ขอความร่วมมือประชาสัมพันธ์และติดตามการตอบแบบสำรวจความคาดหวังของนักศึกษาใหม่ชั้นปีที่ 1 (ปีการศึกษา 2568)\n\nตามที่มหาวิทยาลัยได้จัดทำแบบประเมิน "ระบบสำรวจความคิดเห็นนักศึกษาใหม่ ประจำปีการศึกษา 2568" เพื่อสำรวจความต้องการพัฒนากระบวนการเรียนการสอนและสภาพแวดล้อมสถาบันการเรียนรู้ให้สอดรับกับนโยบายพัฒนาทักษะสร้างสรรค์นั้น\n\nแผนกประกันคุณภาพการศึกษา สำนักมาตรฐานคุณภาพการศึกษา ใคร่ขอเรียนรายงานสรุปรายการนักศึกษาที่เข้าร่วมและยังไม่ตอบใน ${facName} ณ ปัจจุบัน ดังนี้:\n\n• จำนวนชั้นปีที่ 1 ทั้งหมด: ${target} คน\n• ดำเนินการตอบแล้ว: ${responded} คน (คิดเป็นร้อยละ ${rate}%)\n• อยู่ระหว่างติดตามเพิ่มเติม: ${nonResponded} คน (ยังไม่ได้ทำแบบสำรวจ)\n\nสถิติจำแนกความคืบหน้าเชิงสาขาวิชาเอกสังกัดคณะ:\n${majorStatsStr}\nในการนี้ เพื่อให้บรรลุตามจำนวนที่จัดเก็บและพัฒนาคุณภาพ QA จึงใคร่ขอความร่วมมือจากคณบดี ${contact.dean} และผู้ประสานงานคณะ ${contact.coordinator} ช่วยประสานและเน้นย้ำแก่อาจารย์ที่ปรึกษา ช่วยเสริมแรงประชาสัมพันธ์แก่นักศึกษาใหม่ในสังกัดที่ยังคงค้าง ให้ตอบแบบสำรวจออนไลน์ที่ระบบสำรวจโดยด่วนที่สุด\n\nขอแสดงความขอบคุณทางคณะและผู้บริหารในความร่วมมือเป็นอย่างดีเสมอมา\n\nด้วยความเคารพอย่างสูง\nแผนกประกันคุณภาพการศึกษา สำนักมาตรฐานคุณภาพการศึกษา\nติดต่อพัฒนาและดูแลระบบ: pornpun.w@bu.ac.th`;
 
     setEmailModalData({
       facultyName: facName,
       deanName: contact.dean,
       coordinatorName: contact.coordinator,
-      email: contact.email,
+      email: contact.deanEmail,
       responded,
       target,
       nonResponded,
       rate,
       majorStatsText: majorStatsStr
     });
+
+    const ccList = [
+      contact.coordinatorEmail,
+      ...contact.viceDeans.map(v => v.email),
+      'buqa@bu.ac.th',
+      'pornpun.w@bu.ac.th',
+      'admin.survey@bu.ac.th',
+      'support.survey@bu.ac.th'
+    ].filter(Boolean);
+    const ccString = Array.from(new Set(ccList)).join(', ');
+
+    setCustomToEmail(contact.deanEmail);
+    setCustomCcEmail(ccString);
     setCustomEmailSubject(subject);
     setCustomEmailBody(body);
     setSendSuccess(false);
@@ -1445,8 +1628,8 @@ export default function AdminDashboard({ submissions, onClearSubmissions, onRese
                     </div>
 
                     <div className="bg-[#F5F7FA] p-4 rounded-2xl border border-gray-100 max-w-md mx-auto text-left text-[11px] space-y-2 text-gray-600">
-                      <div><strong className="text-gray-800">{lang === 'TH' ? 'ผู้รับหลัก:' : 'To:'}</strong> {lang === 'TH' ? `คณบดี ${emailModalData.deanName}` : `Dean ${emailModalData.deanNameEn || emailModalData.deanName}`} (<span className="font-mono">{emailModalData.email}</span>)</div>
-                      <div><strong className="text-gray-800">{lang === 'TH' ? 'ผู้รับร่วม (CC):' : 'CC:'}</strong> {lang === 'TH' ? `ผู้ประสานงานคณะ ${emailModalData.coordinatorName}` : `Faculty Coordinator ${emailModalData.coordinatorNameEn || emailModalData.coordinatorName}`}</div>
+                      <div><strong className="text-gray-800">{lang === 'TH' ? 'ผู้รับหลัก (To):' : 'To:'}</strong> {lang === 'TH' ? `คณบดี ${emailModalData.deanName}` : `Dean ${emailModalData.deanName}`} (<span className="font-mono">{customToEmail}</span>)</div>
+                      <div><strong className="text-gray-800">{lang === 'TH' ? 'สำเนาถึง (CC):' : 'CC:'}</strong> <span className="font-mono text-gray-500 break-all">{customCcEmail}</span></div>
                       <div><strong className="text-gray-800">{lang === 'TH' ? 'หัวข้อนำส่ง:' : 'Subject:'}</strong> {customEmailSubject}</div>
                     </div>
 
@@ -1500,18 +1683,18 @@ export default function AdminDashboard({ submissions, onClearSubmissions, onRese
                         <label className="font-bold text-gray-700 block">{lang === 'TH' ? 'ส่งถึง (To):' : 'To:'}</label>
                         <input
                           type="text"
-                          value={emailModalData.email}
-                          disabled
-                          className="w-full text-xs p-3 rounded-xl border border-gray-100 bg-gray-50/80 font-mono text-gray-500"
+                          value={customToEmail}
+                          onChange={(e) => setCustomToEmail(e.target.value)}
+                          className="w-full text-xs p-3 rounded-xl border border-gray-200 focus:outline-[#003366] font-mono text-gray-800 bg-white font-semibold"
                         />
                       </div>
                       <div className="space-y-1.5">
                         <label className="font-bold text-gray-700 block">{lang === 'TH' ? 'สำเนาถึง (CC):' : 'CC:'}</label>
                         <input
                           type="text"
-                          value="academic_qc@bu.ac.th"
-                          disabled
-                          className="w-full text-xs p-3 rounded-xl border border-gray-100 bg-gray-50/80 font-mono text-gray-500"
+                          value={customCcEmail}
+                          onChange={(e) => setCustomCcEmail(e.target.value)}
+                          className="w-full text-xs p-3 rounded-xl border border-gray-200 focus:outline-[#003366] font-mono text-gray-800 bg-white font-semibold"
                         />
                       </div>
                     </div>
