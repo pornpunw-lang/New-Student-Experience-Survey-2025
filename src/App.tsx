@@ -151,31 +151,7 @@ export default function App() {
             )}
           </button>
 
-          {/* COMPACT GLOBAL LANGUAGE SEGMENTED SWITCHER */}
-          <div className="flex items-center bg-white/10 p-1 rounded-xl border border-white/15 ml-1 select-none">
-            <button
-              type="button"
-              onClick={() => setLang('TH')}
-              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all duration-200 cursor-pointer ${
-                lang === 'TH'
-                  ? 'bg-white text-[#003366] shadow-sm'
-                  : 'text-slate-200 hover:text-white hover:bg-white/5'
-              }`}
-            >
-              TH
-            </button>
-            <button
-              type="button"
-              onClick={() => setLang('EN')}
-              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all duration-200 cursor-pointer ${
-                lang === 'EN'
-                  ? 'bg-white text-[#003366] shadow-sm'
-                  : 'text-slate-200 hover:text-white hover:bg-white/5'
-              }`}
-            >
-              EN
-            </button>
-          </div>
+
         </div>
       </header>
 
@@ -246,21 +222,7 @@ export default function App() {
                   <p className="text-[10px] text-gray-400 tracking-wider uppercase">Restricted Coordinator Access Platform</p>
                 </div>
 
-                <div className="bg-amber-50/70 border border-amber-200/60 text-amber-900 p-4 rounded-2xl text-left leading-relaxed space-y-2.5">
-                  <div className="flex gap-2 items-center text-xs font-bold text-amber-800">
-                    <ShieldAlert className="w-4 h-4 shrink-0 text-amber-600" />
-                    <span>{lang === 'TH' ? 'ระบบคัดกรองความปลอดภัยระดับแผนก' : 'Department Security Screening'}</span>
-                  </div>
-                  <p className="text-[11px] text-amber-800 font-normal">
-                    {lang === 'TH'
-                      ? 'กรุณากรอกรหัสผ่านเพื่อจำกัดสิทธิ์เข้าถึงข้อมูลเชิงสถิติและความคาดหวังของนักศึกษาใหม่'
-                      : 'Please enter the administrator passcode to access student statistical data.'}
-                  </p>
-                  <div className="text-[10px] text-amber-700/90 bg-amber-100/40 p-2 rounded-lg font-medium border border-amber-200/30">
-                    {lang === 'TH' ? '🔑 รหัสผ่านตรวจสอบสิทธิ์คือ :' : '🔑 Authenticated passcode is :'}{' '}
-                    <code className="bg-amber-100 px-1.5 py-0.5 rounded font-bold font-mono">BU2568</code>
-                  </div>
-                </div>
+
 
                 <form onSubmit={handlePasscodeSubmit} className="space-y-4 text-left">
                   <div className="space-y-1.5">
