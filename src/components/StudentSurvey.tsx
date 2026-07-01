@@ -18,7 +18,8 @@ import {
   Sparkles,
   ShieldCheck,
   Award,
-  Globe
+  Globe,
+  X
 } from 'lucide-react';
 import { SurveyResponse, FacultyData, SurveyOption } from '../types';
 import { SURVEY_OPTIONS, BU_FACULTIES, BU_FACULTIES_BY_DEGREE } from '../data/mockData';
@@ -46,6 +47,24 @@ export default function StudentSurvey({ onSurveySubmit, onAdminToggle, lang, set
   const [submitting, setSubmitting] = useState(false);
   const [submissionId, setSubmissionId] = useState('');
   const [validationError, setValidationError] = useState<string | null>(null);
+
+  // Welcome Popup State
+  const [showWelcomePopup, setShowWelcomePopup] = useState(() => {
+    try {
+      return !sessionStorage.getItem('bu_survey_welcome_dismissed');
+    } catch (e) {
+      return true;
+    }
+  });
+
+  const handleCloseWelcomePopup = () => {
+    try {
+      sessionStorage.setItem('bu_survey_welcome_dismissed', 'true');
+    } catch (e) {
+      console.error(e);
+    }
+    setShowWelcomePopup(false);
+  };
 
   // Filter majors when faculty changes
   const filteredMajors = useMemo(() => {
@@ -209,6 +228,71 @@ export default function StudentSurvey({ onSurveySubmit, onAdminToggle, lang, set
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
+      {/* Welcome Popup Overlay */}
+      <AnimatePresence>
+        {showWelcomePopup && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/65 backdrop-blur-sm" id="welcome-popup-overlay">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 10 }}
+              transition={{ type: "spring", duration: 0.5 }}
+              className="bg-white rounded-3xl overflow-hidden shadow-2xl max-w-lg w-full relative border border-gray-100"
+            >
+              {/* Close Button at Top Right of Modal */}
+              <button
+                onClick={handleCloseWelcomePopup}
+                className="absolute top-4 right-4 z-10 p-2 rounded-full bg-black/40 hover:bg-black/60 text-white transition-all active:scale-95 cursor-pointer"
+                aria-label="Close"
+              >
+                <X className="w-5 h-5" />
+              </button>
+
+              {/* Welcome Image */}
+              <div className="relative aspect-[4/3] w-full overflow-hidden bg-gray-100">
+                <img
+                  src="/src/assets/images/bu_welcome_banner_1782894336724.jpg"
+                  alt="Bangkok University Welcome Freshmen"
+                  className="w-full h-full object-cover"
+                  referrerPolicy="no-referrer"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent" />
+                <div className="absolute bottom-5 left-6 right-6 text-white">
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-[#FFD700] text-black mb-2 uppercase tracking-wide animate-pulse">
+                    <Sparkles className="w-3.5 h-3.5" /> Welcome Freshmen 2025
+                  </span>
+                  <h3 className="text-xl md:text-2xl font-bold font-sans tracking-tight">
+                    ยินดีต้อนรับนักศึกษาใหม่ทุกคน!
+                    <span className="block text-sm font-medium text-white/85 mt-0.5 font-sans">
+                      Warm Welcome to Bangkok University!
+                    </span>
+                  </h3>
+                </div>
+              </div>
+
+              {/* Content Description */}
+              <div className="p-6 md:p-8 text-center sm:text-left">
+                <p className="text-gray-700 text-sm sm:text-base leading-relaxed font-sans mb-4">
+                  ขอต้อนรับนักศึกษาใหม่ปีการศึกษา 2568 ทุกคนเข้าสู่ครอบครัวมหาวิทยาลัยกรุงเทพ มาร่วมแบ่งปันความต้องการและความคาดหวังเพื่อร่วมสร้างสังคมและประสบการณ์การเรียนรู้ที่ดีที่สุดไปด้วยกัน!
+                </p>
+                <p className="text-gray-500 text-xs sm:text-sm leading-relaxed font-sans italic border-l-2 border-[#003366] pl-3 mb-6 text-left">
+                  We're thrilled to have you here! Please complete this short expectation and needs survey to help us build the best possible academic ecosystem for you.
+                </p>
+
+                {/* Closing Action Button */}
+                <button
+                  onClick={handleCloseWelcomePopup}
+                  className="w-full bg-[#003366] hover:bg-[#002244] text-white font-semibold py-3.5 px-6 rounded-xl text-sm md:text-base active:scale-[0.98] transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer"
+                >
+                  <span>เริ่มทำแบบสอบถาม / Start Survey</span>
+                  <ChevronRight className="w-4 h-4 md:w-5 md:h-5" />
+                </button>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
       {/* Dynamic progress bar widget */}
       <div className="mb-8" id="survey-progress-container">
         <div className="flex justify-between text-xs text-[#003366] font-medium mb-2">
