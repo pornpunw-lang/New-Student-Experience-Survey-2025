@@ -23,6 +23,8 @@ import { SurveyResponse } from './types';
 import { generateMockSubmissions } from './data/mockData';
 import StudentSurvey from './components/StudentSurvey';
 import AdminDashboard from './components/AdminDashboard';
+import { collection, doc, setDoc, getDocs, writeBatch, query, orderBy, onSnapshot } from 'firebase/firestore';
+import { db } from './lib/firebase';
 
 export default function App() {
   // Initialize state from localStorage or fallback to prebuilt mock data (180 responses)
@@ -67,14 +69,37 @@ export default function App() {
     }
   };
 
-  // Keep localStorage perfectly synced on state alteration
+  // Load real-time data from Firebase Firestore and automatically seed if empty
   useEffect(() => {
-    localStorage.setItem('bu_new_student_submissions_2568', JSON.stringify(submissions));
-  }, [submissions]);
+    const q = query(collection(db, 'submissions'), orderBy('submittedAt', 'desc'));
+    const unsubscribe = onSnapshot(q, async (snapshot) => {
+      const docsData: SurveyResponse[] = [];
+      snapshot.forEach((doc) => {
+        docsData.push(doc.data() as SurveyResponse);
+      });
 
-  // Handle survey submit callback from StudentSurvey component
+      if (docsData.length === 0) {
+        // Automatically seed with 180 starter mock items if DB is totally blank
+        const mocks = generateMockSubmissions(180);
+        const batch = writeBatch(db);
+        mocks.forEach((mock) => {
+          const docRef = doc(db, 'submissions', mock.id);
+          batch.set(docRef, mock);
+        });
+        await batch.commit();
+      } else {
+        setSubmissions(docsData);
+        localStorage.setItem('bu_new_student_submissions_2568', JSON.stringify(docsData));
+      }
+    }, (error) => {
+      console.error("Firestore listening error: ", error);
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  // Handle survey submit callback to Firebase Firestore
   const handleSurveySubmit = (newResp: Omit<SurveyResponse, 'id' | 'submittedAt'>): string => {
-    // Generate an distinctive and authentic reference registration card format
     const refCode = `BU68-${Math.floor(100000 + Math.random() * 900000)}`;
     const finalSubmission: SurveyResponse = {
       ...newResp,
@@ -82,19 +107,51 @@ export default function App() {
       submittedAt: new Date().toISOString()
     };
 
-    setSubmissions(prev => [finalSubmission, ...prev]);
+    // Save directly to Firebase Firestore
+    const docRef = doc(db, 'submissions', refCode);
+    setDoc(docRef, finalSubmission).catch((err) => {
+      console.error("Error writing document to Firestore: ", err);
+    });
+
     return refCode;
   };
 
-  // Callback to empty submissions
-  const handleClearSubmissions = () => {
-    setSubmissions([]);
+  // Callback to empty submissions in Firestore
+  const handleClearSubmissions = async () => {
+    try {
+      const querySnapshot = await getDocs(collection(db, 'submissions'));
+      const batch = writeBatch(db);
+      querySnapshot.forEach((docSnapshot) => {
+        batch.delete(docSnapshot.ref);
+      });
+      await batch.commit();
+    } catch (e) {
+      console.error("Failed to clear submissions in Firestore: ", e);
+    }
   };
 
-  // Callback to reset database to realistic 180 starter mock items
-  const handleResetToMock = () => {
-    const mocks = generateMockSubmissions(180);
-    setSubmissions(mocks);
+  // Callback to reset database to realistic 180 starter mock items in Firestore
+  const handleResetToMock = async () => {
+    try {
+      // 1. Clear all first
+      const querySnapshot = await getDocs(collection(db, 'submissions'));
+      const deleteBatch = writeBatch(db);
+      querySnapshot.forEach((docSnapshot) => {
+        deleteBatch.delete(docSnapshot.ref);
+      });
+      await deleteBatch.commit();
+
+      // 2. Add 180 items
+      const mocks = generateMockSubmissions(180);
+      const writeBatch1 = writeBatch(db);
+      mocks.forEach((mock) => {
+        const docRef = doc(db, 'submissions', mock.id);
+        writeBatch1.set(docRef, mock);
+      });
+      await writeBatch1.commit();
+    } catch (e) {
+      console.error("Failed to reset mock data in Firestore: ", e);
+    }
   };
 
   return (
@@ -170,8 +227,8 @@ export default function App() {
             <Database className="w-3.5 h-3.5 text-[#003366]" />
             <span>
               {lang === 'TH'
-                ? `เชื่อมต่อ: Local DB (${submissions.length} คำตอบ)`
-                : `Connected: Local DB (${submissions.length} responses)`}
+                ? `เชื่อมต่อ: Firebase Cloud DB (${submissions.length} คำตอบ)`
+                : `Connected: Firebase Cloud DB (${submissions.length} responses)`}
             </span>
           </span>
           <span className="hidden sm:inline-block">
