@@ -24,6 +24,8 @@ import {
 import { SurveyResponse, FacultyData, SurveyOption } from '../types';
 import { SURVEY_OPTIONS, BU_FACULTIES, BU_FACULTIES_BY_DEGREE } from '../data/mockData';
 
+const welcomeBanner = new URL('../assets/images/bu_welcome_banner_1782894336724.jpg', import.meta.url).href;
+
 interface StudentSurveyProps {
   onSurveySubmit: (response: Omit<SurveyResponse, 'id' | 'submittedAt'>) => string | Promise<string>;
   onAdminToggle: () => void;
@@ -251,7 +253,7 @@ export default function StudentSurvey({ onSurveySubmit, onAdminToggle, lang, set
               {/* Welcome Image */}
               <div className="relative aspect-[4/3] w-full overflow-hidden bg-gray-100">
                 <img
-                  src="/src/assets/images/bu_welcome_banner_1782894336724.jpg"
+                  src={welcomeBanner}
                   alt="Bangkok University Welcome Freshmen"
                   className="w-full h-full object-cover"
                   referrerPolicy="no-referrer"
