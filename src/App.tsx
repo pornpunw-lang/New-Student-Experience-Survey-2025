@@ -183,8 +183,13 @@ export default function App() {
 
     // 2. Perform setDoc in the background without blocking the client transition.
     // If the server/connection is slow or disconnected, the user's session remains perfectly fast and safe.
+    // Also remove any undefined properties to prevent Firestore "Unsupported field value: undefined" errors.
     const docRef = doc(db, 'submissions', refCode);
-    setDoc(docRef, finalSubmission).catch((err) => {
+    const cleanedSubmission = Object.fromEntries(
+      Object.entries(finalSubmission).filter(([_, value]) => value !== undefined)
+    );
+    
+    setDoc(docRef, cleanedSubmission).catch((err) => {
       console.warn("Background Firestore write deferred (will sync automatically):", err);
     });
 
@@ -216,12 +221,15 @@ export default function App() {
       });
       await deleteBatch.commit();
 
-      // 2. Add 180 items
+      // 2. Add 180 items (filtering out undefined properties to prevent firestore write errors)
       const mocks = generateMockSubmissions(180);
       const writeBatch1 = writeBatch(db);
       mocks.forEach((mock) => {
         const docRef = doc(db, 'submissions', mock.id);
-        writeBatch1.set(docRef, mock);
+        const cleanedMock = Object.fromEntries(
+          Object.entries(mock).filter(([_, value]) => value !== undefined)
+        );
+        writeBatch1.set(docRef, cleanedMock);
       });
       await writeBatch1.commit();
     } catch (e) {
