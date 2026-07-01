@@ -24,7 +24,7 @@ import { SurveyResponse, FacultyData, SurveyOption } from '../types';
 import { SURVEY_OPTIONS, BU_FACULTIES, BU_FACULTIES_BY_DEGREE } from '../data/mockData';
 
 interface StudentSurveyProps {
-  onSurveySubmit: (response: Omit<SurveyResponse, 'id' | 'submittedAt'>) => string;
+  onSurveySubmit: (response: Omit<SurveyResponse, 'id' | 'submittedAt'>) => string | Promise<string>;
   onAdminToggle: () => void;
   lang: 'TH' | 'EN';
   setLang: (lang: 'TH' | 'EN') => void;
@@ -145,7 +145,7 @@ export default function StudentSurvey({ onSurveySubmit, onAdminToggle, lang, set
   };
 
   // Handle Final Submit to State DB
-  const handleSubmitSurvey = (e: React.FormEvent) => {
+  const handleSubmitSurvey = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (selectedOptions.length === 0) {
@@ -165,10 +165,9 @@ export default function StudentSurvey({ onSurveySubmit, onAdminToggle, lang, set
     setValidationError(null);
     setSubmitting(true);
 
-    // Simulate database write delay
-    setTimeout(() => {
+    try {
       const formattedStudentId = studentId ? studentId.replace(/-/g, '') : undefined;
-      const refId = onSurveySubmit({
+      const refId = await Promise.resolve(onSurveySubmit({
         studentId: formattedStudentId,
         faculty,
         major,
@@ -177,13 +176,21 @@ export default function StudentSurvey({ onSurveySubmit, onAdminToggle, lang, set
         email: email || undefined,
         selectedOptions,
         otherText: selectedOptions.includes('22') ? otherText : undefined,
-      });
+      }));
 
       setSubmissionId(refId);
       setSubmitting(false);
       setStep(3);
       window.scrollTo({ top: 0, behavior: 'smooth' });
-    }, 1200);
+    } catch (err) {
+      console.error("Survey submission failed: ", err);
+      setValidationError(
+        lang === 'TH'
+          ? 'เกิดข้อผิดพลาดในการบันทึกข้อมูลเข้าสู่เซิร์ฟเวอร์ กรุณาลองใหม่อีกครั้ง / Failed to submit survey. Please try again.'
+          : 'An error occurred while saving your data. Please try again.'
+      );
+      setSubmitting(false);
+    }
   };
 
   // Reset form to answer again

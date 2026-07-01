@@ -26,6 +26,51 @@ import AdminDashboard from './components/AdminDashboard';
 import { collection, doc, setDoc, getDocs, writeBatch, query, orderBy, onSnapshot } from 'firebase/firestore';
 import { db } from './lib/firebase';
 
+// Standardised Firebase Operation Types for Error Handling
+enum OperationType {
+  CREATE = 'create',
+  UPDATE = 'update',
+  DELETE = 'delete',
+  LIST = 'list',
+  GET = 'get',
+  WRITE = 'write',
+}
+
+interface FirestoreErrorInfo {
+  error: string;
+  operationType: OperationType;
+  path: string | null;
+  authInfo: {
+    userId?: string | null;
+    email?: string | null;
+    emailVerified?: boolean | null;
+    isAnonymous?: boolean | null;
+    tenantId?: string | null;
+    providerInfo?: {
+      providerId?: string | null;
+      email?: string | null;
+    }[];
+  };
+}
+
+function handleFirestoreError(error: unknown, operationType: OperationType, path: string | null) {
+  const errInfo: FirestoreErrorInfo = {
+    error: error instanceof Error ? error.message : String(error),
+    authInfo: {
+      userId: null,
+      email: null,
+      emailVerified: null,
+      isAnonymous: null,
+      tenantId: null,
+      providerInfo: []
+    },
+    operationType,
+    path
+  };
+  console.error('Firestore Error: ', JSON.stringify(errInfo));
+  throw new Error(JSON.stringify(errInfo));
+}
+
 export default function App() {
   // Initialize state from localStorage or fallback to empty array
   const [submissions, setSubmissions] = useState<SurveyResponse[]>(() => {
@@ -67,7 +112,7 @@ export default function App() {
     }
   };
 
-  // Load real-time data from Firebase Firestore
+  // Load real-time data from Firebase Firestore with standardized error handling
   useEffect(() => {
     const q = query(collection(db, 'submissions'), orderBy('submittedAt', 'desc'));
     const unsubscribe = onSnapshot(q, (snapshot) => {
@@ -79,7 +124,7 @@ export default function App() {
       setSubmissions(docsData);
       localStorage.setItem('bu_new_student_submissions_2568', JSON.stringify(docsData));
     }, (error) => {
-      console.error("Firestore listening error: ", error);
+      handleFirestoreError(error, OperationType.GET, 'submissions');
     });
 
     return () => unsubscribe();
@@ -107,15 +152,15 @@ export default function App() {
           localStorage.setItem(clearedKey, 'true');
           console.log("Production launch: Clean completed successfully.");
         } catch (err) {
-          console.error("Failed to execute automatic production clear:", err);
+          handleFirestoreError(err, OperationType.WRITE, 'submissions');
         }
       }
     };
     performOneTimeClear();
   }, []);
 
-  // Handle survey submit callback to Firebase Firestore
-  const handleSurveySubmit = (newResp: Omit<SurveyResponse, 'id' | 'submittedAt'>): string => {
+  // Handle survey submit callback to Firebase Firestore (Awaited real async flow!)
+  const handleSurveySubmit = async (newResp: Omit<SurveyResponse, 'id' | 'submittedAt'>): Promise<string> => {
     const refCode = `BU68-${Math.floor(100000 + Math.random() * 900000)}`;
     const finalSubmission: SurveyResponse = {
       ...newResp,
@@ -123,11 +168,13 @@ export default function App() {
       submittedAt: new Date().toISOString()
     };
 
-    // Save directly to Firebase Firestore
+    // Save directly to Firebase Firestore with proper await
     const docRef = doc(db, 'submissions', refCode);
-    setDoc(docRef, finalSubmission).catch((err) => {
-      console.error("Error writing document to Firestore: ", err);
-    });
+    try {
+      await setDoc(docRef, finalSubmission);
+    } catch (err) {
+      handleFirestoreError(err, OperationType.WRITE, `submissions/${refCode}`);
+    }
 
     return refCode;
   };
@@ -142,7 +189,7 @@ export default function App() {
       });
       await batch.commit();
     } catch (e) {
-      console.error("Failed to clear submissions in Firestore: ", e);
+      handleFirestoreError(e, OperationType.WRITE, 'submissions');
     }
   };
 
@@ -166,7 +213,7 @@ export default function App() {
       });
       await writeBatch1.commit();
     } catch (e) {
-      console.error("Failed to reset mock data in Firestore: ", e);
+      handleFirestoreError(e, OperationType.WRITE, 'submissions');
     }
   };
 
