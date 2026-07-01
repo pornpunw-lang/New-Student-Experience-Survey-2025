@@ -378,8 +378,8 @@ export default function App() {
         <div className="flex items-center gap-3">
           <span>
             {lang === 'TH'
-              ? 'พัฒนาโดยสำนักเทคโนโลยีสารสนเทศ มนุษยสัมพันธ์ มหาวิทยาลัยกรุงเทพ'
-              : 'Developed by the Information Technology Division, Bangkok University'}
+              ? 'พัฒนาโดยสำนักมาตรฐานคุณภาพการศึกษา มหาวิทยาลัยกรุงเทพ'
+              : 'Developed by the Office of Educational Quality Standards, Bangkok University'}
           </span>
           <span className="flex items-center gap-1">
             <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
