@@ -27,7 +27,7 @@ import { collection, doc, setDoc, getDocs, writeBatch, query, orderBy, onSnapsho
 import { db } from './lib/firebase';
 
 export default function App() {
-  // Initialize state from localStorage or fallback to prebuilt mock data (180 responses)
+  // Initialize state from localStorage or fallback to empty array
   const [submissions, setSubmissions] = useState<SurveyResponse[]>(() => {
     const saved = localStorage.getItem('bu_new_student_submissions_2568');
     if (saved) {
@@ -37,9 +37,7 @@ export default function App() {
         console.error('Failed to parse saved submissions', e);
       }
     }
-    const mocks = generateMockSubmissions(180);
-    localStorage.setItem('bu_new_student_submissions_2568', JSON.stringify(mocks));
-    return mocks;
+    return [];
   });
 
   // Track the currently active view ('user' = Student Form, 'admin' = Admin Dashboard)
@@ -69,33 +67,51 @@ export default function App() {
     }
   };
 
-  // Load real-time data from Firebase Firestore and automatically seed if empty
+  // Load real-time data from Firebase Firestore
   useEffect(() => {
     const q = query(collection(db, 'submissions'), orderBy('submittedAt', 'desc'));
-    const unsubscribe = onSnapshot(q, async (snapshot) => {
+    const unsubscribe = onSnapshot(q, (snapshot) => {
       const docsData: SurveyResponse[] = [];
       snapshot.forEach((doc) => {
         docsData.push(doc.data() as SurveyResponse);
       });
 
-      if (docsData.length === 0) {
-        // Automatically seed with 180 starter mock items if DB is totally blank
-        const mocks = generateMockSubmissions(180);
-        const batch = writeBatch(db);
-        mocks.forEach((mock) => {
-          const docRef = doc(db, 'submissions', mock.id);
-          batch.set(docRef, mock);
-        });
-        await batch.commit();
-      } else {
-        setSubmissions(docsData);
-        localStorage.setItem('bu_new_student_submissions_2568', JSON.stringify(docsData));
-      }
+      setSubmissions(docsData);
+      localStorage.setItem('bu_new_student_submissions_2568', JSON.stringify(docsData));
     }, (error) => {
       console.error("Firestore listening error: ", error);
     });
 
     return () => unsubscribe();
+  }, []);
+
+  // One-time automatic cleanup of pre-populated mock data for production launch
+  useEffect(() => {
+    const performOneTimeClear = async () => {
+      const clearedKey = 'bu_survey_system_production_cleared_v1';
+      if (!localStorage.getItem(clearedKey)) {
+        try {
+          console.log("Production launch: Clearing all mock/sample data...");
+          // Clean cached local storage first so visual state updates instantly
+          localStorage.removeItem('bu_new_student_submissions_2568');
+          setSubmissions([]);
+          
+          // Clear Firestore collection
+          const querySnapshot = await getDocs(collection(db, 'submissions'));
+          const batch = writeBatch(db);
+          querySnapshot.forEach((docSnapshot) => {
+            batch.delete(docSnapshot.ref);
+          });
+          await batch.commit();
+          
+          localStorage.setItem(clearedKey, 'true');
+          console.log("Production launch: Clean completed successfully.");
+        } catch (err) {
+          console.error("Failed to execute automatic production clear:", err);
+        }
+      }
+    };
+    performOneTimeClear();
   }, []);
 
   // Handle survey submit callback to Firebase Firestore
