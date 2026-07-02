@@ -27,7 +27,9 @@ import {
   HeartHandshake,
   Check,
   Mail,
-  Send
+  Send,
+  Lock,
+  ShieldAlert
 } from 'lucide-react';
 import { SurveyResponse, StatisticsItem } from '../types';
 import { SURVEY_OPTIONS, BU_FACULTIES } from '../data/mockData';
@@ -350,6 +352,12 @@ interface AdminDashboardProps {
 }
 
 export default function AdminDashboard({ submissions, onClearSubmissions, onResetToMock, onLogout, lang }: AdminDashboardProps) {
+  // Deletion Protection States
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState<'clear' | 'reset' | null>(null);
+  const [deletePasscode, setDeletePasscode] = useState('');
+  const [deleteError, setDeleteError] = useState<string | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
+
   // Response Tracking States
   const [expandedFacultyId, setExpandedFacultyId] = useState<string | null>(null);
   const [emailModalData, setEmailModalData] = useState<{
@@ -397,6 +405,39 @@ export default function AdminDashboard({ submissions, onClearSubmissions, onRese
   const handleFacultyFilterChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedFaculty(e.target.value);
     setSelectedMajor('');
+  };
+
+  const handleDeleteConfirmSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (deletePasscode.toUpperCase() !== 'BU2568') {
+      setDeleteError(
+        lang === 'TH'
+          ? 'รหัสผ่านผู้ดูแลระบบไม่ถูกต้อง กรุณากรอกรหัสผ่านเพื่อดำเนินการต่อ'
+          : 'Incorrect admin passcode. Please enter a valid passcode.'
+      );
+      return;
+    }
+
+    setIsDeleting(true);
+    setDeleteError(null);
+
+    try {
+      if (showDeleteConfirm === 'clear') {
+        await onClearSubmissions();
+      } else if (showDeleteConfirm === 'reset') {
+        await onResetToMock();
+      }
+      setShowDeleteConfirm(null);
+    } catch (err: any) {
+      console.error("Deletion rejected (expected security rules lock):", err);
+      setDeleteError(
+        lang === 'TH'
+          ? 'ระบบปฏิเสธสิทธิ์การเข้าถึงหลังบ้าน: ข้อมูลผู้ตอบจริงถูกเข้ารหัสและล็อคไว้เพื่อความปลอดภัยสูงสุด สิทธิ์การลบข้อมูลจริงอย่างถาวรจากระบบคลาวด์จะทำได้โดยผู้ดูแลระบบที่ล็อกอินทางหลังบ้าน Firebase Console โดยตรงเท่านั้น'
+          : 'Access Denied: Real respondent data is encrypted and locked for safety. Deletion can only be processed by authorized administrators logging into the Firebase Console directly.'
+      );
+    } finally {
+      setIsDeleting(false);
+    }
   };
 
   // 1. FILTER SUBMISSIONS
@@ -872,7 +913,11 @@ export default function AdminDashboard({ submissions, onClearSubmissions, onRese
 
             <button
               type="button"
-              onClick={onResetToMock}
+              onClick={() => {
+                setShowDeleteConfirm('reset');
+                setDeletePasscode('');
+                setDeleteError(null);
+              }}
               className="text-xs text-[#003366] font-semibold hover:bg-blue-50 border border-blue-200 px-3 py-2 rounded-xl transition-all"
             >
               {lang === 'TH' ? 'คืนค่ากลุ่มตัวอย่าง (180 รายการ)' : 'Reset to Mock Data (180)'}
@@ -880,7 +925,11 @@ export default function AdminDashboard({ submissions, onClearSubmissions, onRese
 
             <button
               type="button"
-              onClick={onClearSubmissions}
+              onClick={() => {
+                setShowDeleteConfirm('clear');
+                setDeletePasscode('');
+                setDeleteError(null);
+              }}
               className="text-xs text-rose-600 font-semibold hover:bg-rose-50 border border-rose-100 px-3 py-2 rounded-xl transition-all flex items-center gap-1"
             >
               <Trash2 className="w-3.5 h-3.5" />
@@ -1890,6 +1939,102 @@ export default function AdminDashboard({ submissions, onClearSubmissions, onRese
               )}
             </motion.div>
           </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* 4. SECURE DELETION CONFIRMATION MODAL */}
+      <AnimatePresence>
+        {showDeleteConfirm && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/65 backdrop-blur-sm" id="secure-delete-modal-overlay">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 10 }}
+              transition={{ type: "spring", duration: 0.4 }}
+              className="bg-white rounded-3xl overflow-hidden shadow-2xl max-w-md w-full relative border border-gray-150 p-6 md:p-8 space-y-6"
+            >
+              <div className="flex items-center gap-3 text-rose-700 bg-rose-50 p-4 rounded-2xl border border-rose-100">
+                <ShieldAlert className="w-8 h-8 shrink-0 animate-pulse" />
+                <div>
+                  <h3 className="font-bold text-sm md:text-base text-gray-800">
+                    {lang === 'TH' ? 'ระบบล็อกการลบข้อมูลเพื่อความปลอดภัยขั้นสูง' : 'Advanced Data Deletion Safety Lock'}
+                  </h3>
+                  <p className="text-[10px] md:text-xs text-rose-700/85 font-medium mt-0.5">
+                    {lang === 'TH' ? 'ความปลอดภัยของข้อมูลความคิดเห็นนักศึกษาใหม่ 2568' : 'Protecting 2025 Freshmen real survey submissions'}
+                  </p>
+                </div>
+              </div>
+
+              <div className="space-y-3 text-xs md:text-sm text-gray-600 leading-relaxed">
+                <p>
+                  {lang === 'TH' 
+                    ? 'เพื่อป้องกันความผิดพลาดหรือการจงใจลบข้อมูลของผู้ตอบจริง ระบบสำรวจได้เปิดระบบป้องกันการลบข้อมูลผ่านเว็บเบราว์เซอร์แล้ว (Data Deletion Lock)' 
+                    : 'To prevent accidental or malicious deletion of real survey submissions, browser-based data deletions are locked by default.'}
+                </p>
+                <p className="bg-amber-50 border border-amber-100 p-3 rounded-xl text-[11px] md:text-xs font-medium text-amber-800">
+                  {lang === 'TH'
+                    ? '⚠️ การล้างฐานข้อมูลระบบ Cloud อย่างถาวร จะสามารถทำได้เฉพาะผู้ดูแลระบบที่มีสิทธิ์การเข้าถึงหลังบ้านโดยตรงของ Google Cloud / Firebase Console เท่านั้น'
+                    : '⚠️ Permanent deletion from the Cloud Database must be done directly through Google Cloud / Firebase Console by authorized admins.'}
+                </p>
+              </div>
+
+              <form onSubmit={handleDeleteConfirmSubmit} className="space-y-4">
+                <div className="space-y-1.5">
+                  <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-widest" htmlFor="delete-passcode-input">
+                    {lang === 'TH' ? 'ระบุรหัสผ่านผู้ดูแลระบบ (Admin Passcode)' : 'Enter Admin Passcode'}
+                  </label>
+                  <div className="relative">
+                    <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400">
+                      <Lock className="w-3.5 h-3.5" />
+                    </div>
+                    <input
+                      id="delete-passcode-input"
+                      type="password"
+                      value={deletePasscode}
+                      onChange={(e) => {
+                        setDeletePasscode(e.target.value);
+                        if (deleteError) setDeleteError(null);
+                      }}
+                      placeholder={lang === 'TH' ? 'พิมพ์รหัสผ่านเพื่อดำเนินขั้นตอนต่อ...' : 'Enter passcode...'}
+                      className="w-full bg-slate-50 border border-gray-200 focus:border-rose-600 focus:bg-white rounded-xl pl-10 pr-4 py-2.5 text-xs text-slate-800 outline-none transition-all placeholder:text-gray-400 font-mono tracking-widest"
+                      required
+                    />
+                  </div>
+                </div>
+
+                {deleteError && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -5 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="text-[11px] text-rose-700 bg-rose-50 border border-rose-100 p-3 rounded-xl font-medium leading-normal"
+                  >
+                    {deleteError}
+                  </motion.div>
+                )}
+
+                <div className="flex gap-3 pt-2">
+                  <button
+                    type="button"
+                    onClick={() => setShowDeleteConfirm(null)}
+                    className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold text-xs py-3 rounded-xl transition-all cursor-pointer"
+                  >
+                    {lang === 'TH' ? 'ยกเลิก / ปิดหน้าต่าง' : 'Cancel'}
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={isDeleting}
+                    className="flex-1 bg-rose-600 hover:bg-rose-700 disabled:bg-gray-400 text-white font-bold text-xs py-3 rounded-xl transition-all flex items-center justify-center gap-1.5 cursor-pointer"
+                  >
+                    {isDeleting ? (
+                      <div className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                    ) : (
+                      <span>{lang === 'TH' ? 'ดำเนินการต่อ' : 'Proceed'}</span>
+                    )}
+                  </button>
+                </div>
+              </form>
+            </motion.div>
+          </div>
         )}
       </AnimatePresence>
     </div>

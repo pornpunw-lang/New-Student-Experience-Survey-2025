@@ -2,7 +2,10 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     match /submissions/{document} {
-      allow read, write: if true;
+      // Allow read and create for everyone (public submission and analytics tracking)
+      allow read, create: if true;
+      // Prevent updates and deletions from public web clients to secure student responses
+      allow update, delete: if false;
     }
   }
 }
