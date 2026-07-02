@@ -112,7 +112,7 @@ export default function App() {
     }
   };
 
-  // Load real-time data from Firebase Firestore with standardized error handling
+  // Loaded real-time data from Firebase Firestore with standardized error handling
   useEffect(() => {
     const q = query(collection(db, 'submissions'), orderBy('submittedAt', 'desc'));
     const unsubscribe = onSnapshot(q, (snapshot) => {
@@ -128,35 +128,6 @@ export default function App() {
     });
 
     return () => unsubscribe();
-  }, []);
-
-  // One-time automatic cleanup of pre-populated mock data for production launch
-  useEffect(() => {
-    const performOneTimeClear = async () => {
-      const clearedKey = 'bu_survey_system_production_cleared_v1';
-      if (!localStorage.getItem(clearedKey)) {
-        try {
-          console.log("Production launch: Clearing all mock/sample data...");
-          // Clean cached local storage first so visual state updates instantly
-          localStorage.removeItem('bu_new_student_submissions_2568');
-          setSubmissions([]);
-          
-          // Clear Firestore collection
-          const querySnapshot = await getDocs(collection(db, 'submissions'));
-          const batch = writeBatch(db);
-          querySnapshot.forEach((docSnapshot) => {
-            batch.delete(docSnapshot.ref);
-          });
-          await batch.commit();
-          
-          localStorage.setItem(clearedKey, 'true');
-          console.log("Production launch: Clean completed successfully.");
-        } catch (err) {
-          handleFirestoreError(err, OperationType.WRITE, 'submissions');
-        }
-      }
-    };
-    performOneTimeClear();
   }, []);
 
   // Handle survey submit callback to Firebase Firestore (Optimized for lightning-fast submission)
