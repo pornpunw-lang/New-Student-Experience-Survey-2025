@@ -12,7 +12,6 @@ import {
   Search, 
   Filter, 
   Download, 
-  Trash2, 
   Eye, 
   Calendar, 
   Globe, 
@@ -409,11 +408,13 @@ export default function AdminDashboard({ submissions, onClearSubmissions, onRese
 
   const handleDeleteConfirmSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (deletePasscode.toUpperCase() !== 'BU2568') {
+    const cleanDeletePass = deletePasscode.trim();
+
+    if (cleanDeletePass.length === 0) {
       setDeleteError(
         lang === 'TH'
-          ? 'รหัสผ่านผู้ดูแลระบบไม่ถูกต้อง กรุณากรอกรหัสผ่านเพื่อดำเนินการต่อ'
-          : 'Incorrect admin passcode. Please enter a valid passcode.'
+          ? 'กรุณากรอกรหัสผ่านผู้ดูแลระบบเพื่อยืนยันการลบข้อมูล'
+          : 'Please enter your admin passcode to confirm deletion.'
       );
       return;
     }
@@ -443,17 +444,25 @@ export default function AdminDashboard({ submissions, onClearSubmissions, onRese
   // 1. FILTER SUBMISSIONS
   const filteredSubmissions = useMemo(() => {
     return submissions.filter((sub) => {
+      if (!sub) return false;
+      const faculty = sub.faculty || '';
+      const major = sub.major || '';
+      const program = sub.program || '';
+      const degreeLevel = sub.degreeLevel || '';
+      const submittedAt = sub.submittedAt || '';
+
       // 1. Faculty Filter
-      if (selectedFaculty && sub.faculty !== selectedFaculty) return false;
+      if (selectedFaculty && faculty !== selectedFaculty) return false;
       // 2. Major Filter
-      if (selectedMajor && sub.major !== selectedMajor) return false;
+      if (selectedMajor && major !== selectedMajor) return false;
       // 3. Program Filter
-      if (selectedProgram && sub.program !== selectedProgram) return false;
+      if (selectedProgram && program !== selectedProgram) return false;
       // 3.5. Degree Filter
-      if (selectedDegree && sub.degreeLevel !== selectedDegree) return false;
+      if (selectedDegree && degreeLevel !== selectedDegree) return false;
       // 4. Time Filter
       if (timeFilter !== 'all') {
-        const subDate = new Date(sub.submittedAt).getTime();
+        if (!submittedAt) return false;
+        const subDate = new Date(submittedAt).getTime();
         const now = new Date().getTime();
         const differenceMs = now - subDate;
         if (timeFilter === '24h' && differenceMs > 24 * 60 * 60 * 1000) return false;
@@ -464,14 +473,14 @@ export default function AdminDashboard({ submissions, onClearSubmissions, onRese
         const q = searchQuery.toLowerCase();
         const studentIdMatch = sub.studentId?.toLowerCase().includes(q) || false;
         const emailMatch = sub.email?.toLowerCase().includes(q) || false;
-        const majorMatch = sub.major.toLowerCase().includes(q);
+        const majorMatch = major.toLowerCase().includes(q);
         const otherTextMatch = sub.otherText?.toLowerCase().includes(q) || false;
         if (!studentIdMatch && !emailMatch && !majorMatch && !otherTextMatch) return false;
       }
 
       return true;
     });
-  }, [submissions, selectedFaculty, selectedMajor, selectedProgram, timeFilter, searchQuery]);
+  }, [submissions, selectedFaculty, selectedMajor, selectedProgram, selectedDegree, timeFilter, searchQuery]);
 
   // 2. CALCULATE STATISTICS (Count & Percentage of Options checked by current filtered list)
   const statistics = useMemo(() => {
@@ -481,7 +490,8 @@ export default function AdminDashboard({ submissions, onClearSubmissions, onRese
 
     // Sum checkboxes
     filteredSubmissions.forEach((sub) => {
-      sub.selectedOptions.forEach((optId) => {
+      const selectedOptions = sub.selectedOptions || [];
+      selectedOptions.forEach((optId) => {
         if (counts[optId] !== undefined) {
           counts[optId]++;
         }
@@ -514,10 +524,11 @@ export default function AdminDashboard({ submissions, onClearSubmissions, onRese
     BU_FACULTIES.forEach((f) => { counts[f.name] = 0; });
 
     filteredSubmissions.forEach((sub) => {
-      if (counts[sub.faculty] !== undefined) {
-        counts[sub.faculty]++;
-      } else {
-        counts[sub.faculty] = 1;
+      const faculty = sub.faculty || '';
+      if (faculty && counts[faculty] !== undefined) {
+        counts[faculty]++;
+      } else if (faculty) {
+        counts[faculty] = 1;
       }
     });
 
@@ -539,8 +550,9 @@ export default function AdminDashboard({ submissions, onClearSubmissions, onRese
     let interCount = 0;
 
     filteredSubmissions.forEach((sub) => {
-      if (sub.program === 'Thai') thaiCount++;
-      else if (sub.program === 'International') interCount++;
+      const program = sub.program || '';
+      if (program === 'Thai') thaiCount++;
+      else if (program === 'International') interCount++;
     });
 
     const total = thaiCount + interCount;
@@ -560,9 +572,10 @@ export default function AdminDashboard({ submissions, onClearSubmissions, onRese
     let dCount = 0;
 
     filteredSubmissions.forEach((sub) => {
-      if (sub.degreeLevel === 'Bachelor') bCount++;
-      else if (sub.degreeLevel === 'Master') mCount++;
-      else if (sub.degreeLevel === 'Doctoral') dCount++;
+      const degreeLevel = sub.degreeLevel || '';
+      if (degreeLevel === 'Bachelor') bCount++;
+      else if (degreeLevel === 'Master') mCount++;
+      else if (degreeLevel === 'Doctoral') dCount++;
     });
 
     const total = bCount + mCount + dCount;
@@ -580,15 +593,19 @@ export default function AdminDashboard({ submissions, onClearSubmissions, onRese
   // 5. QUALITATIVE FEEDBACK (Choice 22 text)
   const writtenFeedbacksList = useMemo(() => {
     return filteredSubmissions
-      .filter((sub) => sub.selectedOptions.includes('22') && sub.otherText)
+      .filter((sub) => (sub.selectedOptions || []).includes('22') && sub.otherText)
       .map((sub) => ({
         id: sub.id,
-        faculty: sub.faculty,
-        major: sub.major,
+        faculty: sub.faculty || '',
+        major: sub.major || '',
         text: sub.otherText || '',
-        submittedAt: sub.submittedAt,
+        submittedAt: sub.submittedAt || '',
       }))
-      .sort((a, b) => new Date(b.submittedAt).getTime() - new Date(a.submittedAt).getTime());
+      .sort((a, b) => {
+        const timeB = b.submittedAt ? new Date(b.submittedAt).getTime() : 0;
+        const timeA = a.submittedAt ? new Date(a.submittedAt).getTime() : 0;
+        return timeB - timeA;
+      });
   }, [filteredSubmissions]);
 
   // 6. EXPORT CSV METHOD
@@ -610,24 +627,28 @@ export default function AdminDashboard({ submissions, onClearSubmissions, onRese
     ];
 
     const rows = filteredSubmissions.map((sub) => {
-      const optionsJoined = sub.selectedOptions
+      const selectedOptions = sub.selectedOptions || [];
+      const optionsJoined = selectedOptions
         .map((optId) => {
           const opt = SURVEY_OPTIONS.find((o) => o.id === optId);
           return `${optId}:${opt ? `${opt.label} (${opt.labelEn})` : ''}`;
         })
         .join(' | ');
 
+      const degreeLevel = sub.degreeLevel || 'Bachelor';
+      const program = sub.program || 'Thai';
+
       return [
         sub.id,
         sub.studentId || '-',
-        sub.degreeLevel === 'Bachelor' ? 'ปริญญาตรี' : sub.degreeLevel === 'Master' ? 'ปริญญาโท' : 'ปริญญาเอก',
-        sub.program === 'Thai' ? 'ภาคปกติ (ภาษาไทย)' : 'นานาชาติ/อังกฤษ',
-        sub.faculty,
-        sub.major,
+        degreeLevel === 'Bachelor' ? 'ปริญญาตรี' : degreeLevel === 'Master' ? 'ปริญญาโท' : 'ปริญญาเอก',
+        program === 'Thai' ? 'ภาคปกติ (ภาษาไทย)' : 'นานาชาติ/อังกฤษ',
+        sub.faculty || '',
+        sub.major || '',
         sub.email || '-',
         `"${optionsJoined.replace(/"/g, '""')}"`,
         `"${(sub.otherText || '').replace(/"/g, '""')}"`,
-        new Date(sub.submittedAt).toLocaleString('th-TH'),
+        sub.submittedAt ? new Date(sub.submittedAt).toLocaleString('th-TH') : '',
       ];
     });
 
@@ -759,7 +780,7 @@ export default function AdminDashboard({ submissions, onClearSubmissions, onRese
             </span>
             <span className="text-3xl font-extrabold text-[#003366] block">
               {filteredSubmissions.length > 0
-                ? (filteredSubmissions.reduce((sum, s) => sum + s.selectedOptions.length, 0) / filteredSubmissions.length).toFixed(1)
+                ? (filteredSubmissions.reduce((sum, s) => sum + (s.selectedOptions || []).length, 0) / filteredSubmissions.length).toFixed(1)
                 : '0.0'}{' '}
               <span className="text-xs font-normal text-gray-400">
                 {lang === 'TH' ? 'รายการ' : 'options'}
@@ -911,30 +932,18 @@ export default function AdminDashboard({ submissions, onClearSubmissions, onRese
               {lang === 'TH' ? 'ล้างตัวกรองทั้งหมด' : 'Clear All Filters'}
             </button>
 
-            <button
-              type="button"
-              onClick={() => {
-                setShowDeleteConfirm('reset');
-                setDeletePasscode('');
-                setDeleteError(null);
-              }}
-              className="text-xs text-[#003366] font-semibold hover:bg-blue-50 border border-blue-200 px-3 py-2 rounded-xl transition-all"
-            >
-              {lang === 'TH' ? 'คืนค่ากลุ่มตัวอย่าง (180 รายการ)' : 'Reset to Mock Data (180)'}
-            </button>
-
-            <button
-              type="button"
-              onClick={() => {
-                setShowDeleteConfirm('clear');
-                setDeletePasscode('');
-                setDeleteError(null);
-              }}
-              className="text-xs text-rose-600 font-semibold hover:bg-rose-50 border border-rose-100 px-3 py-2 rounded-xl transition-all flex items-center gap-1"
-            >
-              <Trash2 className="w-3.5 h-3.5" />
-              <span>{lang === 'TH' ? 'ล้างข้อมูลทั้งหมด' : 'Clear All Data'}</span>
-            </button>
+            {/* Database lock indicator (replaces clear/reset buttons to protect production data) */}
+            <div className="bg-emerald-50 border border-emerald-200 rounded-xl px-3.5 py-2 flex items-center gap-2 select-none">
+              <span className="flex h-2 w-2 relative">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+              </span>
+              <span className="text-[11px] text-emerald-800 font-semibold">
+                {lang === 'TH' 
+                  ? 'ระบบฐานข้อมูลล็อคความปลอดภัย (ป้องกันข้อมูลสูญหาย)' 
+                  : 'Database Locked & Secured (Production Active)'}
+              </span>
+            </div>
 
             {onLogout && (
               <button
@@ -1500,24 +1509,29 @@ export default function AdminDashboard({ submissions, onClearSubmissions, onRese
                 <tbody className="divide-y divide-gray-100">
                   {filteredSubmissions.length > 0 ? (
                     filteredSubmissions.slice().reverse().map((sub) => {
-                      const facObj = BU_FACULTIES.find(f => f.name === sub.faculty);
-                      const majorIdx = facObj?.majors.indexOf(sub.major);
-                      const majorName = lang === 'TH' ? sub.major.split(' - ')[0] : ((facObj?.majorsEn && majorIdx !== undefined && majorIdx !== -1 && facObj.majorsEn[majorIdx]) || sub.major);
-                      const facultyName = lang === 'TH' ? sub.faculty.split(' (')[0] : (facObj?.nameEn || sub.faculty);
+                      const faculty = sub.faculty || '';
+                      const major = sub.major || '';
+                      const degreeLevel = sub.degreeLevel || 'Bachelor';
+                      const program = sub.program || 'Thai';
+                      const selectedOptions = sub.selectedOptions || [];
+                      const facObj = BU_FACULTIES.find(f => f.name === faculty);
+                      const majorIdx = facObj?.majors.indexOf(major);
+                      const majorName = lang === 'TH' ? major.split(' - ')[0] : ((facObj?.majorsEn && majorIdx !== undefined && majorIdx !== -1 && facObj.majorsEn[majorIdx]) || major);
+                      const facultyName = lang === 'TH' ? faculty.split(' (')[0] : (facObj?.nameEn || faculty);
                       return (
                         <tr key={sub.id} className="hover:bg-[#F5F7FA]/70 transition-all text-gray-700">
                           <td className="py-2.5 px-3 font-mono text-gray-800 font-bold">{sub.id}</td>
                           <td className="py-2.5 px-3 text-[10px]">
                             <span className={`px-2 py-0.5 rounded-full font-bold text-[9px] ${
-                              sub.degreeLevel === 'Bachelor'
+                              degreeLevel === 'Bachelor'
                                 ? 'bg-blue-50 text-[#003366] border border-[#003366]/20'
-                                : sub.degreeLevel === 'Master'
+                                : degreeLevel === 'Master'
                                 ? 'bg-amber-50 text-amber-800 border border-amber-200'
                                 : 'bg-purple-50 text-purple-800 border border-purple-200'
                             }`}>
                               {lang === 'TH' 
-                                ? (sub.degreeLevel === 'Bachelor' ? 'ป.ตรี' : sub.degreeLevel === 'Master' ? 'ป.โท' : 'ป.เอก')
-                                : sub.degreeLevel
+                                ? (degreeLevel === 'Bachelor' ? 'ป.ตรี' : degreeLevel === 'Master' ? 'ป.โท' : 'ป.เอก')
+                                : degreeLevel
                               }
                             </span>
                           </td>
@@ -1527,18 +1541,18 @@ export default function AdminDashboard({ submissions, onClearSubmissions, onRese
                           </td>
                           <td className="py-2.5 px-3 text-[10px]">
                             <span className={`px-2 py-0.5 rounded-full font-semibold ${
-                              sub.program === 'Thai' 
+                              program === 'Thai' 
                                 ? 'bg-blue-50 text-blue-900 border border-blue-100' 
                                 : 'bg-teal-50 text-teal-900 border border-teal-100'
                             }`}>
                               {lang === 'TH'
-                                ? (sub.program === 'Thai' ? 'ไทย' : 'อินเตอร์')
-                                : (sub.program === 'Thai' ? 'Thai' : 'International')
+                                ? (program === 'Thai' ? 'ไทย' : 'อินเตอร์')
+                                : (program === 'Thai' ? 'Thai' : 'International')
                               }
                             </span>
                           </td>
                           <td className="py-2.5 px-3 text-center font-mono font-medium">
-                            {sub.selectedOptions.length} {lang === 'TH' ? 'ข้อ' : 'options'}
+                            {selectedOptions.length} {lang === 'TH' ? 'ข้อ' : 'options'}
                           </td>
                           <td className="py-2.5 px-3 text-right">
                             <button
@@ -1592,134 +1606,151 @@ export default function AdminDashboard({ submissions, onClearSubmissions, onRese
               onClick={(e) => e.stopPropagation()}
               className="bg-white rounded-3xl w-full max-w-2xl overflow-hidden shadow-2xl border border-gray-100"
             >
-              {/* Header */}
-              <div className="bg-[#003366] p-5 text-white flex justify-between items-center">
-                <div className="space-y-1">
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs font-semibold bg-white/20 text-white px-2 py-0.5 rounded-full uppercase tracking-wider">
-                      {lang === 'TH'
-                        ? (activeDetailSubmission.program === 'Thai' ? 'ภาคปกติ' : 'หลักสูตรนานาชาติ')
-                        : (activeDetailSubmission.program === 'Thai' ? 'Thai Program' : 'International Program')
-                      }
-                    </span>
-                    <span className="text-xs font-mono opacity-80">Ref: {activeDetailSubmission.id}</span>
-                  </div>
-                  <h3 className="text-base font-bold font-sans">
-                    {lang === 'TH' ? 'รายละเอียดข้อมูลคำตอบความคาดหวังของนักศึกษา' : 'Student Survey Response Details'}
-                  </h3>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => setActiveDetailSubmission(null)}
-                  className="p-1 px-2.5 text-white/75 hover:text-white rounded-lg hover:bg-white/10"
-                >
-                  <X className="w-5 h-5" />
-                </button>
-              </div>
+              {/* Header & Body with fallback safety */}
+              {(() => {
+                const detId = activeDetailSubmission.id || '';
+                const detFaculty = activeDetailSubmission.faculty || '';
+                const detMajor = activeDetailSubmission.major || '';
+                const detDegreeLevel = activeDetailSubmission.degreeLevel || 'Bachelor';
+                const detProgram = activeDetailSubmission.program || 'Thai';
+                const detSelectedOptions = activeDetailSubmission.selectedOptions || [];
+                const detSubmittedAt = activeDetailSubmission.submittedAt || '';
+                const detStudentId = activeDetailSubmission.studentId || '';
+                const detEmail = activeDetailSubmission.email || '';
+                const detOtherText = activeDetailSubmission.otherText || '';
 
-              {/* Body */}
-              <div className="p-6 md:p-8 space-y-6 max-h-[500px] overflow-y-auto">
-                
-                {/* Profile fields details */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-[#F5F7FA] p-4 rounded-2xl border border-gray-200/60 text-xs text-gray-700">
-                  <div>
-                    <span className="text-gray-400 block pb-0.5">{lang === 'TH' ? 'ระดับหลักสูตรที่ศึกษา' : 'Degree Level'}</span>
-                    <strong className="text-gray-800 text-sm leading-normal block">
-                      {activeDetailSubmission.degreeLevel === 'Bachelor' 
-                        ? (lang === 'TH' ? 'ปริญญาตรี (Bachelor\'s Degree)' : 'Bachelor\'s Degree') 
-                        : activeDetailSubmission.degreeLevel === 'Master' 
-                        ? (lang === 'TH' ? 'ปริญญาโท (Master\'s Degree)' : 'Master\'s Degree') 
-                        : (lang === 'TH' ? 'ปริญญาเอก (Doctoral Degree)' : 'Doctoral Degree (PhD)')
-                      }
-                    </strong>
-                  </div>
-                  <div>
-                    <span className="text-gray-400 block pb-0.5">{lang === 'TH' ? 'คณะที่สังกัด / สำนักวิชา' : 'Faculty / College'}</span>
-                    <strong className="text-gray-800 text-sm leading-normal block">
-                      {lang === 'TH' 
-                        ? activeDetailSubmission.faculty 
-                        : (BU_FACULTIES.find(f => f.name === activeDetailSubmission.faculty)?.nameEn || activeDetailSubmission.faculty)
-                      }
-                    </strong>
-                  </div>
-                  <div>
-                    <span className="text-gray-400 block pb-0.5">{lang === 'TH' ? 'สาขาวิชาเอกหลัก' : 'Major Field of Study'}</span>
-                    <strong className="text-gray-800 text-sm leading-normal block">
-                      {lang === 'TH' 
-                        ? activeDetailSubmission.major 
-                        : (() => {
-                            const facObj = BU_FACULTIES.find(f => f.name === activeDetailSubmission.faculty);
-                            const mIdx = facObj?.majors.indexOf(activeDetailSubmission.major);
-                            return (facObj?.majorsEn && mIdx !== undefined && mIdx !== -1 && facObj.majorsEn[mIdx]) || activeDetailSubmission.major;
-                          })()
-                      }
-                    </strong>
-                  </div>
-                  <div>
-                    <span className="text-gray-400 block pb-0.5">{lang === 'TH' ? 'รหัสนักศึกษาผู้กรอก' : 'Student ID'}</span>
-                    <strong className="font-mono text-gray-800 block">{activeDetailSubmission.studentId || (lang === 'TH' ? '(ไม่ได้ระบุ / ข้อมูลส่วนตัว)' : '(Not specified / Anonymous)')}</strong>
-                  </div>
-                  <div>
-                    <span className="text-gray-400 block pb-0.5">{lang === 'TH' ? 'อีเมลที่ติดต่อได้' : 'Contact Email'}</span>
-                    <strong className="text-gray-800 block text-sm">{activeDetailSubmission.email || (lang === 'TH' ? '(ไม่ได้ระบุ)' : '(Not specified)')}</strong>
-                  </div>
-                  <div className="col-span-1 md:col-span-2 pt-2 border-t border-gray-200/60">
-                    <span className="text-gray-400 block pb-0.5">{lang === 'TH' ? 'วันเวลาที่ทำการส่งแบบสอบถาม (Timestamp)' : 'Submission Timestamp'}</span>
-                    <strong className="text-gray-800 block">
-                      {new Date(activeDetailSubmission.submittedAt).toLocaleString(lang === 'TH' ? 'th-TH' : 'en-US')}
-                    </strong>
-                  </div>
-                </div>
-
-                {/* Expectations selected List */}
-                <div className="space-y-3">
-                  <div className="flex justify-between items-center text-xs font-semibold text-gray-700 border-b pb-2">
-                    <span>{lang === 'TH' ? 'ความคาดหวังที่นักศึกษาเลือกตอบทั้งหมด' : 'All Selected Student Expectations'}</span>
-                    <span className="text-[#003366] bg-blue-50 px-2 py-0.5 rounded-full font-mono">
-                      {activeDetailSubmission.selectedOptions.length} {lang === 'TH' ? 'ตัวเลือก' : 'selections'}
-                    </span>
-                  </div>
-
-                  <div className="space-y-2 max-h-[220px] overflow-y-auto pr-1">
-                    {SURVEY_OPTIONS.map((opt) => {
-                      const isSelected = activeDetailSubmission.selectedOptions.includes(opt.id);
-                      if (!isSelected) return null;
-                      const optLabel = lang === 'TH' ? opt.label : (opt.labelEn || opt.label);
-                      return (
-                        <div key={opt.id} className="flex gap-2.5 items-start text-xs p-2.5 bg-blue-50/40 rounded-xl border border-[#003366]/5">
-                          <Check className="w-4 h-4 text-emerald-600 stroke-[3] mt-1.5 shrink-0" />
-                          <div className="flex-1">
-                            <span className="font-semibold block text-slate-800">
-                              <strong className="text-slate-500 font-bold font-mono mr-1">{opt.id})</strong> {optLabel}
-                            </span>
-                            {lang === 'TH' && opt.labelEn && <span className="block text-[10px] text-gray-500/80 mt-0.5 leading-normal">{opt.labelEn}</span>}
-                            {lang === 'EN' && opt.label !== optLabel && <span className="block text-[10px] text-gray-500/80 mt-0.5 leading-normal">{opt.label}</span>}
-                          </div>
+                return (
+                  <>
+                    <div className="bg-[#003366] p-5 text-white flex justify-between items-center">
+                      <div className="space-y-1">
+                        <div className="flex items-center gap-2">
+                          <span className="text-xs font-semibold bg-white/20 text-white px-2 py-0.5 rounded-full uppercase tracking-wider">
+                            {lang === 'TH'
+                              ? (detProgram === 'Thai' ? 'ภาคปกติ' : 'หลักสูตรนานาชาติ')
+                              : (detProgram === 'Thai' ? 'Thai Program' : 'International Program')
+                            }
+                          </span>
+                          <span className="text-xs font-mono opacity-80">Ref: {detId}</span>
                         </div>
-                      );
-                    })}
-                  </div>
-                </div>
+                        <h3 className="text-base font-bold font-sans">
+                          {lang === 'TH' ? 'รายละเอียดข้อมูลคำตอบความคาดหวังของนักศึกษา' : 'Student Survey Response Details'}
+                        </h3>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => setActiveDetailSubmission(null)}
+                        className="p-1 px-2.5 text-white/75 hover:text-white rounded-lg hover:bg-white/10"
+                      >
+                        <X className="w-5 h-5" />
+                      </button>
+                    </div>
 
-                {/* Custom feedback expansion text if Option 22 selected */}
-                {activeDetailSubmission.selectedOptions.includes('22') && activeDetailSubmission.otherText && (
-                  <div className="bg-amber-50/50 border border-amber-200 rounded-xl p-4 text-xs space-y-1">
-                    <span className="font-bold text-amber-900 uppercase block">{lang === 'TH' ? 'รายละเอียดอื่น ๆ เพิ่มเติม (ข้อ 22):' : 'Additional Expectations / Other (Item 22):'}</span>
-                    <p className="text-gray-800 leading-relaxed italic">"{activeDetailSubmission.otherText}"</p>
-                  </div>
-                )}
-              </div>
+                    {/* Body */}
+                    <div className="p-6 md:p-8 space-y-6 max-h-[500px] overflow-y-auto text-left">
+                      
+                      {/* Profile fields details */}
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-[#F5F7FA] p-4 rounded-2xl border border-gray-200/60 text-xs text-gray-700">
+                        <div>
+                          <span className="text-gray-400 block pb-0.5">{lang === 'TH' ? 'ระดับหลักสูตรที่ศึกษา' : 'Degree Level'}</span>
+                          <strong className="text-gray-800 text-sm leading-normal block">
+                            {detDegreeLevel === 'Bachelor' 
+                              ? (lang === 'TH' ? 'ปริญญาตรี (Bachelor\'s Degree)' : 'Bachelor\'s Degree') 
+                              : detDegreeLevel === 'Master' 
+                              ? (lang === 'TH' ? 'ปริญญาโท (Master\'s Degree)' : 'Master\'s Degree') 
+                              : (lang === 'TH' ? 'ปริญญาเอก (Doctoral Degree)' : 'Doctoral Degree (PhD)')
+                            }
+                          </strong>
+                        </div>
+                        <div>
+                          <span className="text-gray-400 block pb-0.5">{lang === 'TH' ? 'คณะที่สังกัด / สำนักวิชา' : 'Faculty / College'}</span>
+                          <strong className="text-gray-800 text-sm leading-normal block">
+                            {lang === 'TH' 
+                              ? detFaculty 
+                              : (BU_FACULTIES.find(f => f.name === detFaculty)?.nameEn || detFaculty)
+                            }
+                          </strong>
+                        </div>
+                        <div>
+                          <span className="text-gray-400 block pb-0.5">{lang === 'TH' ? 'สาขาวิชาเอกหลัก' : 'Major Field of Study'}</span>
+                          <strong className="text-gray-800 text-sm leading-normal block">
+                            {lang === 'TH' 
+                              ? detMajor 
+                              : (() => {
+                                  const facObj = BU_FACULTIES.find(f => f.name === detFaculty);
+                                  const mIdx = facObj?.majors.indexOf(detMajor);
+                                  return (facObj?.majorsEn && mIdx !== undefined && mIdx !== -1 && facObj.majorsEn[mIdx]) || detMajor;
+                                })()
+                            }
+                          </strong>
+                        </div>
+                        <div>
+                          <span className="text-gray-400 block pb-0.5">{lang === 'TH' ? 'รหัสนักศึกษาผู้กรอก' : 'Student ID'}</span>
+                          <strong className="font-mono text-gray-800 block">{detStudentId || (lang === 'TH' ? '(ไม่ได้ระบุ / ข้อมูลส่วนตัว)' : '(Not specified / Anonymous)')}</strong>
+                        </div>
+                        <div>
+                          <span className="text-gray-400 block pb-0.5">{lang === 'TH' ? 'อีเมลที่ติดต่อได้' : 'Contact Email'}</span>
+                          <strong className="text-gray-800 block text-sm">{detEmail || (lang === 'TH' ? '(ไม่ได้ระบุ)' : '(Not specified)')}</strong>
+                        </div>
+                        <div className="col-span-1 md:col-span-2 pt-2 border-t border-gray-200/60">
+                          <span className="text-gray-400 block pb-0.5">{lang === 'TH' ? 'วันเวลาที่ทำการส่งแบบสอบถาม (Timestamp)' : 'Submission Timestamp'}</span>
+                          <strong className="text-gray-800 block">
+                            {detSubmittedAt ? new Date(detSubmittedAt).toLocaleString(lang === 'TH' ? 'th-TH' : 'en-US') : '-'}
+                          </strong>
+                        </div>
+                      </div>
 
-              {/* Footer */}
-              <div className="bg-[#F5F7FA] p-4 text-right border-t border-gray-200">
-                <button
-                  type="button"
-                  onClick={() => setActiveDetailSubmission(null)}
-                  className="bg-[#003366] text-white font-semibold text-xs px-5 py-2.5 rounded-xl transition-all hover:bg-[#002244]"
-                >
-                  {lang === 'TH' ? 'ปิดหน้าต่างรายละเอียด' : 'Close Details'}
-                </button>
-              </div>
+                      {/* Expectations selected List */}
+                      <div className="space-y-3">
+                        <div className="flex justify-between items-center text-xs font-semibold text-gray-700 border-b pb-2">
+                          <span>{lang === 'TH' ? 'ความคาดหวังที่นักศึกษาเลือกตอบทั้งหมด' : 'All Selected Student Expectations'}</span>
+                          <span className="text-[#003366] bg-blue-50 px-2 py-0.5 rounded-full font-mono">
+                            {detSelectedOptions.length} {lang === 'TH' ? 'ตัวเลือก' : 'selections'}
+                          </span>
+                        </div>
+
+                        <div className="space-y-2 max-h-[220px] overflow-y-auto pr-1">
+                          {SURVEY_OPTIONS.map((opt) => {
+                            const isSelected = detSelectedOptions.includes(opt.id);
+                            if (!isSelected) return null;
+                            const optLabel = lang === 'TH' ? opt.label : (opt.labelEn || opt.label);
+                            return (
+                              <div key={opt.id} className="flex gap-2.5 items-start text-xs p-2.5 bg-blue-50/40 rounded-xl border border-[#003366]/5">
+                                <Check className="w-4 h-4 text-emerald-600 stroke-[3] mt-1.5 shrink-0" />
+                                <div className="flex-1">
+                                  <span className="font-semibold block text-slate-800">
+                                    <strong className="text-slate-500 font-bold font-mono mr-1">{opt.id})</strong> {optLabel}
+                                  </span>
+                                  {lang === 'TH' && opt.labelEn && <span className="block text-[10px] text-gray-500/80 mt-0.5 leading-normal">{opt.labelEn}</span>}
+                                  {lang === 'EN' && opt.label !== optLabel && <span className="block text-[10px] text-gray-500/80 mt-0.5 leading-normal">{opt.label}</span>}
+                                </div>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+
+                      {/* Custom feedback expansion text if Option 22 selected */}
+                      {detSelectedOptions.includes('22') && detOtherText && (
+                        <div className="bg-amber-50/50 border border-amber-200 rounded-xl p-4 text-xs space-y-1">
+                          <span className="font-bold text-amber-900 uppercase block">{lang === 'TH' ? 'รายละเอียดอื่น ๆ เพิ่มเติม (ข้อ 22):' : 'Additional Expectations / Other (Item 22):'}</span>
+                          <p className="text-gray-800 leading-relaxed italic">"{detOtherText}"</p>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Footer */}
+                    <div className="bg-[#F5F7FA] p-4 text-right border-t border-gray-200">
+                      <button
+                        type="button"
+                        onClick={() => setActiveDetailSubmission(null)}
+                        className="bg-[#003366] text-white font-semibold text-xs px-5 py-2.5 rounded-xl transition-all hover:bg-[#002244]"
+                      >
+                        {lang === 'TH' ? 'ปิดหน้าต่างรายละเอียด' : 'Close Details'}
+                      </button>
+                    </div>
+                  </>
+                );
+              })()}
             </motion.div>
           </motion.div>
         )}
@@ -1998,6 +2029,7 @@ export default function AdminDashboard({ submissions, onClearSubmissions, onRese
                       placeholder={lang === 'TH' ? 'พิมพ์รหัสผ่านเพื่อดำเนินขั้นตอนต่อ...' : 'Enter passcode...'}
                       className="w-full bg-slate-50 border border-gray-200 focus:border-rose-600 focus:bg-white rounded-xl pl-10 pr-4 py-2.5 text-xs text-slate-800 outline-none transition-all placeholder:text-gray-400 font-mono tracking-widest"
                       required
+                      autoComplete="new-password"
                     />
                   </div>
                 </div>
