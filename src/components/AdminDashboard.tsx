@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { 
   Users, 
@@ -28,7 +28,13 @@ import {
   Mail,
   Send,
   Lock,
-  ShieldAlert
+  ShieldAlert,
+  FileText,
+  Printer,
+  Copy,
+  Award,
+  FileDown,
+  Sparkles
 } from 'lucide-react';
 import { SurveyResponse, StatisticsItem } from '../types';
 import { SURVEY_OPTIONS, BU_FACULTIES } from '../data/mockData';
@@ -393,6 +399,19 @@ export default function AdminDashboard({ submissions, onClearSubmissions, onRese
   // Currently viewing single submission detail modal State
   const [activeDetailSubmission, setActiveDetailSubmission] = useState<SurveyResponse | null>(null);
 
+  // Institutional Research (IR) Report States
+  const [currentTab, setCurrentTab] = useState<'dashboard' | 'ir-report'>('dashboard');
+  const [reportTitle, setReportTitle] = useState<string>('');
+  const [reportAuthor, setReportAuthor] = useState<string>('');
+  const [reportNumber, setReportNumber] = useState<string>('IR-68-001');
+  const [reportSignee, setReportSignee] = useState<string>('ผู้จัดทำรายงาน แผนกประกันคุณภาพการศึกษา');
+  const [reportCopied, setReportCopied] = useState<boolean>(false);
+  
+  // Custom comments states inside the report for active drafting
+  const [execSummaryText, setExecSummaryText] = useState<string>('');
+  const [methodologyText, setMethodologyText] = useState<string>('');
+  const [recommendationsText, setRecommendationsText] = useState<string>('');
+
   // Filter majors when faculty changes in filter bar
   const filterMajorsList = useMemo(() => {
     if (!selectedFaculty) return [];
@@ -481,6 +500,39 @@ export default function AdminDashboard({ submissions, onClearSubmissions, onRese
       return true;
     });
   }, [submissions, selectedFaculty, selectedMajor, selectedProgram, selectedDegree, timeFilter, searchQuery]);
+
+  useEffect(() => {
+    const facultyStr = selectedFaculty ? `สำหรับ${selectedFaculty}` : '';
+    const facultyStrEn = selectedFaculty ? ` for ${selectedFaculty}` : '';
+    
+    if (lang === 'TH') {
+      setReportTitle(`รายงานวิจัยสถาบัน: การวิเคราะห์ความคาดหวังของนักศึกษาใหม่${facultyStr} มหาวิทยาลัยกรุงเทพ ประจำปีการศึกษา 2568`);
+      setReportAuthor('แผนกประกันคุณภาพการศึกษา สำนักมาตรฐานคุณภาพการศึกษา มหาวิทยาลัยกรุงเทพ');
+      setReportSignee('ผู้จัดทำรายงาน แผนกประกันคุณภาพการศึกษา');
+      setExecSummaryText(
+        `จากการสำรวจความคิดเห็นและความคาดหวังของนักศึกษาใหม่ชั้นปีที่ 1 มหาวิทยาลัยกรุงเทพ ประจำปีการศึกษา 2568 ในกลุ่มตัวอย่างที่เลือกวิเคราะห์จำนวน ${filteredSubmissions.length} รายพบว่า นักศึกษามีความมุ่งหวังหลักในด้าน "การเรียนรู้นอกห้องเรียนและการนำหลักสูตรไปใช้งานจริงในวิชาชีพ" และต้องการให้สถาบันพัฒนาสิ่งอำนวยความสะดวก เทคโนโลยีการเรียนรู้ และสิ่งสนับสนุนการเรียนการสอนเชิงรุกที่สอดรับกับนโยบายพัฒนาทักษะสร้างสรรค์ของมหาวิทยาลัย`
+      );
+      setMethodologyText(
+        `การวิจัยสถาบันฉบับนี้ใช้รูปแบบการวิจัยเชิงสำรวจ (Survey Research) โดยจัดเก็บรวบรวมข้อมูลผ่านระบบสำรวจออนไลน์ แบบประเมินประกอบด้วยรายการตัวเลือกความคาดหวัง 22 รายการ และข้อคำถามปลายเปิดเพื่อสะท้อนความเห็นเพิ่มเติม วิเคราะห์ข้อมูลสถิติโดยใช้ความถี่ ร้อยละ และการจัดอันดับความสำคัญตามความต้องการของนักศึกษาจำแนกรายมิติและคณะวิชาสังกัด`
+      );
+      setRecommendationsText(
+        `1. ควรเร่งยกระดับห้องปฏิบัติการและอุปกรณ์เทคโนโลยีสารสนเทศให้มีความทันสมัยและเพียงพอต่อจำนวนนักศึกษาในทุกสาขาวิชาเอก\n2. ส่งเสริมกระบวนการเรียนรู้แบบ Active Learning โดยเน้นการฝึกปฏิบัติจริง (Hands-on) และเชิญวิทยากรผู้เชี่ยวชาญจากภายนอกเข้ามาร่วมจัดกิจกรรมแบ่งปันประสบการณ์\n3. เพิ่มรอบรถตู้บริการรับส่งระหว่างวิทยาเขตเพื่ออำนวยความสะดวกในการเดินทาง และขยายเวลาเปิดทำการของ Co-working Space ในช่วงสอบกลางภาคและปลายภาค`
+      );
+    } else {
+      setReportTitle(`Institutional Research Report: Analysis of New Student Expectations${facultyStrEn}, Bangkok University Academic Year 2025`);
+      setReportAuthor('Educational Quality Standards Department, Office of Educational Quality Standards, Bangkok University');
+      setReportSignee('Reporter, Educational Quality Standards Department');
+      setExecSummaryText(
+        `Based on the survey of first-year student expectations at Bangkok University for the 2025 academic year, analyzed from a sample size of ${filteredSubmissions.length} respondents. The data reveals that students place the highest value on "practical, hands-on learning experiences and career employability." It is critical for the institution to continuously invest in state-of-the-art facilities, digital technology, and academic support services aligned with the university's creative core.`
+      );
+      setMethodologyText(
+        `This institutional research utilizes a survey research design, collecting quantitative and qualitative data through an online system. The questionnaire features 22 expectation indicators and an open-ended feedback section. Statistical metrics include frequency distributions, percentages, and multi-dimensional rankings by faculty and degree levels.`
+      );
+      setRecommendationsText(
+        `1. Modernize and expand lab facilities and technical learning equipment to ensure adequate resources across all active majors.\n2. Strengthen practical, hands-on active learning initiatives by embedding more field projects and industry expert workshops.\n3. Enhance student transit solutions and expand campus service operating hours during peak exam weeks based on qualitative feedback.`
+      );
+    }
+  }, [selectedFaculty, filteredSubmissions.length, lang]);
 
   // 2. CALCULATE STATISTICS (Count & Percentage of Options checked by current filtered list)
   const statistics = useMemo(() => {
@@ -590,6 +642,67 @@ export default function AdminDashboard({ submissions, onClearSubmissions, onRese
     };
   }, [filteredSubmissions]);
 
+  // Institutional Quality Dimensions analysis for research report
+  const irDimensionMetrics = useMemo(() => {
+    const dim1Options = ['01', '03', '11', '14', '15']; // Academic & Employability
+    const dim2Options = ['04', '05', '13', '16', '21']; // Instructor Standards & Quality
+    const dim3Options = ['06', '07', '17', '18'];       // Tech & Infrastructure
+    const dim4Options = ['02', '08', '09', '10', '12', '19', '20']; // Welfare & Community
+
+    let dim1Count = 0;
+    let dim2Count = 0;
+    let dim3Count = 0;
+    let dim4Count = 0;
+
+    filteredSubmissions.forEach((sub) => {
+      const opts = sub.selectedOptions || [];
+      if (opts.some(o => dim1Options.includes(o))) dim1Count++;
+      if (opts.some(o => dim2Options.includes(o))) dim2Count++;
+      if (opts.some(o => dim3Options.includes(o))) dim3Count++;
+      if (opts.some(o => dim4Options.includes(o))) dim4Count++;
+    });
+
+    const totalSub = filteredSubmissions.length;
+    return [
+      {
+        id: 'DIM1',
+        name: lang === 'TH' ? 'มิติที่ 1: คุณภาพหลักสูตรและการเตรียมความพร้อมสู่วิชาชีพ' : 'Dimension 1: Academic Programs & Career Employability',
+        description: lang === 'TH' ? 'ความสอดคล้องของหลักสูตรกับการนำไปใช้งานจริง และโอกาสการทำงานหลังจบการศึกษา (ครอบคลุมข้อเลือก 01, 03, 11, 14, 15)' : 'Alignment of programs with real-world applications and post-graduation employability (Option 01, 03, 11, 14, 15)',
+        count: dim1Count,
+        percentage: totalSub > 0 ? Number(((dim1Count / totalSub) * 100).toFixed(1)) : 0,
+        color: '#003366',
+        items: dim1Options
+      },
+      {
+        id: 'DIM2',
+        name: lang === 'TH' ? 'มิติที่ 2: มาตรฐานผู้สอนและคุณภาพปฏิสัมพันธ์ทางการเรียนรู้' : 'Dimension 2: Instructional Quality & Faculty Excellence',
+        description: lang === 'TH' ? 'ชื่อเสียงและคุณภาพความใส่ใจของคณาจารย์ทั้งประจำเป็นพิเศษ และบรรยากาศเรียนสนุก (ครอบคลุมข้อเลือก 04, 05, 13, 16, 21)' : 'Reputation, quality, attentiveness of faculty members, and interactive learning atmosphere (Option 04, 05, 13, 16, 21)',
+        count: dim2Count,
+        percentage: totalSub > 0 ? Number(((dim2Count / totalSub) * 100).toFixed(1)) : 0,
+        color: '#00A2E8',
+        items: dim2Options
+      },
+      {
+        id: 'DIM3',
+        name: lang === 'TH' ? 'มิติที่ 3: สภาพแวดล้อมทางกายภาพ อุปกรณ์ และสิ่งอำนวยความสะดวก' : 'Dimension 3: Physical Environment, Technology & Facilities',
+        description: lang === 'TH' ? 'ความทันสมัยและพอเพียงของเครื่องมือ ห้องปฏิบัติการ อาคารสถานที่ และเครือข่ายอินเทอร์เน็ต (ครอบคลุมข้อเลือก 06, 07, 17, 18)' : 'Sufficiency and modernization of laboratories, building facilities, campus environment, and Wi-Fi networks (Option 06, 07, 17, 18)',
+        count: dim3Count,
+        percentage: totalSub > 0 ? Number(((dim3Count / totalSub) * 100).toFixed(1)) : 0,
+        color: '#e21b56',
+        items: dim3Options
+      },
+      {
+        id: 'DIM4',
+        name: lang === 'TH' ? 'มิติที่ 4: สวัสดิการ การบริการนักศึกษา ชุมชน และความปลอดภัย' : 'Dimension 4: Student Welfare, Campus Community & Security',
+        description: lang === 'TH' ? 'การบริการและดูแลนักศึกษา ทุนการศึกษา กิจกรรมนักศึกษา สังคมเพื่อนรุ่นพี่ และความปลอดภัย (ครอบคลุมข้อเลือก 02, 08, 09, 10, 12, 19, 20)' : 'Student services, scholarships, financial aid, extracurricular sports/activities, safety, and peer support (Option 02, 08, 09, 10, 12, 19, 20)',
+        count: dim4Count,
+        percentage: totalSub > 0 ? Number(((dim4Count / totalSub) * 100).toFixed(1)) : 0,
+        color: '#800080',
+        items: dim4Options
+      }
+    ].sort((a, b) => b.percentage - a.percentage);
+  }, [filteredSubmissions, lang]);
+
   // 5. QUALITATIVE FEEDBACK (Choice 22 text)
   const writtenFeedbacksList = useMemo(() => {
     return filteredSubmissions
@@ -663,6 +776,99 @@ export default function AdminDashboard({ submissions, onClearSubmissions, onRese
     document.body.removeChild(link);
   };
 
+  const generateMarkdownReport = () => {
+    const topExpectations = [...statistics]
+      .sort((a, b) => b.percentage - a.percentage)
+      .slice(0, 5);
+
+    const activeFilterText = [
+      selectedFaculty ? `คณะ: ${selectedFaculty}` : null,
+      selectedMajor ? `สาขาวิชา: ${selectedMajor}` : null,
+      selectedProgram ? `หลักสูตร: ${selectedProgram === 'Thai' ? 'ภาคปกติ' : 'อินเตอร์'}` : null,
+      selectedDegree ? `ระดับปริญญา: ${selectedDegree}` : null
+    ].filter(Boolean).join(' | ') || 'ทั้งหมดทุกคณะวิชา';
+
+    return `# ${reportTitle}
+**รหัสรายงาน:** ${reportNumber}  
+**กลุ่มเป้าหมายวิเคราะห์:** ${activeFilterText}  
+**จำนวนผู้ตอบแบบสำรวจ (N):** ${filteredSubmissions.length} คน  
+**หน่วยงานผู้รับผิดชอบ:** ${reportAuthor}  
+**วันที่ออกเอกสาร:** ${new Date().toLocaleDateString(lang === 'TH' ? 'th-TH' : 'en-US')}
+
+---
+
+## 1. บทสรุปผู้บริหาร (Executive Summary)
+${execSummaryText}
+
+---
+
+## 2. บทนำและระเบียบวิธีวิจัย (Introduction & Methodology)
+${methodologyText}
+
+---
+
+## 3. ผลการวิเคราะห์ข้อมูลเชิงปริมาณ (Quantitative Analysis)
+
+### 3.1 สัดส่วนกลุ่มผู้ตอบแบบประเมินจำแนกรายระดับปริญญาและหลักสูตร
+- **ระดับปริญญาตรี:** ${degreeMetrics.bachelorCount} คน (${degreeMetrics.bachelorPercent}%)
+- **ระดับปริญญาโท:** ${degreeMetrics.masterCount} คน (${degreeMetrics.masterPercent}%)
+- **ระดับปริญญาเอก:** ${degreeMetrics.doctoralCount} คน (${degreeMetrics.doctoralPercent}%)
+- **หลักสูตรภาษาไทย (ปกติ):** ${programMetrics.thaiCount} คน (${programMetrics.thaiPercent}%)
+- **หลักสูตรนานาชาติ/อังกฤษ:** ${programMetrics.interCount} คน (${programMetrics.interPercent}%)
+
+### 3.2 ลำดับความคาดหวังสูงสุด 5 อันดับแรกของนักศึกษาใหม่
+${topExpectations.map((item, idx) => `${idx + 1}. **ข้อเลือก ${item.id}** - ${lang === 'TH' ? item.label : (item.labelEn || item.label)} (โหวต: ${item.count} ครั้ง | ${item.percentage}%)`).join('\n')}
+
+---
+
+## 4. ผลวิเคราะห์ความคาดหวังแบ่งรายมิติวุฒิการศึกษาเชิงสถาบัน (Strategic Dimensions)
+${irDimensionMetrics.map((dim, idx) => `### อันดับที่ ${idx + 1}: ${dim.name}
+- **ความหนาแน่นความคาดหวัง:** ${dim.percentage}%
+- **จำนวนการเลือก:** ${dim.count} ครั้ง  
+- *คำอธิบายมิติ:* ${dim.description}`).join('\n\n')}
+
+---
+
+## 5. บทวิเคราะห์ความคิดเห็นเชิงคุณภาพตัวเลือกแบบเปิด (Qualitative Insights)
+จากการรวบรวมข้อความความคาดหวังเพิ่มเติม ("อื่น ๆ") ของนักศึกษาใหม่ ได้ข้อสรุปทัศนคติที่เด่นชัด ดังนี้:
+${writtenFeedbacksList.slice(0, 5).map((fb, idx) => `${idx + 1}. "${fb.text}" (คณะ: ${fb.faculty})`).join('\n')}
+
+---
+
+## 6. ข้อเสนอแนะเชิงพัฒนาสำหรับสถาบัน (Strategic Policy Recommendations)
+${recommendationsText}
+
+---
+
+**ลงชื่อรับรองความถูกต้องของรายงาน**  
+( ${reportSignee} )  
+สำนักมาตรฐานคุณภาพการศึกษา มหาวิทยาลัยกรุงเทพ
+`;
+  };
+
+  const handleCopyMarkdown = () => {
+    const md = generateMarkdownReport();
+    navigator.clipboard.writeText(md);
+    setReportCopied(true);
+    setTimeout(() => setReportCopied(false), 2000);
+  };
+
+  const handleDownloadText = () => {
+    const md = generateMarkdownReport();
+    const blob = new Blob([md], { type: 'text/markdown;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', `BU_Institutional_Report_${reportNumber}.md`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  const handlePrintReport = () => {
+    window.print();
+  };
+
   const openEmailModal = (facName: string) => {
     const facObj = BU_FACULTIES.find(f => f.name === facName);
     if (!facObj) return;
@@ -720,76 +926,49 @@ export default function AdminDashboard({ submissions, onClearSubmissions, onRese
 
   return (
     <div className="space-y-8 pb-16">
-      {/* 1. TOP SUMMARY METRIC BENTO CARDS */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5" id="admin-summary-cards">
-        {/* Total submissions */}
-        <div className="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 flex items-center justify-between">
-          <div className="space-y-1.5">
-            <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider block">
-              {lang === 'TH' ? 'จำนวนผู้ตอบทั้งหมด' : 'Total Respondents'}
-            </span>
-            <span className="text-3xl font-extrabold text-[#003366] block">
-              {filteredSubmissions.length}{' '}
-              {filteredSubmissions.length !== submissions.length && (
-                <span className="text-xs font-normal text-gray-400">
-                  / {lang === 'TH' ? 'จากทั้งหมด' : 'of total'} {submissions.length}
-                </span>
-              )}
-            </span>
-          </div>
-          <div className="p-3.5 bg-blue-50 text-[#003366] rounded-xl">
-            <Users className="w-6 h-6" />
+      {/* TAB SELECTOR SECTION WITH BU BRANDING ACCENTS */}
+      <div className="bg-white p-2.5 rounded-2xl border border-gray-100 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4 print:hidden">
+        <div className="flex items-center gap-2.5 pl-2">
+          <div className="h-2 w-2 rounded-full bg-[#003366] animate-pulse" />
+          <div>
+            <h3 className="text-xs font-bold text-gray-800 uppercase tracking-wider">
+              {lang === 'TH' ? 'ระบบบริหารจัดการสำหรับแอดมิน' : 'Admin Operations Management'}
+            </h3>
+            <p className="text-[10px] text-gray-400">
+              {lang === 'TH' ? 'สลับโหมดวิเคราะห์ สถิติเรียลไทม์ และรายงานวิจัยสถาบันเพื่อส่งออกผู้บริหาร' : 'Toggle between live statistics dashboard and academic research report generator.'}
+            </p>
           </div>
         </div>
 
-        {/* Thai Program count */}
-        <div className="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 flex items-center justify-between">
-          <div className="space-y-1.5">
-            <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider block">
-              {lang === 'TH' ? 'หลักสูตรภาคปกติ (ภาษาไทย)' : 'Regular Thai Program'}
+        <div className="inline-flex bg-[#F5F7FA] p-1 rounded-xl border border-gray-200 shrink-0 self-start sm:self-auto">
+          <button
+            type="button"
+            onClick={() => setCurrentTab('dashboard')}
+            className={`px-4 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-2 cursor-pointer ${
+              currentTab === 'dashboard'
+                ? 'bg-white text-[#003366] shadow-xs'
+                : 'text-gray-500 hover:text-gray-800'
+            }`}
+          >
+            <BarChart3 className="w-3.5 h-3.5" />
+            <span>{lang === 'TH' ? 'Dashboard สถิติเรียลไทม์' : 'Live Stats Dashboard'}</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => setCurrentTab('ir-report')}
+            className={`px-4 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-2 relative cursor-pointer ${
+              currentTab === 'ir-report'
+                ? 'bg-white text-[#003366] shadow-xs'
+                : 'text-gray-500 hover:text-gray-800'
+            }`}
+          >
+            <FileText className="w-3.5 h-3.5" />
+            <span>{lang === 'TH' ? 'ออกรายงานวิจัยสถาบัน' : 'IR Research Report'}</span>
+            <span className="absolute -top-1 -right-1 flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-indigo-500"></span>
             </span>
-            <span className="text-3xl font-extrabold text-[#003366] block">
-              {programMetrics.thaiCount} <span className="text-xs font-normal text-emerald-600">{programMetrics.thaiPercent}%</span>
-            </span>
-          </div>
-          <div className="p-3.5 bg-sky-50 text-sky-700 rounded-xl">
-            <BookOpen className="w-6 h-6" />
-          </div>
-        </div>
-
-        {/* International Program count */}
-        <div className="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 flex items-center justify-between">
-          <div className="space-y-1.5">
-            <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider block">
-              {lang === 'TH' ? 'หลักสูตรภาษาอังกฤษ/นานาชาติ' : 'English / International'}
-            </span>
-            <span className="text-3xl font-extrabold text-[#003366] block">
-              {programMetrics.interCount} <span className="text-xs font-normal text-sky-600">{programMetrics.interPercent}%</span>
-            </span>
-          </div>
-          <div className="p-3.5 bg-indigo-50 text-indigo-700 rounded-xl">
-            <Globe className="w-6 h-6" />
-          </div>
-        </div>
-
-        {/* Avg Expectations Checked */}
-        <div className="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 flex items-center justify-between">
-          <div className="space-y-1.5">
-            <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider block">
-              {lang === 'TH' ? 'เฉลี่ยความหวัง / คน' : 'Avg Expectations / Student'}
-            </span>
-            <span className="text-3xl font-extrabold text-[#003366] block">
-              {filteredSubmissions.length > 0
-                ? (filteredSubmissions.reduce((sum, s) => sum + (s.selectedOptions || []).length, 0) / filteredSubmissions.length).toFixed(1)
-                : '0.0'}{' '}
-              <span className="text-xs font-normal text-gray-400">
-                {lang === 'TH' ? 'รายการ' : 'options'}
-              </span>
-            </span>
-          </div>
-          <div className="p-3.5 bg-amber-50 text-amber-700 rounded-xl">
-            <HeartHandshake className="w-6 h-6 animate-pulse" />
-          </div>
+          </button>
         </div>
       </div>
 
@@ -959,7 +1138,82 @@ export default function AdminDashboard({ submissions, onClearSubmissions, onRese
         </div>
       </div>
 
-      {/* 3. CHARTS GRID (SVG CUSTOM GRAPHICS) */}
+      {currentTab === 'dashboard' ? (
+        <>
+          {/* 1. TOP SUMMARY METRIC BENTO CARDS */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5" id="admin-summary-cards">
+            {/* Total submissions */}
+            <div className="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 flex items-center justify-between">
+              <div className="space-y-1.5">
+                <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider block">
+                  {lang === 'TH' ? 'จำนวนผู้ตอบทั้งหมด' : 'Total Respondents'}
+                </span>
+                <span className="text-3xl font-extrabold text-[#003366] block">
+                  {filteredSubmissions.length}{' '}
+                  {filteredSubmissions.length !== submissions.length && (
+                    <span className="text-xs font-normal text-gray-400">
+                      / {lang === 'TH' ? 'จากทั้งหมด' : 'of total'} {submissions.length}
+                    </span>
+                  )}
+                </span>
+              </div>
+              <div className="p-3.5 bg-blue-50 text-[#003366] rounded-xl">
+                <Users className="w-6 h-6" />
+              </div>
+            </div>
+
+            {/* Thai Program count */}
+            <div className="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 flex items-center justify-between">
+              <div className="space-y-1.5">
+                <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider block">
+                  {lang === 'TH' ? 'หลักสูตรภาคปกติ (ภาษาไทย)' : 'Regular Thai Program'}
+                </span>
+                <span className="text-3xl font-extrabold text-[#003366] block">
+                  {programMetrics.thaiCount} <span className="text-xs font-normal text-emerald-600">{programMetrics.thaiPercent}%</span>
+                </span>
+              </div>
+              <div className="p-3.5 bg-sky-50 text-sky-700 rounded-xl">
+                <BookOpen className="w-6 h-6" />
+              </div>
+            </div>
+
+            {/* International Program count */}
+            <div className="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 flex items-center justify-between">
+              <div className="space-y-1.5">
+                <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider block">
+                  {lang === 'TH' ? 'หลักสูตรภาษาอังกฤษ/นานาชาติ' : 'English / International'}
+                </span>
+                <span className="text-3xl font-extrabold text-[#003366] block">
+                  {programMetrics.interCount} <span className="text-xs font-normal text-sky-600">{programMetrics.interPercent}%</span>
+                </span>
+              </div>
+              <div className="p-3.5 bg-indigo-50 text-indigo-700 rounded-xl">
+                <Globe className="w-6 h-6" />
+              </div>
+            </div>
+
+            {/* Avg Expectations Checked */}
+            <div className="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 flex items-center justify-between">
+              <div className="space-y-1.5">
+                <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider block">
+                  {lang === 'TH' ? 'เฉลี่ยความหวัง / คน' : 'Avg Expectations / Student'}
+                </span>
+                <span className="text-3xl font-extrabold text-[#003366] block">
+                  {filteredSubmissions.length > 0
+                    ? (filteredSubmissions.reduce((sum, s) => sum + (s.selectedOptions || []).length, 0) / filteredSubmissions.length).toFixed(1)
+                    : '0.0'}{' '}
+                  <span className="text-xs font-normal text-gray-400">
+                    {lang === 'TH' ? 'รายการ' : 'options'}
+                  </span>
+                </span>
+              </div>
+              <div className="p-3.5 bg-amber-50 text-amber-700 rounded-xl">
+                <HeartHandshake className="w-6 h-6 animate-pulse" />
+              </div>
+            </div>
+          </div>
+
+          {/* 3. CHARTS GRID (SVG CUSTOM GRAPHICS) */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* DONUT: Curriculum Distribution */}
         <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex flex-col justify-between space-y-4">
@@ -1587,6 +1841,479 @@ export default function AdminDashboard({ submissions, onClearSubmissions, onRese
         </div>
 
       </div>
+        </>
+      ) : (
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 print:block">
+          {/* Style Injector */}
+          <style>{`
+            @media print {
+              body {
+                background: white !important;
+                color: black !important;
+                font-family: 'Sarabun', 'Inter', serif !important;
+                margin: 0 !important;
+                padding: 0 !important;
+              }
+              header, footer, nav, aside, 
+              .print-hidden, 
+              #global-header, 
+              #admin-summary-cards, 
+              #filters-engine-panel, 
+              button,
+              select,
+              input,
+              textarea,
+              .shadow-sm,
+              .shadow-md,
+              .shadow-lg,
+              .shadow-xl {
+                display: none !important;
+                box-shadow: none !important;
+              }
+              .print-report-container {
+                display: block !important;
+                width: 100% !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                background: white !important;
+                color: black !important;
+                box-shadow: none !important;
+                border: none !important;
+              }
+              .print-page-break {
+                page-break-before: always !important;
+              }
+              .print-no-break {
+                page-break-inside: avoid !important;
+              }
+            }
+          `}</style>
+
+          {/* Left Panel: Settings and controls (Hidden in Print) */}
+          <div className="space-y-6 print-hidden lg:col-span-1">
+            <div className="bg-white p-5 md:p-6 rounded-2xl shadow-sm border border-gray-100 space-y-5">
+              <div className="border-b border-gray-100 pb-3 flex items-center gap-2">
+                <FileText className="w-4.5 h-4.5 text-[#003366]" />
+                <h4 className="text-sm font-bold text-gray-800">
+                  {lang === 'TH' ? 'ตั้งค่ารายงานวิจัยสถาบัน' : 'IR Report Configuration'}
+                </h4>
+              </div>
+
+              {/* Interactive Scope Selectors for IR Report */}
+              <div className="bg-blue-50/40 border border-blue-100 rounded-2xl p-4 space-y-3">
+                <div className="flex items-center gap-1.5 text-[#003366] font-bold text-xs pb-1.5 border-b border-blue-100">
+                  <Filter className="w-3.5 h-3.5" />
+                  <span>{lang === 'TH' ? 'ขอบเขตเป้าหมายรายงาน' : 'Report Target Scope'}</span>
+                </div>
+
+                {/* Faculty selector */}
+                <div className="space-y-1">
+                  <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-wider" htmlFor="report-filter-faculty">
+                    {lang === 'TH' ? 'คณะที่เข้าศึกษา' : 'Faculty / College'}
+                  </label>
+                  <select
+                    id="report-filter-faculty"
+                    value={selectedFaculty}
+                    onChange={handleFacultyFilterChange}
+                    className="w-full bg-white border border-gray-200 rounded-xl px-3 py-1.5 text-xs text-gray-800 outline-none cursor-pointer focus:border-[#003366] focus:ring-1 focus:ring-[#003366]"
+                  >
+                    <option value="">{lang === 'TH' ? 'ทั้งหมดทุกคณะ' : 'All Faculties'}</option>
+                    {BU_FACULTIES.map((fac) => (
+                      <option key={fac.name} value={fac.name}>
+                        {lang === 'TH' ? fac.name : (fac.nameEn || fac.name)}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* Department / Major selector */}
+                <div className="space-y-1">
+                  <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-wider" htmlFor="report-filter-major">
+                    {lang === 'TH' ? 'สาขาวิชา' : 'Department / Major'}
+                  </label>
+                  <select
+                    id="report-filter-major"
+                    disabled={!selectedFaculty}
+                    value={selectedMajor}
+                    onChange={(e) => setSelectedMajor(e.target.value)}
+                    className="w-full bg-white disabled:opacity-50 disabled:cursor-not-allowed border border-gray-200 rounded-xl px-3 py-1.5 text-xs text-gray-800 outline-none cursor-pointer focus:border-[#003366] focus:ring-1 focus:ring-[#003366]"
+                  >
+                    <option value="">{lang === 'TH' ? 'ทั้งหมดทุกสาขา' : 'All Majors'}</option>
+                    {filterMajorsList.map((m) => {
+                      const facObj = BU_FACULTIES.find((f) => f.name === selectedFaculty);
+                      const mIdx = facObj?.majors.indexOf(m) ?? -1;
+                      const mEn = (mIdx !== -1 && facObj?.majorsEn && facObj.majorsEn[mIdx]) ? facObj.majorsEn[mIdx] : m;
+                      return (
+                        <option key={m} value={m}>
+                          {lang === 'TH' ? m : mEn}
+                        </option>
+                      );
+                    })}
+                  </select>
+                </div>
+
+                {/* Degree Level selector */}
+                <div className="space-y-1">
+                  <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-wider" htmlFor="report-filter-degree">
+                    {lang === 'TH' ? 'ระดับการศึกษา' : 'Degree Level'}
+                  </label>
+                  <select
+                    id="report-filter-degree"
+                    value={selectedDegree}
+                    onChange={(e) => setSelectedDegree(e.target.value)}
+                    className="w-full bg-white border border-gray-200 rounded-xl px-3 py-1.5 text-xs text-gray-800 outline-none cursor-pointer focus:border-[#003366] focus:ring-1 focus:ring-[#003366]"
+                  >
+                    <option value="">{lang === 'TH' ? 'ระดับการศึกษาทั้งหมด' : 'All Degree Levels'}</option>
+                    <option value="Bachelor">{lang === 'TH' ? 'ปริญญาตรี (Bachelor\'s)' : 'Bachelor\'s Degree'}</option>
+                    <option value="Master">{lang === 'TH' ? 'ปริญญาโท (Master\'s)' : 'Master\'s Degree'}</option>
+                    <option value="Doctoral">{lang === 'TH' ? 'ปริญญาเอก (Doctoral)' : 'Doctoral Degree'}</option>
+                  </select>
+                </div>
+
+                {/* Sample Size summary */}
+                <div className="pt-2 flex justify-between items-center text-[11px] font-semibold text-gray-500 border-t border-blue-100">
+                  <span>{lang === 'TH' ? 'จำนวนกลุ่มตัวอย่าง:' : 'Sample Size:'}</span>
+                  <span className="bg-[#003366] text-white px-2.5 py-0.5 rounded-full font-mono text-[11px]">
+                    N = {filteredSubmissions.length}
+                  </span>
+                </div>
+              </div>
+
+              <div className="space-y-4 text-xs text-gray-700">
+                {/* Title edit */}
+                <div className="space-y-1">
+                  <label className="block text-[11px] font-semibold text-gray-500 uppercase tracking-wider">
+                    {lang === 'TH' ? 'หัวข้อรายงานวิจัย' : 'Report Title'}
+                  </label>
+                  <textarea
+                    rows={3}
+                    value={reportTitle}
+                    onChange={(e) => setReportTitle(e.target.value)}
+                    className="w-full bg-[#f5f7fa] border border-gray-100 rounded-xl px-3 py-2 text-xs focus:ring-[#003366] focus:bg-white text-gray-800 outline-none leading-relaxed"
+                  />
+                </div>
+
+                {/* Report Number / Signature */}
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="space-y-1">
+                    <label className="block text-[11px] font-semibold text-gray-500 uppercase tracking-wider">
+                      {lang === 'TH' ? 'เลขที่รายงาน' : 'Report Code'}
+                    </label>
+                    <input
+                      type="text"
+                      value={reportNumber}
+                      onChange={(e) => setReportNumber(e.target.value)}
+                      className="w-full bg-[#f5f7fa] border border-gray-100 rounded-xl px-3 py-2 text-xs focus:ring-[#003366] focus:bg-white text-gray-800 outline-none"
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <label className="block text-[11px] font-semibold text-gray-500 uppercase tracking-wider">
+                      {lang === 'TH' ? 'ชื่อผู้ตรวจสอบรับรอง' : 'Approver Title'}
+                    </label>
+                    <input
+                      type="text"
+                      value={reportSignee}
+                      onChange={(e) => setReportSignee(e.target.value)}
+                      className="w-full bg-[#f5f7fa] border border-gray-100 rounded-xl px-3 py-2 text-xs focus:ring-[#003366] focus:bg-white text-gray-800 outline-none"
+                    />
+                  </div>
+                </div>
+
+                {/* Executive Summary edit */}
+                <div className="space-y-1">
+                  <label className="block text-[11px] font-semibold text-gray-500 uppercase tracking-wider">
+                    {lang === 'TH' ? 'บทสรุปผู้บริหาร' : 'Executive Summary'}
+                  </label>
+                  <textarea
+                    rows={4}
+                    value={execSummaryText}
+                    onChange={(e) => setExecSummaryText(e.target.value)}
+                    className="w-full bg-[#f5f7fa] border border-gray-100 rounded-xl px-3 py-2 text-xs focus:ring-[#003366] focus:bg-white text-gray-800 outline-none leading-relaxed"
+                  />
+                </div>
+
+                {/* Methodology edit */}
+                <div className="space-y-1">
+                  <label className="block text-[11px] font-semibold text-gray-500 uppercase tracking-wider">
+                    {lang === 'TH' ? 'ระเบียบวิธีวิจัย' : 'Methodology'}
+                  </label>
+                  <textarea
+                    rows={3}
+                    value={methodologyText}
+                    onChange={(e) => setMethodologyText(e.target.value)}
+                    className="w-full bg-[#f5f7fa] border border-gray-100 rounded-xl px-3 py-2 text-xs focus:ring-[#003366] focus:bg-white text-gray-800 outline-none leading-relaxed"
+                  />
+                </div>
+
+                {/* Strategic recommendations edit */}
+                <div className="space-y-1">
+                  <label className="block text-[11px] font-semibold text-gray-500 uppercase tracking-wider">
+                    {lang === 'TH' ? 'ข้อเสนอแนะเชิงพัฒนาเพื่อสถาบัน' : 'Strategic Recommendations'}
+                  </label>
+                  <textarea
+                    rows={4}
+                    value={recommendationsText}
+                    onChange={(e) => setRecommendationsText(e.target.value)}
+                    className="w-full bg-[#f5f7fa] border border-gray-100 rounded-xl px-3 py-2 text-xs focus:ring-[#003366] focus:bg-white text-gray-800 outline-none leading-relaxed"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Action buttons list */}
+            <div className="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 space-y-3">
+              <button
+                type="button"
+                onClick={handlePrintReport}
+                className="w-full bg-[#003366] text-white hover:bg-[#002244] active:scale-[0.98] transition-all font-bold text-xs py-2.5 rounded-xl flex items-center justify-center gap-2 cursor-pointer"
+              >
+                <Printer className="w-4 h-4" />
+                <span>{lang === 'TH' ? 'พิมพ์รายงาน / บันทึกเป็น PDF' : 'Print / Export to PDF'}</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={handleCopyMarkdown}
+                className="w-full bg-slate-100 hover:bg-slate-200 text-slate-800 active:scale-[0.98] transition-all font-bold text-xs py-2.5 rounded-xl flex items-center justify-center gap-2 border border-slate-200 cursor-pointer"
+              >
+                {reportCopied ? <Check className="w-4 h-4 text-emerald-600 animate-bounce" /> : <Copy className="w-4 h-4" />}
+                <span>
+                  {reportCopied
+                    ? (lang === 'TH' ? 'คัดลอกลงคลิปบอร์ดแล้ว!' : 'Copied to Clipboard!')
+                    : (lang === 'TH' ? 'คัดลอกรายงาน (Markdown)' : 'Copy Report (Markdown)')
+                  }
+                </span>
+              </button>
+
+              <button
+                type="button"
+                onClick={handleDownloadText}
+                className="w-full bg-slate-100 hover:bg-slate-200 text-slate-800 active:scale-[0.98] transition-all font-bold text-xs py-2.5 rounded-xl flex items-center justify-center gap-2 border border-slate-200 cursor-pointer"
+              >
+                <FileDown className="w-4 h-4" />
+                <span>{lang === 'TH' ? 'ดาวน์โหลดรายงาน (.md)' : 'Download Report (.md)'}</span>
+              </button>
+            </div>
+          </div>
+
+          {/* Right Panel: Academic A4 Paper Canvas */}
+          <div className="lg:col-span-2 print:col-span-1">
+            <div className="bg-white shadow-xl rounded-2xl border border-gray-200 p-8 md:p-12 max-w-[800px] mx-auto select-text font-serif text-gray-900 leading-relaxed text-sm print-report-container">
+              {/* Report Cover / Header block */}
+              <div className="border-b-4 border-double border-[#003366] pb-6 mb-8 text-center space-y-3 relative">
+                <div className="absolute top-0 right-0 font-mono text-[10px] text-gray-400 print-hidden">
+                  Ref: {reportNumber}
+                </div>
+                <div className="flex justify-center mb-2">
+                  <div className="h-12 w-12 bg-[#003366] text-white flex items-center justify-center rounded-xl font-extrabold tracking-widest text-lg">
+                    BU
+                  </div>
+                </div>
+                <h1 className="text-xl md:text-2xl font-bold tracking-tight text-gray-900 leading-snug print-report-title">
+                  {reportTitle}
+                </h1>
+                <p className="text-xs text-gray-500 font-sans tracking-wide">
+                  {lang === 'TH' ? 'เอกสารวิจัยสถาบันเพื่อพัฒนาคุณภาพการศึกษาเชิงยุทธศาสตร์ (Institutional Research Document)' : 'Academic Institutional Research Document for Strategy & Quality Assurance'}
+                </p>
+                <div className="grid grid-cols-2 gap-4 text-[11px] font-sans text-gray-500 pt-3 border-t border-dashed border-gray-200">
+                  <div className="text-left leading-relaxed">
+                    <strong>{lang === 'TH' ? 'เลขที่วิจัย:' : 'Document No:'}</strong> {reportNumber}<br />
+                    <strong>{lang === 'TH' ? 'กลุ่มเป้าหมาย:' : 'Filter Group:'}</strong> {selectedFaculty || (lang === 'TH' ? 'ทุกคณะ/วิทยาลัย' : 'All Faculties')}
+                  </div>
+                  <div className="text-right leading-relaxed">
+                    <strong>{lang === 'TH' ? 'วันที่:' : 'Date:'}</strong> {new Date().toLocaleDateString(lang === 'TH' ? 'th-TH' : 'en-US')}<br />
+                    <strong>{lang === 'TH' ? 'ขนาดกลุ่มตัวอย่าง:' : 'Sample Size:'}</strong> N = {filteredSubmissions.length}
+                  </div>
+                </div>
+              </div>
+
+              {/* SECTION 1: EXECUTIVE SUMMARY */}
+              <div className="space-y-3 mb-8 print-no-break">
+                <h3 className="text-sm font-bold text-[#003366] uppercase tracking-wider border-l-3 border-[#003366] pl-2.5 font-sans">
+                  {lang === 'TH' ? '1. บทสรุปผู้บริหาร (Executive Summary)' : '1. Executive Summary'}
+                </h3>
+                <p className="text-gray-700 leading-relaxed text-[13px] indent-8 whitespace-pre-line text-justify text-justify">
+                  {execSummaryText}
+                </p>
+              </div>
+
+              {/* SECTION 2: INTRODUCTION */}
+              <div className="space-y-3 mb-8 print-no-break">
+                <h3 className="text-sm font-bold text-[#003366] uppercase tracking-wider border-l-3 border-[#003366] pl-2.5 font-sans">
+                  {lang === 'TH' ? '2. บทนำและระเบียบวิธีวิจัย (Methodology)' : '2. Research Methodology'}
+                </h3>
+                <p className="text-gray-700 leading-relaxed text-[13px] indent-8 text-justify whitespace-pre-line">
+                  {methodologyText}
+                </p>
+              </div>
+
+              {/* SECTION 3: QUANTITATIVE STATS TABLE */}
+              <div className="space-y-4 mb-8 print-no-break">
+                <h3 className="text-sm font-bold text-[#003366] uppercase tracking-wider border-l-3 border-[#003366] pl-2.5 font-sans">
+                  {lang === 'TH' ? '3. ผลการวิเคราะห์สถิติภาพรวมเชิงปริมาณ' : '3. Quantitative Statistical Analysis'}
+                </h3>
+                
+                {/* Profile ratio card */}
+                <div className="bg-slate-50 border border-gray-100 p-4 rounded-xl font-sans text-xs grid grid-cols-2 sm:grid-cols-3 gap-4 print:bg-white print:border-slate-300">
+                  <div className="space-y-1">
+                    <span className="text-gray-400 font-medium block">{lang === 'TH' ? 'รวมผู้ตอบ:' : 'Total Respondents:'}</span>
+                    <strong className="text-lg text-[#003366] block">{filteredSubmissions.length} {lang === 'TH' ? 'คน' : 'students'}</strong>
+                  </div>
+                  <div className="space-y-1">
+                    <span className="text-gray-400 font-medium block">{lang === 'TH' ? 'ภาคปกติ (ไทย):' : 'Regular Program (Thai):'}</span>
+                    <strong className="text-xs text-gray-700 block">{programMetrics.thaiCount} คน ({programMetrics.thaiPercent}%)</strong>
+                  </div>
+                  <div className="space-y-1">
+                    <span className="text-gray-400 font-medium block">{lang === 'TH' ? 'อินเตอร์/อังกฤษ:' : 'International Program:'}</span>
+                    <strong className="text-xs text-gray-700 block">{programMetrics.interCount} คน ({programMetrics.interPercent}%)</strong>
+                  </div>
+                  <div className="space-y-1">
+                    <span className="text-gray-400 font-medium block">{lang === 'TH' ? 'ปริญญาตรี (Bachelor):' : 'Bachelor Degree:'}</span>
+                    <strong className="text-xs text-gray-700 block">{degreeMetrics.bachelorCount} คน ({degreeMetrics.bachelorPercent}%)</strong>
+                  </div>
+                  <div className="space-y-1 col-span-2">
+                    <span className="text-gray-400 font-medium block">{lang === 'TH' ? 'สัดส่วน ป.โท และ ป.เอก:' : 'Postgraduate Ratio:'}</span>
+                    <strong className="text-xs text-gray-700 block">
+                      {lang === 'TH' ? 'โท:' : 'Master:'} {degreeMetrics.masterCount} คน ({degreeMetrics.masterPercent}%) | {lang === 'TH' ? 'เอก:' : 'Doc:'} {degreeMetrics.doctoralCount} คน ({degreeMetrics.doctoralPercent}%)
+                    </strong>
+                  </div>
+                </div>
+
+                {/* Ranked top 5 list Table */}
+                <div className="space-y-2">
+                  <span className="text-[11px] font-bold text-gray-600 font-sans block">
+                    {lang === 'TH' ? 'ตารางที่ 1: จัดอันดับความคาดหวังสูงสุด 5 ลำดับแรก' : 'Table 1: Top 5 Expectations Ranking'}
+                  </span>
+                  <table className="w-full text-left text-xs font-sans print-table">
+                    <thead>
+                      <tr className="bg-[#003366] text-white font-semibold border-b border-gray-300">
+                        <th className="py-2.5 px-3 rounded-l-lg text-center w-[60px]">{lang === 'TH' ? 'อันดับ' : 'Rank'}</th>
+                        <th className="py-2.5 px-3 w-[80px] text-center">{lang === 'TH' ? 'รหัสข้อ' : 'Option ID'}</th>
+                        <th className="py-2.5 px-3">{lang === 'TH' ? 'รายละเอียดความคาดหวัง' : 'Expectation Description'}</th>
+                        <th className="py-2.5 px-3 text-center w-[100px]">{lang === 'TH' ? 'ความถี่ (คน)' : 'Frequency'}</th>
+                        <th className="py-2.5 px-3 text-right rounded-r-lg w-[100px]">{lang === 'TH' ? 'ร้อยละ (%)' : 'Percentage (%)'}</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-gray-100 border-b border-gray-200">
+                      {[...statistics]
+                        .sort((a, b) => b.percentage - a.percentage)
+                        .slice(0, 5)
+                        .map((item, idx) => {
+                          const itemLabel = lang === 'TH' ? item.label : (item.labelEn || item.label);
+                          return (
+                            <tr key={item.id} className="hover:bg-slate-50 transition-all">
+                              <td className="py-2.5 px-3 text-center font-bold text-gray-700">{idx + 1}</td>
+                              <td className="py-2.5 px-3 text-center font-mono text-[#003366] font-bold">{item.id}</td>
+                              <td className="py-2.5 px-3 text-gray-700 leading-normal font-medium">{itemLabel}</td>
+                              <td className="py-2.5 px-3 text-center font-mono font-bold text-gray-600">{item.count}</td>
+                              <td className="py-2.5 px-3 text-right font-mono font-bold text-[#003366]">{item.percentage}%</td>
+                            </tr>
+                          );
+                        })}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              {/* PAGE BREAK FOR PRINTING IF CONTENT GROWS */}
+              <div className="print-page-break" />
+
+              {/* SECTION 4: STRATEGIC DIMENSION / PILLAR ANALYSIS */}
+              <div className="space-y-4 mb-8 print-no-break">
+                <h3 className="text-sm font-bold text-[#003366] uppercase tracking-wider border-l-3 border-[#003366] pl-2.5 font-sans">
+                  {lang === 'TH' ? '4. การสำรวจวิเคราะห์รายมิติตามกรอบมาตรฐานสถาบัน (Dimensional Analysis)' : '4. Multi-Dimensional Institutional Gap Analysis'}
+                </h3>
+                <p className="text-gray-700 text-[13px] indent-8 text-justify">
+                  {lang === 'TH'
+                    ? 'เพื่อความสะดวกในการวางแผนเชิงยุทธศาสตร์ แผนกประกันคุณภาพการศึกษาได้วิเคราะห์แบบสำรวจโดยจัดกลุ่มความต้องการ 22 หัวข้อ ออกเป็น 4 มิติหลักเชิงสถาบัน ผลการจัดอันดับความจำนงสูงสุดพบรายละเอียดดังนี้'
+                    : 'To support strategic planning, the educational quality team grouped the 22 survey options into 4 major institutional dimensions. Below is the ranked density breakdown based on the student votes.'}
+                </p>
+
+                {/* Dimensions ranking visual layout */}
+                <div className="space-y-4 font-sans text-xs">
+                  {irDimensionMetrics.map((dim, idx) => (
+                    <div key={dim.id} className="bg-slate-50/50 p-4 rounded-xl border border-gray-100 space-y-2.5 print:bg-white print:border-slate-300">
+                      <div className="flex justify-between items-center">
+                        <span className="font-bold text-[#003366]">
+                          {idx + 1}. {dim.name}
+                        </span>
+                        <span className="font-mono font-extrabold text-xs text-[#003366]">
+                          {dim.percentage}% ({dim.count} {lang === 'TH' ? 'คน' : 'students'})
+                        </span>
+                      </div>
+                      <p className="text-[11px] text-gray-500 italic leading-snug">
+                        {dim.description}
+                      </p>
+                      {/* Simple print-friendly loading bar */}
+                      <div className="w-full h-1.5 bg-gray-200 rounded-full overflow-hidden">
+                        <div className="h-full bg-[#003366] rounded-full" style={{ width: `${dim.percentage}%` }} />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* SECTION 5: QUALITATIVE FEEDBACK SUMMARY */}
+              <div className="space-y-4 mb-8 print-no-break">
+                <h3 className="text-sm font-bold text-[#003366] uppercase tracking-wider border-l-3 border-[#003366] pl-2.5 font-sans">
+                  {lang === 'TH' ? '5. บทวิเคราะห์ความคิดเห็นเชิงคุณภาพตัวเลือกแบบเปิด' : '5. Qualitative Feedback Analysis'}
+                </h3>
+                <p className="text-gray-700 text-[13px] indent-8 text-justify">
+                  {lang === 'TH'
+                    ? 'จากการวิเคราะห์กลั่นกรองคำร้องเรียนหรือความเห็นเพิ่มเติม (ที่ระบุเพิ่มเติมในหัวข้อ "อื่น ๆ" ตัวเลือก 22) คณะผู้วิจัยสถาบันได้คัดแยกทัศนคติสะท้อนตัวแทนที่มีความสำคัญสูงสุด เพื่อนำเสนอเป็นเสียงสะท้อนจากนักศึกษาจริง (Voice of Students) ดังตัวอย่างความคิดเห็นดังต่อไปนี้'
+                    : 'Based on qualitative coding of additional expectations written under the "Other" option 22, the institutional research team highlighted the most critical student statements reflecting authentic campus needs:'}
+                </p>
+
+                <div className="space-y-3 font-sans text-xs">
+                  {writtenFeedbacksList.slice(0, 4).map((fb) => (
+                    <div key={fb.id} className="border-l-2 border-[#003366]/30 pl-3.5 py-1 text-gray-700 italic leading-relaxed text-[11px]">
+                      "{fb.text}" <span className="font-semibold text-[#003366] not-italic block mt-1 font-sans">— {lang === 'TH' ? fb.faculty.split(' (')[0] : fb.faculty}</span>
+                    </div>
+                  ))}
+                  {writtenFeedbacksList.length === 0 && (
+                    <div className="text-center text-gray-400 py-6 italic">
+                      {lang === 'TH' ? 'ไม่พบข้อมูลความคิดเห็นเชิงคุณภาพสำหรับการกรองปัจจุบัน' : 'No qualitative comments found for the current filter group.'}
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* SECTION 6: RECOMMENDATIONS */}
+              <div className="space-y-3 mb-12 print-no-break">
+                <h3 className="text-sm font-bold text-[#003366] uppercase tracking-wider border-l-3 border-[#003366] pl-2.5 font-sans">
+                  {lang === 'TH' ? '6. ข้อเสนอแนะเชิงพัฒนาสำหรับสถาบัน (Strategic Policy Recommendations)' : '6. Strategic Policy Recommendations'}
+                </h3>
+                <p className="text-gray-700 text-[13px] indent-8 text-justify mb-2">
+                  {lang === 'TH'
+                    ? 'แผนกประกันคุณภาพการศึกษา สำนักมาตรฐานคุณภาพการศึกษา ใคร่ขอเรียนเสนอแนวทางนโยบายเพื่อปรับปรุงสถาบัน ดังต่อไปนี้'
+                    : 'Based on the research findings, the Office of Educational Quality Standards proposes the following institutional action plans:'}
+                </p>
+                <div className="text-gray-700 text-[13px] leading-relaxed whitespace-pre-line pl-6">
+                  {recommendationsText}
+                </div>
+              </div>
+
+              {/* Signature section */}
+              <div className="pt-8 border-t border-gray-100 grid grid-cols-2 text-xs font-sans text-gray-500 print-no-break">
+                <div>
+                  <strong>{lang === 'TH' ? 'หน่วยงานออกรายงาน:' : 'Issuing Department:'}</strong><br />
+                  {reportAuthor}
+                </div>
+                <div className="text-right space-y-8">
+                  <div>
+                    <strong>{lang === 'TH' ? 'ผู้ประมวลและรับรองรายงาน:' : 'Certified and Compiled By:'}</strong>
+                  </div>
+                  <div className="space-y-1">
+                    <span className="font-bold text-gray-800 border-b border-gray-400 pb-1.5 px-4 block w-48 ml-auto"></span>
+                    <span className="block">{reportSignee}</span>
+                    <span className="block text-[10px] text-gray-400">{lang === 'TH' ? 'มหาวิทยาลัยกรุงเทพ' : 'Bangkok University'}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* 6. SINGLE VIEW DETAIL MODAL SHEET DRAWER */}
       <AnimatePresence>
