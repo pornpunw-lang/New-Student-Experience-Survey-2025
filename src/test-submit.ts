@@ -30,7 +30,7 @@ async function testSecurity() {
       studentName: "Test Student",
       faculty: "Engineering",
       major: "Computer Engineering",
-      academicYear: "2568"
+      academicYear: "2569"
     });
     console.log("✅ SUCCESS: Creation allowed under security rules.");
   } catch (err: any) {

@@ -506,11 +506,11 @@ export default function AdminDashboard({ submissions, onClearSubmissions, onRese
     const facultyStrEn = selectedFaculty ? ` for ${selectedFaculty}` : '';
     
     if (lang === 'TH') {
-      setReportTitle(`รายงานวิจัยสถาบัน: การวิเคราะห์ความคาดหวังของนักศึกษาใหม่${facultyStr} มหาวิทยาลัยกรุงเทพ ประจำปีการศึกษา 2568`);
+      setReportTitle(`รายงานวิจัยสถาบัน: การวิเคราะห์ความคาดหวังของนักศึกษาใหม่${facultyStr} มหาวิทยาลัยกรุงเทพ ประจำปีการศึกษา 2569`);
       setReportAuthor('แผนกประกันคุณภาพการศึกษา สำนักมาตรฐานคุณภาพการศึกษา มหาวิทยาลัยกรุงเทพ');
       setReportSignee('ผู้จัดทำรายงาน แผนกประกันคุณภาพการศึกษา');
       setExecSummaryText(
-        `จากการสำรวจความคิดเห็นและความคาดหวังของนักศึกษาใหม่ชั้นปีที่ 1 มหาวิทยาลัยกรุงเทพ ประจำปีการศึกษา 2568 ในกลุ่มตัวอย่างที่เลือกวิเคราะห์จำนวน ${filteredSubmissions.length} รายพบว่า นักศึกษามีความมุ่งหวังหลักในด้าน "การเรียนรู้นอกห้องเรียนและการนำหลักสูตรไปใช้งานจริงในวิชาชีพ" และต้องการให้สถาบันพัฒนาสิ่งอำนวยความสะดวก เทคโนโลยีการเรียนรู้ และสิ่งสนับสนุนการเรียนการสอนเชิงรุกที่สอดรับกับนโยบายพัฒนาทักษะสร้างสรรค์ของมหาวิทยาลัย`
+        `จากการสำรวจความคิดเห็นและความคาดหวังของนักศึกษาใหม่ชั้นปีที่ 1 มหาวิทยาลัยกรุงเทพ ประจำปีการศึกษา 2569 ในกลุ่มตัวอย่างที่เลือกวิเคราะห์จำนวน ${filteredSubmissions.length} รายพบว่า นักศึกษามีความมุ่งหวังหลักในด้าน "การเรียนรู้นอกห้องเรียนและการนำหลักสูตรไปใช้งานจริงในวิชาชีพ" และต้องการให้สถาบันพัฒนาสิ่งอำนวยความสะดวก เทคโนโลยีการเรียนรู้ และสิ่งสนับสนุนการเรียนการสอนเชิงรุกที่สอดรับกับนโยบายพัฒนาทักษะสร้างสรรค์ของมหาวิทยาลัย`
       );
       setMethodologyText(
         `การวิจัยสถาบันฉบับนี้ใช้รูปแบบการวิจัยเชิงสำรวจ (Survey Research) โดยจัดเก็บรวบรวมข้อมูลผ่านระบบสำรวจออนไลน์ แบบประเมินประกอบด้วยรายการตัวเลือกความคาดหวัง 22 รายการ และข้อคำถามปลายเปิดเพื่อสะท้อนความเห็นเพิ่มเติม วิเคราะห์ข้อมูลสถิติโดยใช้ความถี่ ร้อยละ และการจัดอันดับความสำคัญตามความต้องการของนักศึกษาจำแนกรายมิติและคณะวิชาสังกัด`
@@ -519,11 +519,11 @@ export default function AdminDashboard({ submissions, onClearSubmissions, onRese
         `1. ควรเร่งยกระดับห้องปฏิบัติการและอุปกรณ์เทคโนโลยีสารสนเทศให้มีความทันสมัยและเพียงพอต่อจำนวนนักศึกษาในทุกสาขาวิชาเอก\n2. ส่งเสริมกระบวนการเรียนรู้แบบ Active Learning โดยเน้นการฝึกปฏิบัติจริง (Hands-on) และเชิญวิทยากรผู้เชี่ยวชาญจากภายนอกเข้ามาร่วมจัดกิจกรรมแบ่งปันประสบการณ์\n3. เพิ่มรอบรถตู้บริการรับส่งระหว่างวิทยาเขตเพื่ออำนวยความสะดวกในการเดินทาง และขยายเวลาเปิดทำการของ Co-working Space ในช่วงสอบกลางภาคและปลายภาค`
       );
     } else {
-      setReportTitle(`Institutional Research Report: Analysis of New Student Expectations${facultyStrEn}, Bangkok University Academic Year 2025`);
+      setReportTitle(`Institutional Research Report: Analysis of New Student Expectations${facultyStrEn}, Bangkok University Academic Year 2026`);
       setReportAuthor('Educational Quality Standards Department, Office of Educational Quality Standards, Bangkok University');
       setReportSignee('Reporter, Educational Quality Standards Department');
       setExecSummaryText(
-        `Based on the survey of first-year student expectations at Bangkok University for the 2025 academic year, analyzed from a sample size of ${filteredSubmissions.length} respondents. The data reveals that students place the highest value on "practical, hands-on learning experiences and career employability." It is critical for the institution to continuously invest in state-of-the-art facilities, digital technology, and academic support services aligned with the university's creative core.`
+        `Based on the survey of first-year student expectations at Bangkok University for the 2026 academic year, analyzed from a sample size of ${filteredSubmissions.length} respondents. The data reveals that students place the highest value on "practical, hands-on learning experiences and career employability." It is critical for the institution to continuously invest in state-of-the-art facilities, digital technology, and academic support services aligned with the university's creative core.`
       );
       setMethodologyText(
         `This institutional research utilizes a survey research design, collecting quantitative and qualitative data through an online system. The questionnaire features 22 expectation indicators and an open-ended feedback section. Statistical metrics include frequency distributions, percentages, and multi-dimensional rankings by faculty and degree levels.`
@@ -779,7 +779,7 @@ export default function AdminDashboard({ submissions, onClearSubmissions, onRese
   const generateMarkdownReport = () => {
     const topExpectations = [...statistics]
       .sort((a, b) => b.percentage - a.percentage)
-      .slice(0, 5);
+      .slice(0, 10);
 
     const activeFilterText = [
       selectedFaculty ? `คณะ: ${selectedFaculty}` : null,
@@ -816,7 +816,7 @@ ${methodologyText}
 - **หลักสูตรภาษาไทย (ปกติ):** ${programMetrics.thaiCount} คน (${programMetrics.thaiPercent}%)
 - **หลักสูตรนานาชาติ/อังกฤษ:** ${programMetrics.interCount} คน (${programMetrics.interPercent}%)
 
-### 3.2 ลำดับความคาดหวังสูงสุด 5 อันดับแรกของนักศึกษาใหม่
+### 3.2 ${lang === 'TH' ? 'ลำดับความคาดหวังสูงสุด 10 อันดับแรกของนักศึกษาใหม่' : 'Top 10 New Student Expectations Ranking'}
 ${topExpectations.map((item, idx) => `${idx + 1}. **ข้อเลือก ${item.id}** - ${lang === 'TH' ? item.label : (item.labelEn || item.label)} (โหวต: ${item.count} ครั้ง | ${item.percentage}%)`).join('\n')}
 
 ---
@@ -891,8 +891,8 @@ ${recommendationsText}
       majorStatsStr += `  - ${m.split(' - ')[0]}: ตอบแล้ว ${mResponded} จากเป้าหมาย ${majorTarget} คน (ยังไม่ตอบ ${mNonResponded} คน, คืบหน้า ${mRate}%)\n`;
     });
 
-    const subject = `[ด่วนที่สุด - ติดตามแบบสำรวจนักศึกษาใหม่ 2568] สรุปยอดผู้ตอบและไม่ตอบแบบสำรวจ: ${facName}`;
-    const body = `เรียน คณบดี${facName} (${contact.dean}) และผู้ประสานงานคณะ (${contact.coordinator})\nมหาวิทยาลัยกรุงเทพ\n\nเรื่อง: ขอความร่วมมือประชาสัมพันธ์และติดตามการตอบแบบสำรวจความคาดหวังของนักศึกษาใหม่ชั้นปีที่ 1 (ปีการศึกษา 2568)\n\nตามที่มหาวิทยาลัยได้จัดทำแบบประเมิน "ระบบสำรวจความคิดเห็นนักศึกษาใหม่ ประจำปีการศึกษา 2568" เพื่อสำรวจความต้องการพัฒนากระบวนการเรียนการสอนและสภาพแวดล้อมสถาบันการเรียนรู้ให้สอดรับกับนโยบายพัฒนาทักษะสร้างสรรค์นั้น\n\nแผนกประกันคุณภาพการศึกษา สำนักมาตรฐานคุณภาพการศึกษา ใคร่ขอเรียนรายงานสรุปรายการนักศึกษาที่เข้าร่วมและยังไม่ตอบใน ${facName} ณ ปัจจุบัน ดังนี้:\n\n• จำนวนชั้นปีที่ 1 ทั้งหมด: ${target} คน\n• ดำเนินการตอบแล้ว: ${responded} คน (คิดเป็นร้อยละ ${rate}%)\n• อยู่ระหว่างติดตามเพิ่มเติม: ${nonResponded} คน (ยังไม่ได้ทำแบบสำรวจ)\n\nสถิติจำแนกความคืบหน้าเชิงสาขาวิชาเอกสังกัดคณะ:\n${majorStatsStr}\nในการนี้ เพื่อให้บรรลุตามจำนวนที่จัดเก็บและพัฒนาคุณภาพ QA จึงใคร่ขอความร่วมมือจากคณบดี ${contact.dean} และผู้ประสานงานคณะ ${contact.coordinator} ช่วยประสานและเน้นย้ำแก่อาจารย์ที่ปรึกษา ช่วยเสริมแรงประชาสัมพันธ์แก่นักศึกษาใหม่ในสังกัดที่ยังคงค้าง ให้ตอบแบบสำรวจออนไลน์ที่ระบบสำรวจโดยด่วนที่สุด\n\nขอแสดงความขอบคุณทางคณะและผู้บริหารในความร่วมมือเป็นอย่างดีเสมอมา\n\nด้วยความเคารพอย่างสูง\nแผนกประกันคุณภาพการศึกษา สำนักมาตรฐานคุณภาพการศึกษา\nติดต่อพัฒนาและดูแลระบบ: pornpun.w@bu.ac.th`;
+    const subject = `[ด่วนที่สุด - ติดตามแบบสำรวจนักศึกษาใหม่ 2569] สรุปยอดผู้ตอบและไม่ตอบแบบสำรวจ: ${facName}`;
+    const body = `เรียน คณบดี${facName} (${contact.dean}) และผู้ประสานงานคณะ (${contact.coordinator})\nมหาวิทยาลัยกรุงเทพ\n\nเรื่อง: ขอความร่วมมือประชาสัมพันธ์และติดตามการตอบแบบสำรวจความคาดหวังของนักศึกษาใหม่ชั้นปีที่ 1 (ปีการศึกษา 2569)\n\nตามที่มหาวิทยาลัยได้จัดทำแบบประเมิน "ระบบสำรวจความคิดเห็นนักศึกษาใหม่ ประจำปีการศึกษา 2569" เพื่อสำรวจความต้องการพัฒนากระบวนการเรียนการสอนและสภาพแวดล้อมสถาบันการเรียนรู้ให้สอดรับกับนโยบายพัฒนาทักษะสร้างสรรค์นั้น\n\nแผนกประกันคุณภาพการศึกษา สำนักมาตรฐานคุณภาพการศึกษา ใคร่ขอเรียนรายงานสรุปรายการนักศึกษาที่เข้าร่วมและยังไม่ตอบใน ${facName} ณ ปัจจุบัน ดังนี้:\n\n• จำนวนชั้นปีที่ 1 ทั้งหมด: ${target} คน\n• ดำเนินการตอบแล้ว: ${responded} คน (คิดเป็นร้อยละ ${rate}%)\n• อยู่ระหว่างติดตามเพิ่มเติม: ${nonResponded} คน (ยังไม่ได้ทำแบบสำรวจ)\n\nสถิติจำแนกความคืบหน้าเชิงสาขาวิชาเอกสังกัดคณะ:\n${majorStatsStr}\nในการนี้ เพื่อให้บรรลุตามจำนวนที่จัดเก็บและพัฒนาคุณภาพ QA จึงใคร่ขอความร่วมมือจากคณบดี ${contact.dean} และผู้ประสานงานคณะ ${contact.coordinator} ช่วยประสานและเน้นย้ำแก่อาจารย์ที่ปรึกษา ช่วยเสริมแรงประชาสัมพันธ์แก่นักศึกษาใหม่ในสังกัดที่ยังคงค้าง ให้ตอบแบบสำรวจออนไลน์ที่ระบบสำรวจโดยด่วนที่สุด\n\nขอแสดงความขอบคุณทางคณะและผู้บริหารในความร่วมมือเป็นอย่างดีเสมอมา\n\nด้วยความเคารพอย่างสูง\nแผนกประกันคุณภาพการศึกษา สำนักมาตรฐานคุณภาพการศึกษา\nติดต่อพัฒนาและดูแลระบบ: pornpun.w@bu.ac.th`;
 
     setEmailModalData({
       facultyName: facName,
@@ -1074,7 +1074,7 @@ ${recommendationsText}
               onChange={(e) => setTimeFilter(e.target.value)}
               className="w-full bg-[#f5f7fa] border border-gray-100 rounded-xl px-3.5 py-2 text-xs focus:ring-[#003366] focus:bg-white text-gray-800 outline-none cursor-pointer"
             >
-              <option value="all">{lang === 'TH' ? 'ปีการศึกษา 2568 ทั้งหมด' : 'All Academic Year 2025'}</option>
+              <option value="all">{lang === 'TH' ? 'ปีการศึกษา 2569 ทั้งหมด' : 'All Academic Year 2026'}</option>
               <option value="24h">{lang === 'TH' ? 'ล่าสุด 24 ชั่วโมงที่ผ่านมา' : 'Last 24 Hours'}</option>
               <option value="7d">{lang === 'TH' ? 'ล่าสุด 7 วันที่ผ่านมา' : 'Last 7 Days'}</option>
             </select>
@@ -2179,10 +2179,10 @@ ${recommendationsText}
                   </div>
                 </div>
 
-                {/* Ranked top 5 list Table */}
+                {/* Ranked top 10 list Table */}
                 <div className="space-y-2">
                   <span className="text-[11px] font-bold text-gray-600 font-sans block">
-                    {lang === 'TH' ? 'ตารางที่ 1: จัดอันดับความคาดหวังสูงสุด 5 ลำดับแรก' : 'Table 1: Top 5 Expectations Ranking'}
+                    {lang === 'TH' ? 'ตารางที่ 1: จัดอันดับความคาดหวังสูงสุด 10 ลำดับแรก' : 'Table 1: Top 10 Expectations Ranking'}
                   </span>
                   <table className="w-full text-left text-xs font-sans print-table">
                     <thead>
@@ -2197,7 +2197,7 @@ ${recommendationsText}
                     <tbody className="divide-y divide-gray-100 border-b border-gray-200">
                       {[...statistics]
                         .sort((a, b) => b.percentage - a.percentage)
-                        .slice(0, 5)
+                        .slice(0, 10)
                         .map((item, idx) => {
                           const itemLabel = lang === 'TH' ? item.label : (item.labelEn || item.label);
                           return (
@@ -2319,18 +2319,25 @@ ${recommendationsText}
       <AnimatePresence>
         {activeDetailSubmission && (
           <motion.div
+            key="modal-submission-detail-backdrop"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 backdrop-blur-xs"
-            onClick={() => setActiveDetailSubmission(null)}
+            onClick={(e) => {
+              if (e.target === e.currentTarget) {
+                setActiveDetailSubmission(null);
+              }
+            }}
             id="response-detail-modal"
           >
             <motion.div
+              key="modal-submission-detail-content"
               initial={{ scale: 0.95, y: 15 }}
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.95, y: 15 }}
               onClick={(e) => e.stopPropagation()}
+              onMouseDown={(e) => e.stopPropagation()}
               className="bg-white rounded-3xl w-full max-w-2xl overflow-hidden shadow-2xl border border-gray-100"
             >
               {/* Header & Body with fallback safety */}
@@ -2484,18 +2491,25 @@ ${recommendationsText}
 
         {emailModalData && (
           <motion.div
+            key="modal-outreach-email-backdrop"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 backdrop-blur-xs"
-            onClick={() => setEmailModalData(null)}
+            onClick={(e) => {
+              if (e.target === e.currentTarget) {
+                setEmailModalData(null);
+              }
+            }}
             id="outreach-email-modal"
           >
             <motion.div
+              key="modal-outreach-email-content"
               initial={{ scale: 0.95, y: 20 }}
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.95, y: 20 }}
               onClick={(e) => e.stopPropagation()}
+              onMouseDown={(e) => e.stopPropagation()}
               className="bg-white rounded-3xl w-full max-w-2xl overflow-hidden shadow-2xl border border-gray-100 flex flex-col max-h-[90vh]"
             >
               {/* Header */}
@@ -2705,6 +2719,7 @@ ${recommendationsText}
         {showDeleteConfirm && (
           <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/65 backdrop-blur-sm" id="secure-delete-modal-overlay">
             <motion.div
+              key="secure-delete-modal-box"
               initial={{ opacity: 0, scale: 0.9, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 10 }}
@@ -2718,7 +2733,7 @@ ${recommendationsText}
                     {lang === 'TH' ? 'ระบบล็อกการลบข้อมูลเพื่อความปลอดภัยขั้นสูง' : 'Advanced Data Deletion Safety Lock'}
                   </h3>
                   <p className="text-[10px] md:text-xs text-rose-700/85 font-medium mt-0.5">
-                    {lang === 'TH' ? 'ความปลอดภัยของข้อมูลความคิดเห็นนักศึกษาใหม่ 2568' : 'Protecting 2025 Freshmen real survey submissions'}
+                    {lang === 'TH' ? 'ความปลอดภัยของข้อมูลความคิดเห็นนักศึกษาใหม่ 2569' : 'Protecting 2026 Freshmen real survey submissions'}
                   </p>
                 </div>
               </div>

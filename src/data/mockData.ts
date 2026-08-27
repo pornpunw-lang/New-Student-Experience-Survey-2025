@@ -523,7 +523,7 @@ export function generateMockSubmissions(count: number = 180): SurveyResponse[] {
     const subTime = new Date(baseTime + Math.random() * timeSpread);
 
     list.push({
-      id: `BU68-${100000 + i}`,
+      id: `BU69-${100000 + i}`,
       studentId,
       faculty,
       major,

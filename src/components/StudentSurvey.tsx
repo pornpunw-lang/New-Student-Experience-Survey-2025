@@ -206,7 +206,7 @@ export default function StudentSurvey({ onSurveySubmit, onAdminToggle, lang, set
     } catch (err) {
       console.error("Survey submission failed: ", err);
       // Fallback to local offline-first success flow to ensure the student has a perfect, zero-latency submission experience!
-      const fallbackId = `BU68-${Math.floor(100000 + Math.random() * 900000)}`;
+      const fallbackId = `BU69-${Math.floor(100000 + Math.random() * 900000)}`;
       setSubmissionId(fallbackId);
       setSubmitting(false);
       setStep(3);
@@ -261,7 +261,7 @@ export default function StudentSurvey({ onSurveySubmit, onAdminToggle, lang, set
                 <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent" />
                 <div className="absolute bottom-5 left-6 right-6 text-white">
                   <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-[#FFD700] text-black mb-2 uppercase tracking-wide animate-pulse">
-                    <Sparkles className="w-3.5 h-3.5" /> Welcome Freshmen 2025
+                    <Sparkles className="w-3.5 h-3.5" /> Welcome Freshmen 2026
                   </span>
                   <h3 className="text-xl md:text-2xl font-bold font-sans tracking-tight">
                     ยินดีต้อนรับนักศึกษาใหม่ทุกคน!
@@ -275,7 +275,7 @@ export default function StudentSurvey({ onSurveySubmit, onAdminToggle, lang, set
               {/* Content Description */}
               <div className="p-6 md:p-8 text-center sm:text-left">
                 <p className="text-gray-700 text-sm sm:text-base leading-relaxed font-sans mb-4">
-                  ขอต้อนรับนักศึกษาใหม่ปีการศึกษา 2568 ทุกคนเข้าสู่ครอบครัวมหาวิทยาลัยกรุงเทพ มาร่วมแบ่งปันความต้องการและความคาดหวังเพื่อร่วมสร้างสังคมและประสบการณ์การเรียนรู้ที่ดีที่สุดไปด้วยกัน!
+                  ขอต้อนรับนักศึกษาใหม่ปีการศึกษา 2569 ทุกคนเข้าสู่ครอบครัวมหาวิทยาลัยกรุงเทพ มาร่วมแบ่งปันความต้องการและความคาดหวังเพื่อร่วมสร้างสังคมและประสบการณ์การเรียนรู้ที่ดีที่สุดไปด้วยกัน!
                 </p>
                 <p className="text-gray-500 text-xs sm:text-sm leading-relaxed font-sans italic border-l-2 border-[#003366] pl-3 mb-6 text-left">
                   We're thrilled to have you here! Please complete this short expectation and needs survey to help us build the best possible academic ecosystem for you.
@@ -330,7 +330,7 @@ export default function StudentSurvey({ onSurveySubmit, onAdminToggle, lang, set
                     <ClipboardList className="w-6 h-6 text-white" />
                   </span>
                   <span className="text-xs font-semibold bg-white/20 text-[#ffffff] px-2.5 py-1 rounded-full uppercase tracking-wider">
-                    ปีการศึกษา 2568 / Academic Year 2025
+                    ปีการศึกษา 2569 / Academic Year 2026
                   </span>
                 </div>
                 <h2 className="text-xl md:text-2xl font-bold mt-4 font-sans tracking-tight">

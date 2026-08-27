@@ -134,7 +134,7 @@ const safeSessionStorage = {
 export default function App() {
   // Initialize state from localStorage or fallback to 180 starter mock items so there is always data
   const [submissions, setSubmissions] = useState<SurveyResponse[]>(() => {
-    const saved = safeLocalStorage.getItem('bu_new_student_submissions_2568');
+    const saved = safeLocalStorage.getItem('bu_new_student_submissions_2569') || safeLocalStorage.getItem('bu_new_student_submissions_2568');
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
@@ -148,7 +148,7 @@ export default function App() {
     // Default to the 180 beautiful responses so the dashboard is immediately interactive and never blank
     const initialMocks = generateMockSubmissions(180);
     try {
-      safeLocalStorage.setItem('bu_new_student_submissions_2568', JSON.stringify(initialMocks));
+      safeLocalStorage.setItem('bu_new_student_submissions_2569', JSON.stringify(initialMocks));
     } catch (err) {
       console.warn('LocalStorage save deferred:', err);
     }
@@ -167,7 +167,7 @@ export default function App() {
   // Admin Access Shield Authentication States
   const [isAdminAuthenticated, setIsAdminAuthenticated] = useState<boolean>(() => {
     try {
-      return safeSessionStorage.getItem('bu_admin_auth_2568') === 'true';
+      return safeSessionStorage.getItem('bu_admin_auth_2569') === 'true' || safeSessionStorage.getItem('bu_admin_auth_2568') === 'true';
     } catch (e) {
       return false;
     }
@@ -189,17 +189,19 @@ export default function App() {
         if (email === 'pornpun.w@bu.ac.th') {
           setIsAdminAuthenticated(true);
           try {
-            safeSessionStorage.setItem('bu_admin_auth_2568', 'true');
+            safeSessionStorage.setItem('bu_admin_auth_2569', 'true');
           } catch (e) {}
         } else {
           setIsAdminAuthenticated(false);
           try {
+            safeSessionStorage.removeItem('bu_admin_auth_2569');
             safeSessionStorage.removeItem('bu_admin_auth_2568');
           } catch (e) {}
         }
       } else {
         setIsAdminAuthenticated(false);
         try {
+          safeSessionStorage.removeItem('bu_admin_auth_2569');
           safeSessionStorage.removeItem('bu_admin_auth_2568');
         } catch (e) {}
       }
@@ -221,7 +223,7 @@ export default function App() {
         setIsAdminAuthenticated(true);
         setPasscodeError(null);
         try {
-          safeSessionStorage.setItem('bu_admin_auth_2568', 'true');
+          safeSessionStorage.setItem('bu_admin_auth_2569', 'true');
         } catch (err) {
           console.warn('SessionStorage save deferred:', err);
         }
@@ -247,6 +249,7 @@ export default function App() {
   const handleAdminLogout = async () => {
     setIsAdminAuthenticated(false);
     try {
+      safeSessionStorage.removeItem('bu_admin_auth_2569');
       safeSessionStorage.removeItem('bu_admin_auth_2568');
       await signOut(auth);
     } catch (e) {}
@@ -262,7 +265,7 @@ export default function App() {
       if (snapshot.empty) {
         // If the Firestore database is completely empty (e.g. freshly provisioned),
         // we use local state and don't overwrite it with empty array, giving the admin immediately populated charts.
-        const saved = safeLocalStorage.getItem('bu_new_student_submissions_2568');
+        const saved = safeLocalStorage.getItem('bu_new_student_submissions_2569') || safeLocalStorage.getItem('bu_new_student_submissions_2568');
         if (saved) {
           try {
             const parsed = JSON.parse(saved);
@@ -276,7 +279,7 @@ export default function App() {
         }
         const initialMocks = generateMockSubmissions(180);
         setSubmissions(initialMocks);
-        safeLocalStorage.setItem('bu_new_student_submissions_2568', JSON.stringify(initialMocks));
+        safeLocalStorage.setItem('bu_new_student_submissions_2569', JSON.stringify(initialMocks));
       } else {
         const docsData: SurveyResponse[] = [];
         snapshot.forEach((doc) => {
@@ -284,13 +287,13 @@ export default function App() {
         });
 
         setSubmissions(docsData);
-        safeLocalStorage.setItem('bu_new_student_submissions_2568', JSON.stringify(docsData));
+        safeLocalStorage.setItem('bu_new_student_submissions_2569', JSON.stringify(docsData));
       }
     }, (error) => {
       console.warn("Firestore subscription inactive or offline. Running on secure local database cache mode:", error);
       setIsOffline(true);
       // Fail-safe: always ensure there is data loaded
-      const saved = safeLocalStorage.getItem('bu_new_student_submissions_2568');
+      const saved = safeLocalStorage.getItem('bu_new_student_submissions_2569') || safeLocalStorage.getItem('bu_new_student_submissions_2568');
       if (saved) {
         try {
           const parsed = JSON.parse(saved);
@@ -310,7 +313,7 @@ export default function App() {
 
   // Handle survey submit callback to Firebase Firestore (Optimized for lightning-fast submission)
   const handleSurveySubmit = async (newResp: Omit<SurveyResponse, 'id' | 'submittedAt'>): Promise<string> => {
-    const refCode = `BU68-${Math.floor(100000 + Math.random() * 900000)}`;
+    const refCode = `BU69-${Math.floor(100000 + Math.random() * 900000)}`;
     const finalSubmission: SurveyResponse = {
       ...newResp,
       id: refCode,
@@ -320,12 +323,12 @@ export default function App() {
     // 1. Instantly update local state and localStorage so the user sees results immediately
     setSubmissions(prev => [finalSubmission, ...prev]);
     try {
-      const saved = safeLocalStorage.getItem('bu_new_student_submissions_2568');
+      const saved = safeLocalStorage.getItem('bu_new_student_submissions_2569') || safeLocalStorage.getItem('bu_new_student_submissions_2568');
       let localList: SurveyResponse[] = [];
       if (saved) {
         localList = JSON.parse(saved);
       }
-      safeLocalStorage.setItem('bu_new_student_submissions_2568', JSON.stringify([finalSubmission, ...localList]));
+      safeLocalStorage.setItem('bu_new_student_submissions_2569', JSON.stringify([finalSubmission, ...localList]));
     } catch (e) {
       console.error("Local storage update error: ", e);
     }
@@ -398,10 +401,10 @@ export default function App() {
             <h1 className="text-base md:text-lg font-bold leading-none uppercase tracking-wide">Bangkok University</h1>
             <div className="text-[10px] md:text-xs opacity-90 mt-1 select-none">
               <div className="font-semibold tracking-wide">
-                ระบบสำรวจความคิดเห็นนักศึกษาใหม่ 2568
+                ระบบสำรวจความคิดเห็นนักศึกษาใหม่ 2569
               </div>
               <div className="opacity-75 tracking-wider font-normal mt-0.5">
-                NEW STUDENT EXPERIENCE SURVEY 2025
+                NEW STUDENT EXPERIENCE SURVEY 2026
               </div>
             </div>
           </div>
@@ -450,8 +453,8 @@ export default function App() {
           <Info className="w-3.5 h-3.5 text-[#003366]" />
           <span>
             {lang === 'TH'
-              ? 'ระบบสำรวจปีการศึกษา 2568: มหาวิทยาลัยกรุงเทพ (รวบรวมความคาดหวังเพื่อพัฒนาการเรียนการสอน)'
-              : '2025 First-Year Students Survey: Bangkok University (Gathering expectations to improve teaching & services)'}
+              ? 'ระบบสำรวจปีการศึกษา 2569: มหาวิทยาลัยกรุงเทพ (รวบรวมความคาดหวังเพื่อพัฒนาการเรียนการสอน)'
+              : '2026 First-Year Students Survey: Bangkok University (Gathering expectations to improve teaching & services)'}
           </span>
         </div>
         <div className="flex items-center gap-4">
@@ -649,8 +652,8 @@ export default function App() {
       <footer className="bg-slate-100 border-t border-slate-200 py-3 px-4 md:px-8 text-center md:text-left flex flex-col md:flex-row justify-between items-center text-[10px] text-slate-400 gap-2">
         <div>
           {lang === 'TH'
-            ? 'ม.กรุงเทพ | SYSTEM ID: BU-SURVEY-2568-GENZ'
-            : 'Bangkok University | SYSTEM ID: BU-SURVEY-2568-GENZ'}
+            ? 'ม.กรุงเทพ | SYSTEM ID: BU-SURVEY-2569-GENZ'
+            : 'Bangkok University | SYSTEM ID: BU-SURVEY-2569-GENZ'}
         </div>
         <div className="flex items-center gap-3">
           <span>
