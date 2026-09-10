@@ -17,7 +17,12 @@ import {
   KeyRound,
   Eye,
   EyeOff,
-  Sparkles
+  Sparkles,
+  Copy,
+  Check,
+  ExternalLink,
+  AlertTriangle,
+  Key
 } from 'lucide-react';
 
 import { SurveyResponse } from './types';
@@ -26,6 +31,7 @@ import StudentSurvey from './components/StudentSurvey';
 import AdminDashboard from './components/AdminDashboard';
 import { collection, doc, setDoc, getDocs, writeBatch, query, orderBy, onSnapshot } from 'firebase/firestore';
 import { db, auth } from './lib/firebase';
+import firebaseConfig from '../firebase-applet-config.json';
 import { 
   signInWithPopup, 
   GoogleAuthProvider, 
@@ -177,6 +183,42 @@ export default function App() {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [authChecking, setAuthChecking] = useState<boolean>(true);
   const [passcodeError, setPasscodeError] = useState<string | null>(null);
+  const [isUnauthorizedDomain, setIsUnauthorizedDomain] = useState<boolean>(false);
+  const [copiedDomain, setCopiedDomain] = useState<boolean>(false);
+  const [showPasscodeFallback, setShowPasscodeFallback] = useState<boolean>(false);
+  const [emergencyPasscode, setEmergencyPasscode] = useState<string>('');
+  const [showEmergencyPasscodeText, setShowEmergencyPasscodeText] = useState<boolean>(false);
+
+  const handleCopyDomain = () => {
+    const domain = window.location.hostname;
+    if (navigator?.clipboard?.writeText) {
+      navigator.clipboard.writeText(domain);
+      setCopiedDomain(true);
+      setTimeout(() => setCopiedDomain(false), 2500);
+    }
+  };
+
+  const handleEmergencyPasscodeLogin = (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    const cleanCode = emergencyPasscode.trim().toLowerCase();
+    // Authorized emergency codes for BU Coordinator: buqa2569, bu2569, pornpun2569
+    if (cleanCode === 'buqa2569' || cleanCode === 'bu2569' || cleanCode === 'pornpun2569') {
+      setIsAdminAuthenticated(true);
+      setPasscodeError(null);
+      setIsUnauthorizedDomain(false);
+      try {
+        safeSessionStorage.setItem('bu_admin_auth_2569', 'true');
+      } catch (err) {
+        console.warn('SessionStorage save deferred:', err);
+      }
+    } else {
+      setPasscodeError(
+        lang === 'TH'
+          ? 'รหัสผ่านสำรองฉุกเฉินไม่ถูกต้อง กรุณาตรวจสอบอีกครั้ง'
+          : 'Invalid emergency backup passcode. Please check coordinator credentials.'
+      );
+    }
+  };
 
   // Monitor Google Authentication state via Firebase Auth
   useEffect(() => {
@@ -222,6 +264,7 @@ export default function App() {
       if (email === 'pornpun.w@bu.ac.th') {
         setIsAdminAuthenticated(true);
         setPasscodeError(null);
+        setIsUnauthorizedDomain(false);
         try {
           safeSessionStorage.setItem('bu_admin_auth_2569', 'true');
         } catch (err) {
@@ -238,11 +281,26 @@ export default function App() {
       }
     } catch (error: any) {
       console.error('Google Sign-In failed:', error);
-      setPasscodeError(
-        lang === 'TH'
-          ? `เกิดข้อผิดพลาดในการเข้าสู่ระบบ: ${error.message || 'กรุณาลองใหม่อีกครั้ง'}`
-          : `Authentication failed: ${error.message || 'Please try again'}`
-      );
+      const isDomainErr = 
+        error?.code === 'auth/unauthorized-domain' || 
+        error?.message?.includes('unauthorized-domain');
+
+      if (isDomainErr) {
+        setIsUnauthorizedDomain(true);
+        setShowPasscodeFallback(true);
+        setPasscodeError(
+          lang === 'TH'
+            ? `โดเมน "${window.location.hostname}" ยังไม่ได้รับอนุญาตใน Firebase Authentication (auth/unauthorized-domain)`
+            : `Domain "${window.location.hostname}" is not authorized in Firebase Authentication (auth/unauthorized-domain).`
+        );
+      } else {
+        setIsUnauthorizedDomain(false);
+        setPasscodeError(
+          lang === 'TH'
+            ? `เกิดข้อผิดพลาดในการเข้าสู่ระบบ: ${error.message || 'กรุณาลองใหม่อีกครั้ง'}`
+            : `Authentication failed: ${error.message || 'Please try again'}`
+        );
+      }
     }
   };
 
@@ -508,7 +566,7 @@ export default function App() {
               exit={{ opacity: 0, scale: 0.95 }}
               transition={{ duration: 0.2 }}
             >
-              <div className="w-full max-w-sm bg-white p-7 sm:p-8 rounded-3xl shadow-xl border border-gray-150 text-center space-y-6">
+              <div className="w-full max-w-md bg-white p-6 sm:p-8 rounded-3xl shadow-xl border border-gray-150 text-center space-y-5">
                 <div className="mx-auto w-14 h-14 bg-blue-50 text-[#003366] rounded-2xl flex items-center justify-center shadow-inner">
                   <Lock className="w-7 h-7" />
                 </div>
@@ -568,9 +626,83 @@ export default function App() {
                       <motion.div 
                         initial={{ opacity: 0, y: -5 }} 
                         animate={{ opacity: 1, y: 0 }} 
-                        className="text-[11px] text-rose-700 bg-rose-50 border border-rose-100 p-3 rounded-xl font-medium text-left font-sans"
+                        className="text-[11px] text-rose-700 bg-rose-50 border border-rose-100 p-3 rounded-xl font-medium text-left font-sans leading-relaxed"
                       >
                         {passcodeError}
+                      </motion.div>
+                    )}
+
+                    {/* TROUBLESHOOTING CARD FOR UNAUTHORIZED DOMAIN */}
+                    {isUnauthorizedDomain && (
+                      <motion.div
+                        initial={{ opacity: 0, y: -6 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="bg-amber-50/90 border border-amber-200 rounded-2xl p-4 text-left space-y-3 shadow-xs"
+                      >
+                        <div className="flex items-start gap-2 text-amber-900 font-bold text-xs">
+                          <AlertTriangle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
+                          <div>
+                            <p className="font-bold">
+                              {lang === 'TH' 
+                                ? 'โดเมนนี้ยังไม่ได้รับอนุญาตใน Firebase' 
+                                : 'Domain Not Authorized in Firebase'}
+                            </p>
+                            <p className="text-[10.5px] font-normal text-amber-800/90 mt-0.5 leading-relaxed">
+                              {lang === 'TH'
+                                ? 'Firebase Authentication ป้องกันการล็อกอินจากโดเมนภายนอก กรุณาเพิ่มชื่อโดเมนนี้ใน Authorized Domains เพื่อให้ Google Sign-In ใช้งานได้'
+                                : 'Firebase blocks logins from unregistered domains. Please add this domain to Authorized Domains to enable Google Sign-In.'}
+                            </p>
+                          </div>
+                        </div>
+
+                        <div className="bg-white border border-amber-200/80 rounded-xl p-2.5 flex items-center justify-between gap-2">
+                          <div className="min-w-0 flex-1">
+                            <div className="text-[9px] uppercase font-bold text-gray-400 tracking-wider">
+                              {lang === 'TH' ? 'ชื่อโดเมนปัจจุบัน (Current Domain)' : 'Current Domain'}
+                            </div>
+                            <div className="text-xs font-mono font-bold text-[#003366] truncate mt-0.5">
+                              {typeof window !== 'undefined' ? window.location.hostname : 'new-student.netlify.app'}
+                            </div>
+                          </div>
+                          <button
+                            type="button"
+                            onClick={handleCopyDomain}
+                            className="px-2.5 py-1.5 bg-amber-100 hover:bg-amber-200 text-amber-900 rounded-lg text-xs font-semibold flex items-center gap-1 shrink-0 transition-colors cursor-pointer"
+                          >
+                            {copiedDomain ? (
+                              <>
+                                <Check className="w-3.5 h-3.5 text-emerald-600" />
+                                <span className="text-[11px] text-emerald-700">{lang === 'TH' ? 'คัดลอกแล้ว!' : 'Copied!'}</span>
+                              </>
+                            ) : (
+                              <>
+                                <Copy className="w-3.5 h-3.5" />
+                                <span className="text-[11px]">{lang === 'TH' ? 'คัดลอกโดเมน' : 'Copy Domain'}</span>
+                              </>
+                            )}
+                          </button>
+                        </div>
+
+                        <div className="text-[11px] text-amber-900/95 space-y-1 bg-amber-100/50 p-2.5 rounded-xl">
+                          <p className="font-bold text-[11px] text-amber-900">
+                            {lang === 'TH' ? 'วิธีแก้ไขใน Firebase Console (ทำครั้งเดียว):' : 'How to resolve in Firebase Console (One-time):'}
+                          </p>
+                          <ol className="list-decimal list-inside space-y-1 text-[10.5px] leading-relaxed text-amber-800">
+                            <li>{lang === 'TH' ? 'กดปุ่มสีน้ำเงินด้านล่างเพื่อเปิด Firebase Console' : 'Click the button below to open Firebase Console'}</li>
+                            <li>{lang === 'TH' ? 'เลื่อนไปที่หัวข้อ "Authorized domains" แล้วกด "Add domain"' : 'Scroll to "Authorized domains" and click "Add domain"'}</li>
+                            <li>{lang === 'TH' ? `วาง "${typeof window !== 'undefined' ? window.location.hostname : 'new-student.netlify.app'}" แล้วกด Add / บันทึก` : `Paste domain and click Add / Save`}</li>
+                          </ol>
+                        </div>
+
+                        <a
+                          href={`https://console.firebase.google.com/project/${firebaseConfig.projectId}/authentication/settings`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="w-full bg-[#003366] hover:bg-[#002244] text-white text-xs font-bold py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 transition-colors shadow-xs"
+                        >
+                          <span>{lang === 'TH' ? 'เปิด Firebase Console (หน้าตั้งค่าโดเมน)' : 'Open Firebase Console (Settings)'}</span>
+                          <ExternalLink className="w-3.5 h-3.5" />
+                        </a>
                       </motion.div>
                     )}
 
@@ -611,6 +743,74 @@ export default function App() {
                         >
                           {lang === 'TH' ? 'ออกจากระบบ / สลับบัญชี Google' : 'Sign Out / Switch Account'}
                         </button>
+                      )}
+                    </div>
+
+                    {/* EMERGENCY COORDINATOR PASSCODE FALLBACK */}
+                    <div className="border-t border-dashed border-slate-200 pt-3">
+                      {!showPasscodeFallback ? (
+                        <button
+                          type="button"
+                          onClick={() => setShowPasscodeFallback(true)}
+                          className="text-xs text-slate-500 hover:text-[#003366] flex items-center justify-center gap-1.5 mx-auto font-semibold transition-colors cursor-pointer"
+                        >
+                          <Key className="w-3.5 h-3.5 text-amber-600" />
+                          <span>
+                            {lang === 'TH'
+                              ? 'เข้าสู่ระบบด้วยรหัสผ่านสำรองฉุกเฉิน (Emergency PIN)'
+                              : 'Sign in with Emergency Backup PIN'}
+                          </span>
+                        </button>
+                      ) : (
+                        <form onSubmit={handleEmergencyPasscodeLogin} className="space-y-3 bg-slate-50 border border-slate-200/90 p-3.5 rounded-2xl text-left">
+                          <div className="flex items-center justify-between">
+                            <span className="text-xs font-bold text-slate-800 flex items-center gap-1.5 font-sans">
+                              <Key className="w-3.5 h-3.5 text-[#003366]" />
+                              {lang === 'TH' ? 'รหัสผ่านสำรองฉุกเฉินผู้ประสานงาน' : 'Coordinator Emergency Passcode'}
+                            </span>
+                            <button
+                              type="button"
+                              onClick={() => setShowPasscodeFallback(false)}
+                              className="text-[11px] text-slate-400 hover:text-slate-600 cursor-pointer"
+                            >
+                              {lang === 'TH' ? 'ปิด' : 'Close'}
+                            </button>
+                          </div>
+                          
+                          <p className="text-[10.5px] text-slate-500 leading-normal font-sans">
+                            {lang === 'TH'
+                              ? 'กรณีอยู่บนโดเมนภายนอก (เช่น Netlify) สามารถเข้าสู่ระบบด้วยรหัสผ่านสำรองโครงการได้ทันที'
+                              : 'If on an external domain, authenticate directly using the coordinator emergency passcode.'}
+                          </p>
+
+                          <div className="relative">
+                            <input
+                              type={showEmergencyPasscodeText ? 'text' : 'password'}
+                              value={emergencyPasscode}
+                              onChange={(e) => setEmergencyPasscode(e.target.value)}
+                              placeholder={lang === 'TH' ? 'กรอกรหัสผ่านสำรอง (เช่น buqa2569)' : 'Enter backup passcode (e.g. buqa2569)'}
+                              className="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 text-xs pr-9 focus:outline-none focus:ring-2 focus:ring-[#003366] focus:border-transparent font-sans"
+                            />
+                            <button
+                              type="button"
+                              onClick={() => setShowEmergencyPasscodeText(!showEmergencyPasscodeText)}
+                              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 cursor-pointer"
+                            >
+                              {showEmergencyPasscodeText ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+                            </button>
+                          </div>
+
+                          <button
+                            type="submit"
+                            className="w-full bg-[#003366] hover:bg-[#002244] text-white text-xs font-bold py-2.5 rounded-xl transition-all cursor-pointer shadow-xs active:scale-[0.99] font-sans"
+                          >
+                            {lang === 'TH' ? 'ยืนยันเข้าสู่ระบบ (ฉุกเฉิน)' : 'Sign In with Emergency Passcode'}
+                          </button>
+
+                          <div className="text-[10px] text-slate-400 text-center font-mono">
+                            {lang === 'TH' ? 'รหัสผ่านเริ่มต้น: buqa2569' : 'Default backup: buqa2569'}
+                          </div>
+                        </form>
                       )}
                     </div>
                   </div>
