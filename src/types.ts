@@ -10,6 +10,9 @@ export interface SurveyResponse {
   major: string;
   program: 'Thai' | 'International';
   degreeLevel: 'Bachelor' | 'Master' | 'Doctoral';
+  primaryCaregiver?: string; // ผู้ปกครองหรือผู้ดูแลหลัก
+  primaryCaregiverOther?: string; // ระบุหากเลือกบุคคลอื่น
+  caregiverIncomeRange?: string; // รายได้เฉลี่ยต่อเดือนของผู้ปกครอง
   email?: string;
   selectedOptions: string[]; // List of option IDs (e.g. ["01", "03", "22"])
   otherText?: string; // Text details for option 22

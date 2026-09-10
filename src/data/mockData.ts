@@ -5,6 +5,35 @@
 
 import { FacultyData, SurveyOption, SurveyResponse } from '../types';
 
+export interface CaregiverOption {
+  id: string;
+  label: string;
+  labelEn: string;
+}
+
+export const CAREGIVER_OPTIONS: CaregiverOption[] = [
+  { id: 'father', label: 'บิดา', labelEn: 'Father' },
+  { id: 'mother', label: 'มารดา', labelEn: 'Mother' },
+  { id: 'both', label: 'บิดาและมารดา', labelEn: 'Both father and mother' },
+  { id: 'relative', label: 'ญาติ', labelEn: 'Relative' },
+  { id: 'other', label: 'บุคคลอื่น โปรดระบุ...', labelEn: 'Other (please specify)' },
+];
+
+export interface IncomeOption {
+  id: string;
+  label: string;
+  labelEn: string;
+}
+
+export const CAREGIVER_INCOME_OPTIONS: IncomeOption[] = [
+  { id: 'inc_1', label: 'ไม่มีรายได้', labelEn: 'No income' },
+  { id: 'inc_2', label: 'ไม่เกิน 20,000 บาท', labelEn: 'Not exceeding 20,000 THB' },
+  { id: 'inc_3', label: '20,001 - 40,000 บาท', labelEn: '20,001 - 40,000 THB' },
+  { id: 'inc_4', label: '40,001 - 60,000 บาท', labelEn: '40,001 - 60,000 THB' },
+  { id: 'inc_5', label: '60,001 - 100,000 บาท', labelEn: '60,001 - 100,000 THB' },
+  { id: 'inc_6', label: 'มากกว่า 100,000 บาทขึ้นไป', labelEn: 'More than 100,000 THB' },
+];
+
 export const SURVEY_OPTIONS: SurveyOption[] = [
   {
     id: '01',
@@ -522,6 +551,32 @@ export function generateMockSubmissions(count: number = 180): SurveyResponse[] {
     // Distribute time leading to current time
     const subTime = new Date(baseTime + Math.random() * timeSpread);
 
+    const caregivers = ['father', 'mother', 'both', 'relative', 'other'];
+    const caregiverProb = [0.25, 0.35, 0.30, 0.08, 0.02];
+    let selectedCaregiver = 'both';
+    const rC = Math.random();
+    let cumC = 0;
+    for (let cIdx = 0; cIdx < caregivers.length; cIdx++) {
+      cumC += caregiverProb[cIdx];
+      if (rC <= cumC) {
+        selectedCaregiver = caregivers[cIdx];
+        break;
+      }
+    }
+
+    const incomeIds = ['inc_1', 'inc_2', 'inc_3', 'inc_4', 'inc_5', 'inc_6'];
+    const incomeProb = [0.03, 0.22, 0.38, 0.22, 0.11, 0.04];
+    let selectedIncome = 'inc_3';
+    const rI = Math.random();
+    let cumI = 0;
+    for (let iIdx = 0; iIdx < incomeIds.length; iIdx++) {
+      cumI += incomeProb[iIdx];
+      if (rI <= cumI) {
+        selectedIncome = incomeIds[iIdx];
+        break;
+      }
+    }
+
     list.push({
       id: `BU69-${100000 + i}`,
       studentId,
@@ -529,6 +584,9 @@ export function generateMockSubmissions(count: number = 180): SurveyResponse[] {
       major,
       program,
       degreeLevel,
+      primaryCaregiver: selectedCaregiver,
+      primaryCaregiverOther: selectedCaregiver === 'other' ? 'ยาย' : undefined,
+      caregiverIncomeRange: selectedIncome,
       email,
       selectedOptions,
       otherText,

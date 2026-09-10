@@ -37,7 +37,7 @@ import {
   Sparkles
 } from 'lucide-react';
 import { SurveyResponse, StatisticsItem } from '../types';
-import { SURVEY_OPTIONS, BU_FACULTIES } from '../data/mockData';
+import { SURVEY_OPTIONS, BU_FACULTIES, CAREGIVER_OPTIONS, CAREGIVER_INCOME_OPTIONS } from '../data/mockData';
 
 interface FacultyContact {
   dean: string;
@@ -733,6 +733,9 @@ export default function AdminDashboard({ submissions, onClearSubmissions, onRese
       'ประเภทหลักสูตร (Program)',
       'คณะที่ศึกษา (Faculty)',
       'สาขาวิชา (Major)',
+      'ผู้ปกครองหรือผู้ดูแลหลัก (Caregiver)',
+      'ระบุบุคคลอื่น (Caregiver Other)',
+      'รายได้เฉลี่ยต่อเดือนของผู้ปกครอง (Caregiver Income)',
       'อีเมล (Email)',
       'รายการความคาดหวังที่เลือก (Selected Options)',
       'คำอธิบายเพิ่มเติมอื่น ๆ (Other details)',
@@ -750,6 +753,10 @@ export default function AdminDashboard({ submissions, onClearSubmissions, onRese
 
       const degreeLevel = sub.degreeLevel || 'Bachelor';
       const program = sub.program || 'Thai';
+      const caregiverObj = CAREGIVER_OPTIONS.find(c => c.id === sub.primaryCaregiver);
+      const caregiverName = caregiverObj ? caregiverObj.label : (sub.primaryCaregiver || '-');
+      const incomeObj = CAREGIVER_INCOME_OPTIONS.find(i => i.id === sub.caregiverIncomeRange);
+      const incomeName = incomeObj ? incomeObj.label : (sub.caregiverIncomeRange || '-');
 
       return [
         sub.id,
@@ -758,6 +765,9 @@ export default function AdminDashboard({ submissions, onClearSubmissions, onRese
         program === 'Thai' ? 'ภาคปกติ (ภาษาไทย)' : 'นานาชาติ/อังกฤษ',
         sub.faculty || '',
         sub.major || '',
+        caregiverName,
+        sub.primaryCaregiverOther || '-',
+        incomeName,
         sub.email || '-',
         `"${optionsJoined.replace(/"/g, '""')}"`,
         `"${(sub.otherText || '').replace(/"/g, '""')}"`,
@@ -2352,6 +2362,11 @@ ${recommendationsText}
                 const detStudentId = activeDetailSubmission.studentId || '';
                 const detEmail = activeDetailSubmission.email || '';
                 const detOtherText = activeDetailSubmission.otherText || '';
+                const detCaregiverId = activeDetailSubmission.primaryCaregiver;
+                const detCaregiverOther = activeDetailSubmission.primaryCaregiverOther;
+                const detIncomeId = activeDetailSubmission.caregiverIncomeRange;
+                const caregiverObj = CAREGIVER_OPTIONS.find(c => c.id === detCaregiverId);
+                const incomeObj = CAREGIVER_INCOME_OPTIONS.find(i => i.id === detIncomeId);
 
                 return (
                   <>
@@ -2424,6 +2439,23 @@ ${recommendationsText}
                         <div>
                           <span className="text-gray-400 block pb-0.5">{lang === 'TH' ? 'อีเมลที่ติดต่อได้' : 'Contact Email'}</span>
                           <strong className="text-gray-800 block text-sm">{detEmail || (lang === 'TH' ? '(ไม่ได้ระบุ)' : '(Not specified)')}</strong>
+                        </div>
+                        <div>
+                          <span className="text-gray-400 block pb-0.5">{lang === 'TH' ? 'ผู้ปกครองหรือผู้ดูแลหลัก' : 'Primary Caregiver'}</span>
+                          <strong className="text-gray-800 block text-sm">
+                            {caregiverObj 
+                              ? (lang === 'TH' ? caregiverObj.label : caregiverObj.labelEn) 
+                              : (detCaregiverId || (lang === 'TH' ? '(ไม่ได้ระบุ)' : '(Not specified)'))}
+                            {detCaregiverId === 'other' && detCaregiverOther && ` (${detCaregiverOther})`}
+                          </strong>
+                        </div>
+                        <div>
+                          <span className="text-gray-400 block pb-0.5">{lang === 'TH' ? 'รายได้เฉลี่ยต่อเดือนของผู้ปกครอง' : 'Caregiver Monthly Income'}</span>
+                          <strong className="text-gray-800 block text-sm">
+                            {incomeObj 
+                              ? (lang === 'TH' ? incomeObj.label : incomeObj.labelEn) 
+                              : (detIncomeId || (lang === 'TH' ? '(ไม่ได้ระบุ)' : '(Not specified)'))}
+                          </strong>
                         </div>
                         <div className="col-span-1 md:col-span-2 pt-2 border-t border-gray-200/60">
                           <span className="text-gray-400 block pb-0.5">{lang === 'TH' ? 'วันเวลาที่ทำการส่งแบบสอบถาม (Timestamp)' : 'Submission Timestamp'}</span>
