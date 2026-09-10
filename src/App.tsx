@@ -788,7 +788,7 @@ export default function App() {
                               type={showEmergencyPasscodeText ? 'text' : 'password'}
                               value={emergencyPasscode}
                               onChange={(e) => setEmergencyPasscode(e.target.value)}
-                              placeholder={lang === 'TH' ? 'กรอกรหัสผ่านสำรอง (เช่น buqa2569)' : 'Enter backup passcode (e.g. buqa2569)'}
+                              placeholder=""
                               className="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 text-xs pr-9 focus:outline-none focus:ring-2 focus:ring-[#003366] focus:border-transparent font-sans"
                             />
                             <button
@@ -806,10 +806,6 @@ export default function App() {
                           >
                             {lang === 'TH' ? 'ยืนยันเข้าสู่ระบบ (ฉุกเฉิน)' : 'Sign In with Emergency Passcode'}
                           </button>
-
-                          <div className="text-[10px] text-slate-400 text-center font-mono">
-                            {lang === 'TH' ? 'รหัสผ่านเริ่มต้น: buqa2569' : 'Default backup: buqa2569'}
-                          </div>
                         </form>
                       )}
                     </div>
