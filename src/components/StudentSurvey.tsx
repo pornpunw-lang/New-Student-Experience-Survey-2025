@@ -39,7 +39,7 @@ export default function StudentSurvey({ onSurveySubmit, onAdminToggle, lang, set
   const [faculty, setFaculty] = useState('');
   const [major, setMajor] = useState('');
   const [program, setProgram] = useState<'Thai' | 'International'>('Thai');
-  const [degreeLevel, setDegreeLevel] = useState<'Bachelor' | 'Master' | 'Doctoral'>('Bachelor');
+  const [degreeLevel, setDegreeLevel] = useState<'Bachelor' | 'Master' | 'Doctoral' | ''>('');
   const [primaryCaregiver, setPrimaryCaregiver] = useState('');
   const [primaryCaregiverOther, setPrimaryCaregiverOther] = useState('');
   const [caregiverIncomeRange, setCaregiverIncomeRange] = useState('');
@@ -73,6 +73,7 @@ export default function StudentSurvey({ onSurveySubmit, onAdminToggle, lang, set
 
   // Filter majors when faculty changes
   const filteredMajors = useMemo(() => {
+    if (!degreeLevel) return [];
     const selectedFac = BU_FACULTIES_BY_DEGREE[degreeLevel].find((f) => f.name === faculty);
     return selectedFac ? selectedFac.majors : [];
   }, [faculty, degreeLevel]);
@@ -123,7 +124,7 @@ export default function StudentSurvey({ onSurveySubmit, onAdminToggle, lang, set
       if (major) totalScore += 2;
       if (primaryCaregiver) totalScore += 1;
       if (caregiverIncomeRange) totalScore += 1;
-    } else {
+    } else if (degreeLevel === 'Master' || degreeLevel === 'Doctoral') {
       // Master / Doctoral: Degree (2), Faculty (2.5), Major (2.5) = 7 points
       if (degreeLevel) totalScore += 2;
       if (faculty) totalScore += 2.5;
@@ -146,6 +147,12 @@ export default function StudentSurvey({ onSurveySubmit, onAdminToggle, lang, set
 
   // Handle validation and proceed to Step 2
   const handleProceedToStep2 = () => {
+    if (!degreeLevel) {
+      setValidationError(
+        'กรุณาเลือกระดับการศึกษาของคุณก่อนดำเนินการขั้นตอนต่อไป / Please select your degree level before proceeding to the next step.'
+      );
+      return;
+    }
     if (!faculty) {
       setValidationError(
         'กรุณาเลือกคณะของคุณก่อนดำเนินการขั้นตอนต่อไป / Please select your faculty before proceeding to the next step.'
@@ -229,7 +236,7 @@ export default function StudentSurvey({ onSurveySubmit, onAdminToggle, lang, set
         faculty,
         major,
         program,
-        degreeLevel,
+        degreeLevel: degreeLevel || 'Bachelor',
         primaryCaregiver: primaryCaregiver || undefined,
         primaryCaregiverOther: primaryCaregiver === 'other' ? primaryCaregiverOther.trim() : undefined,
         caregiverIncomeRange: caregiverIncomeRange || undefined,
@@ -259,7 +266,7 @@ export default function StudentSurvey({ onSurveySubmit, onAdminToggle, lang, set
     setFaculty('');
     setMajor('');
     setProgram('Thai');
-    setDegreeLevel('Bachelor');
+    setDegreeLevel('');
     setPrimaryCaregiver('');
     setPrimaryCaregiverOther('');
     setCaregiverIncomeRange('');
@@ -483,14 +490,19 @@ export default function StudentSurvey({ onSurveySubmit, onAdminToggle, lang, set
                       <select
                         id="faculty-select"
                         required
+                        disabled={!degreeLevel}
                         value={faculty}
                         onChange={handleFacultyChange}
-                        className="w-full bg-[#F5F7FA] border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#003366] focus:bg-white transition-all appearance-none cursor-pointer text-gray-800"
+                        className={`w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#003366] focus:bg-white transition-all appearance-none cursor-pointer text-gray-800 ${
+                          degreeLevel ? 'bg-[#F5F7FA]' : 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                        }`}
                       >
                         <option value="">
-                          -- เลือกคณะของคุณ / Select your faculty --
+                          {degreeLevel 
+                            ? '-- เลือกคณะของคุณ / Select your faculty --'
+                            : 'กรุณาเลือกระดับการศึกษาก่อน / Please select degree level first'}
                         </option>
-                        {BU_FACULTIES_BY_DEGREE[degreeLevel].map((fac) => (
+                        {degreeLevel && BU_FACULTIES_BY_DEGREE[degreeLevel]?.map((fac) => (
                           <option key={fac.name} value={fac.name}>
                             {fac.nameEn ? `${fac.name} (${fac.nameEn})` : fac.name}
                           </option>
@@ -523,8 +535,8 @@ export default function StudentSurvey({ onSurveySubmit, onAdminToggle, lang, set
                             ? '-- เลือกสาขาวิชา / Select your major --' 
                             : 'กรุณาเลือกคณะก่อน / Please select a faculty first'}
                         </option>
-                        {filteredMajors.map((m, idx) => {
-                          const selectedFac = BU_FACULTIES_BY_DEGREE[degreeLevel].find((f) => f.name === faculty);
+                        {degreeLevel && filteredMajors.map((m, idx) => {
+                          const selectedFac = BU_FACULTIES_BY_DEGREE[degreeLevel]?.find((f) => f.name === faculty);
                           const majorEn = (selectedFac && selectedFac.majorsEn && selectedFac.majorsEn[idx]) || m;
                           return (
                             <option key={m} value={m}>
