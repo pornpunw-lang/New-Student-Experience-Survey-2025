@@ -82,6 +82,11 @@ export default function StudentSurvey({ onSurveySubmit, onAdminToggle, lang, set
     setDegreeLevel(level);
     setFaculty('');
     setMajor('');
+    if (level !== 'Bachelor') {
+      setPrimaryCaregiver('');
+      setPrimaryCaregiverOther('');
+      setCaregiverIncomeRange('');
+    }
   };
 
   // Handle Faculty change to clear the major selection
@@ -111,12 +116,19 @@ export default function StudentSurvey({ onSurveySubmit, onAdminToggle, lang, set
     if (step === 3) return 100;
     
     let totalScore = 0;
-    // Section 1 items: Degree (1), Faculty (2), Major (2), Caregiver (1), Income (1) = 7 points
-    if (degreeLevel) totalScore += 1;
-    if (faculty) totalScore += 2;
-    if (major) totalScore += 2;
-    if (primaryCaregiver) totalScore += 1;
-    if (caregiverIncomeRange) totalScore += 1;
+    if (degreeLevel === 'Bachelor') {
+      // Bachelor degree: Degree (1), Faculty (2), Major (2), Caregiver (1), Income (1) = 7 points
+      if (degreeLevel) totalScore += 1;
+      if (faculty) totalScore += 2;
+      if (major) totalScore += 2;
+      if (primaryCaregiver) totalScore += 1;
+      if (caregiverIncomeRange) totalScore += 1;
+    } else {
+      // Master / Doctoral: Degree (2), Faculty (2.5), Major (2.5) = 7 points
+      if (degreeLevel) totalScore += 2;
+      if (faculty) totalScore += 2.5;
+      if (major) totalScore += 2.5;
+    }
     
     // Section 2 items: 3 points if at least 1 option selected
     if (selectedOptions.length > 0) {
@@ -146,23 +158,25 @@ export default function StudentSurvey({ onSurveySubmit, onAdminToggle, lang, set
       );
       return;
     }
-    if (!primaryCaregiver) {
-      setValidationError(
-        'กรุณาเลือกผู้ปกครองหรือผู้ดูแลหลักของท่านในข้อที่ 1 / Please select your primary parent or caregiver in Question 1.'
-      );
-      return;
-    }
-    if (primaryCaregiver === 'other' && !primaryCaregiverOther.trim()) {
-      setValidationError(
-        'เนื่องจากท่านเลือก "บุคคลอื่น" กรุณาระบุรายละเอียดเพิ่มเติมในช่องข้อความ / Since you selected "Other", please specify in the text box.'
-      );
-      return;
-    }
-    if (!caregiverIncomeRange) {
-      setValidationError(
-        'กรุณาเลือกระดับรายได้เฉลี่ยต่อเดือนของผู้ปกครองหรือผู้ดูแลหลักของท่านในข้อที่ 2 / Please select caregiver average monthly income in Question 2.'
-      );
-      return;
+    if (degreeLevel === 'Bachelor') {
+      if (!primaryCaregiver) {
+        setValidationError(
+          'กรุณาเลือกผู้ปกครองหรือผู้ดูแลหลักของท่านในข้อที่ 1 / Please select your primary parent or caregiver in Question 1.'
+        );
+        return;
+      }
+      if (primaryCaregiver === 'other' && !primaryCaregiverOther.trim()) {
+        setValidationError(
+          'เนื่องจากท่านเลือก "บุคคลอื่น" กรุณาระบุรายละเอียดเพิ่มเติมในช่องข้อความ / Since you selected "Other", please specify in the text box.'
+        );
+        return;
+      }
+      if (!caregiverIncomeRange) {
+        setValidationError(
+          'กรุณาเลือกระดับรายได้เฉลี่ยต่อเดือนของผู้ปกครองหรือผู้ดูแลหลักของท่านในข้อที่ 2 / Please select caregiver average monthly income in Question 2.'
+        );
+        return;
+      }
     }
 
     setValidationError(null);
@@ -525,107 +539,112 @@ export default function StudentSurvey({ onSurveySubmit, onAdminToggle, lang, set
                     </div>
                   </div>
 
-                  {/* Question 1: Primary Caregiver */}
-                  <div className="col-span-1 md:col-span-2 pt-4 border-t border-gray-100 space-y-3" id="caregiver-section">
-                    <div>
-                      <label className="block text-sm font-bold text-gray-800 leading-snug">
-                        1. ผู้ปกครองหรือผู้ดูแลหลักของท่านคือใคร? (กรุณาเลือก 1 ข้อ) <span className="text-red-500">*</span>
-                      </label>
-                      <span className="block text-xs text-gray-500 italic mt-0.5">
-                        Who is your primary parent or caregiver? (Please select one.)
-                      </span>
-                    </div>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2.5">
-                      {CAREGIVER_OPTIONS.map((opt) => {
-                        const isSelected = primaryCaregiver === opt.id;
-                        return (
-                          <label
-                            key={opt.id}
-                            id={`caregiver-opt-${opt.id}`}
-                            className={`flex items-center gap-3 p-3 rounded-xl border-2 transition-all cursor-pointer select-none ${
-                              isSelected
-                                ? 'border-[#003366] bg-blue-50/50 text-[#003366] font-semibold shadow-sm shadow-blue-900/5'
-                                : 'border-gray-200 hover:border-gray-300 text-gray-700 bg-white'
-                            }`}
-                          >
-                            <input
-                              type="radio"
-                              name="primaryCaregiver"
-                              value={opt.id}
-                              checked={isSelected}
-                              onChange={() => setPrimaryCaregiver(opt.id)}
-                              className="w-4 h-4 text-[#003366] border-gray-300 focus:ring-[#003366] cursor-pointer"
-                            />
-                            <div className="text-xs">
-                              <div>{opt.label}</div>
-                              <div className="text-[10px] text-gray-400 font-normal">{opt.labelEn}</div>
-                            </div>
+                  {/* Questions 1 & 2: Primary Caregiver and Monthly Income (Shown only for Bachelor Degree) */}
+                  {degreeLevel === 'Bachelor' && (
+                    <>
+                      {/* Question 1: Primary Caregiver */}
+                      <div className="col-span-1 md:col-span-2 pt-4 border-t border-gray-100 space-y-3" id="caregiver-section">
+                        <div>
+                          <label className="block text-sm font-bold text-gray-800 leading-snug">
+                            1. ผู้ปกครองหรือผู้ดูแลหลักของท่านคือใคร? (กรุณาเลือก 1 ข้อ) <span className="text-red-500">*</span>
                           </label>
-                        );
-                      })}
-                    </div>
+                          <span className="block text-xs text-gray-500 italic mt-0.5">
+                            Who is your primary parent or caregiver? (Please select one.)
+                          </span>
+                        </div>
 
-                    {/* Specify if "Other" is selected */}
-                    {primaryCaregiver === 'other' && (
-                      <div className="bg-amber-50/50 border border-amber-200 rounded-xl p-3.5 mt-2 space-y-1.5" id="caregiver-other-input-container">
-                        <label htmlFor="caregiver-other-text" className="block text-xs font-semibold text-amber-900">
-                          โปรดระบุบุคคลอื่น / Please specify caregiver details <span className="text-red-500">*</span>
-                        </label>
-                        <input
-                          type="text"
-                          id="caregiver-other-text"
-                          required
-                          value={primaryCaregiverOther}
-                          onChange={(e) => setPrimaryCaregiverOther(e.target.value)}
-                          placeholder="เช่น คุณยาย, คุณลุง, พี่สาว / e.g., Grandmother, Uncle, Sister"
-                          className="w-full bg-white border border-amber-300 rounded-lg px-3.5 py-2.5 text-xs focus:outline-none focus:ring-2 focus:ring-[#003366] text-gray-800"
-                        />
+                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2.5">
+                          {CAREGIVER_OPTIONS.map((opt) => {
+                            const isSelected = primaryCaregiver === opt.id;
+                            return (
+                              <label
+                                key={opt.id}
+                                id={`caregiver-opt-${opt.id}`}
+                                className={`flex items-center gap-3 p-3 rounded-xl border-2 transition-all cursor-pointer select-none ${
+                                  isSelected
+                                    ? 'border-[#003366] bg-blue-50/50 text-[#003366] font-semibold shadow-sm shadow-blue-900/5'
+                                    : 'border-gray-200 hover:border-gray-300 text-gray-700 bg-white'
+                                }`}
+                              >
+                                <input
+                                  type="radio"
+                                  name="primaryCaregiver"
+                                  value={opt.id}
+                                  checked={isSelected}
+                                  onChange={() => setPrimaryCaregiver(opt.id)}
+                                  className="w-4 h-4 text-[#003366] border-gray-300 focus:ring-[#003366] cursor-pointer"
+                                />
+                                <div className="text-xs">
+                                  <div>{opt.label}</div>
+                                  <div className="text-[10px] text-gray-400 font-normal">{opt.labelEn}</div>
+                                </div>
+                              </label>
+                            );
+                          })}
+                        </div>
+
+                        {/* Specify if "Other" is selected */}
+                        {primaryCaregiver === 'other' && (
+                          <div className="bg-amber-50/50 border border-amber-200 rounded-xl p-3.5 mt-2 space-y-1.5" id="caregiver-other-input-container">
+                            <label htmlFor="caregiver-other-text" className="block text-xs font-semibold text-amber-900">
+                              โปรดระบุบุคคลอื่น / Please specify caregiver details <span className="text-red-500">*</span>
+                            </label>
+                            <input
+                              type="text"
+                              id="caregiver-other-text"
+                              required
+                              value={primaryCaregiverOther}
+                              onChange={(e) => setPrimaryCaregiverOther(e.target.value)}
+                              placeholder="เช่น คุณยาย, คุณลุง, พี่สาว / e.g., Grandmother, Uncle, Sister"
+                              className="w-full bg-white border border-amber-300 rounded-lg px-3.5 py-2.5 text-xs focus:outline-none focus:ring-2 focus:ring-[#003366] text-gray-800"
+                            />
+                          </div>
+                        )}
                       </div>
-                    )}
-                  </div>
 
-                  {/* Question 2: Caregiver Monthly Income Range */}
-                  <div className="col-span-1 md:col-span-2 pt-4 border-t border-gray-100 space-y-3" id="income-section">
-                    <div>
-                      <label className="block text-sm font-bold text-gray-800 leading-snug">
-                        2. รายได้เฉลี่ยต่อเดือนของผู้ปกครองหรือผู้ดูแลหลักของท่านอยู่ในช่วงใด? (กรุณาเลือก 1 ข้อ) <span className="text-red-500">*</span>
-                      </label>
-                      <span className="block text-xs text-gray-500 italic mt-0.5">
-                        What is the average monthly income of your parent(s) or primary caregiver? (Please select one.)
-                      </span>
-                    </div>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2.5">
-                      {CAREGIVER_INCOME_OPTIONS.map((opt) => {
-                        const isSelected = caregiverIncomeRange === opt.id;
-                        return (
-                          <label
-                            key={opt.id}
-                            id={`income-opt-${opt.id}`}
-                            className={`flex items-center gap-3 p-3 rounded-xl border-2 transition-all cursor-pointer select-none ${
-                              isSelected
-                                ? 'border-[#003366] bg-blue-50/50 text-[#003366] font-semibold shadow-sm shadow-blue-900/5'
-                                : 'border-gray-200 hover:border-gray-300 text-gray-700 bg-white'
-                            }`}
-                          >
-                            <input
-                              type="radio"
-                              name="caregiverIncomeRange"
-                              value={opt.id}
-                              checked={isSelected}
-                              onChange={() => setCaregiverIncomeRange(opt.id)}
-                              className="w-4 h-4 text-[#003366] border-gray-300 focus:ring-[#003366] cursor-pointer"
-                            />
-                            <div className="text-xs">
-                              <div>{opt.label}</div>
-                              <div className="text-[10px] text-gray-400 font-normal">{opt.labelEn}</div>
-                            </div>
+                      {/* Question 2: Caregiver Monthly Income Range */}
+                      <div className="col-span-1 md:col-span-2 pt-4 border-t border-gray-100 space-y-3" id="income-section">
+                        <div>
+                          <label className="block text-sm font-bold text-gray-800 leading-snug">
+                            2. รายได้เฉลี่ยต่อเดือนของผู้ปกครองหรือผู้ดูแลหลักของท่านอยู่ในช่วงใด? (กรุณาเลือก 1 ข้อ) <span className="text-red-500">*</span>
                           </label>
-                        );
-                      })}
-                    </div>
-                  </div>
+                          <span className="block text-xs text-gray-500 italic mt-0.5">
+                            What is the average monthly income of your parent(s) or primary caregiver? (Please select one.)
+                          </span>
+                        </div>
+
+                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2.5">
+                          {CAREGIVER_INCOME_OPTIONS.map((opt) => {
+                            const isSelected = caregiverIncomeRange === opt.id;
+                            return (
+                              <label
+                                key={opt.id}
+                                id={`income-opt-${opt.id}`}
+                                className={`flex items-center gap-3 p-3 rounded-xl border-2 transition-all cursor-pointer select-none ${
+                                  isSelected
+                                    ? 'border-[#003366] bg-blue-50/50 text-[#003366] font-semibold shadow-sm shadow-blue-900/5'
+                                    : 'border-gray-200 hover:border-gray-300 text-gray-700 bg-white'
+                                }`}
+                              >
+                                <input
+                                  type="radio"
+                                  name="caregiverIncomeRange"
+                                  value={opt.id}
+                                  checked={isSelected}
+                                  onChange={() => setCaregiverIncomeRange(opt.id)}
+                                  className="w-4 h-4 text-[#003366] border-gray-300 focus:ring-[#003366] cursor-pointer"
+                                />
+                                <div className="text-xs">
+                                  <div>{opt.label}</div>
+                                  <div className="text-[10px] text-gray-400 font-normal">{opt.labelEn}</div>
+                                </div>
+                              </label>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    </>
+                  )}
                 </div>
               </div>
 

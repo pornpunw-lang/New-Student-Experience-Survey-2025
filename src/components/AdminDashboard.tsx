@@ -170,7 +170,7 @@ const FACULTY_CONTACTS: Record<string, FacultyContact> = {
     baseTarget: 129,
     email: 'pichai.w@bu.ac.th'
   },
-  'คณะการสร้างเจ้าของธุรกิจและการบริหารจัดการ': {
+  'คณะการสร้างเจ้าของธุรกิจและการบริหารกิจการ': {
     dean: 'ดร.วุฒิพงษ์ วราไกรสวัสดิ์',
     deanEmail: 'wutnipong.s@bu.ac.th',
     coordinator: 'คุณพิมพ์ชนก จันทรแสงเจริญ',

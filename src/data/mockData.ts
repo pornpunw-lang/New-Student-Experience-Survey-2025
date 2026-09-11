@@ -150,14 +150,74 @@ export const SURVEY_OPTIONS: SurveyOption[] = [
 export const BU_FACULTIES_BY_DEGREE: Record<'Bachelor' | 'Master' | 'Doctoral', FacultyData[]> = {
   Bachelor: [
     {
-      name: 'คณะบัญชี',
-      nameEn: 'Accounting',
-      majors: ['สาขาวิชาบัญชี'],
-      majorsEn: ['Accounting Program']
+      name: 'คณะการสร้างเจ้าของธุรกิจและการบริหารกิจการ',
+      nameEn: 'School of Entrepreneurship and Management',
+      majors: [
+        'สาขาวิชาการเป็นเจ้าของธุรกิจ',
+        'สาขาวิชาการเป็นเจ้าของธุรกิจ (หลักสูตรนานาชาติ)'
+      ],
+      majorsEn: [
+        'Entrepreneurship',
+        'Entrepreneurship (International Program)'
+      ]
+    },
+    {
+      name: 'คณะดิจิทัลมีเดียและศิลปะภาพยนตร์',
+      nameEn: 'School of Digital Media and Cinematic Arts',
+      majors: [
+        'สาขาวิชาภาพยนตร์',
+        'สาขาวิชาดิจิทัลมีเดีย',
+        'สาขาวิชาการผลิตแพลตฟอร์มภาพยนตร์ ซีรีส์ และเนื้อหาสากล (หลักสูตรนานาชาติ)',
+        'สาขาวิชาการผลิตเสมือนและการออกแบบประสบการณ์โลกเสมือนจริง'
+      ],
+      majorsEn: [
+        'Film',
+        'Digital Media',
+        'Film, Series and Global Content Production and Business (International Program)',
+        'Virtual Production and Immersive Experience Design'
+      ]
+    },
+    {
+      name: 'คณะเทคโนโลยีสารสนเทศและนวัตกรรม',
+      nameEn: 'School of Information Technology and Innovation',
+      majors: [
+        'สาขาวิชาวิทยาการคอมพิวเตอร์',
+        'สาขาวิชาเทคโนโลยีสารสนเทศ',
+        'สาขาวิชาเกมและสื่อเชิงโต้ตอบ'
+      ],
+      majorsEn: [
+        'Computer Science',
+        'Information Technology',
+        'Games and Interactive Media'
+      ]
+    },
+    {
+      name: 'คณะนิติศาสตร์',
+      nameEn: 'School of Law',
+      majors: ['สาขาวิชานิติศาสตร์'],
+      majorsEn: ['Law Program']
+    },
+    {
+      name: 'คณะนิเทศศาสตร์',
+      nameEn: 'School of Communication Arts',
+      majors: [
+        'สาขาวิชาการสื่อสารและสื่อใหม่',
+        'สาขาวิชาวิทยุกระจายเสียง วิทยุโทรทัศน์ และ การผลิตสื่อสตรีมมิ่ง',
+        'สาขาวิชาการผลิตเนื้อหาสร้างสรรค์และประสบการณ์ดิจิทัล',
+        'สาขาวิชาศิลปะการแสดง',
+        'สาขาวิชาการผลิตอีเว้นท์ และการจัดการนิทรรศการและการประชุม'
+      ],
+      majorsEn: [
+        'Communication and New Media',
+        'Broadcasting and Streaming Media Production',
+        'Creative Content Production and Digital Experience',
+        'Performing Arts',
+        'Event Production and MICE Management'
+      ]
     },
     {
       name: 'คณะบริหารธุรกิจ',
-      nameEn: 'Business Administration',
+      nameEn: 'School of Business Administration',
       majors: [
         'สาขาวิชาการตลาด',
         'สาขาวิชาการเงิน',
@@ -178,146 +238,32 @@ export const BU_FACULTIES_BY_DEGREE: Record<'Bachelor' | 'Master' | 'Doctoral', 
       ]
     },
     {
-      name: 'วิทยาลัยนานาชาติ',
-      nameEn: 'Bangkok University International',
-      majors: [
-        'สาขาวิชาการตลาด (หลักสูตรนานาชาติ)',
-        'สาขาวิชาบริหารธุรกิจ (หลักสูตรนานาชาติ)',
-        'สาขาวิชาการผลิตสื่อสร้างสรรค์ (หลักสูตรนานาชาติ)',
-        'สาขาวิชาสื่อและการสื่อสาร (หลักสูตรนานาชาติ)',
-        'สาขาวิชาภาษาอังกฤษธุรกิจ (หลักสูตรนานาชาติ)',
-        'สาขาวิชาการท่องเที่ยวและการบริการนานาชาติ (หลักสูตรนานาชาติ)',
-        'สาขาวิชาศิลปะการประกอบอาหารและออกแบบอาหาร (หลักสูตรนานาชาติ)',
-        'สาขาวิชาการออกแบบนิเทศศิลป์เชิงสร้างสรรค์ (หลักสูตรนานาชาติ)',
-        'สาขาวิชาการเป็นเจ้าของธุรกิจ (หลักสูตรนานาชาติ)'
-      ],
-      majorsEn: [
-        'Marketing (International Program)',
-        'Business Administration (International Program)',
-        'Innovative Media Production (International Program)',
-        'Media and Communication (International Program)',
-        'Business English (International Program)',
-        'International Tourism and Hospitality Management (International Program)',
-        'Culinary Arts and Design (International Program)',
-        'Creative Communication Design (International Program)',
-        'Entrepreneurship (International Program)'
-      ]
-    },
-    {
-      name: 'คณะนิเทศศาสตร์',
-      nameEn: 'Communication Arts',
-      majors: [
-        'สาขาวิชาสื่อสารและการสื่อใหม่',
-        'สาขาวิชาวิทยุกระจายเสียง วิทยุโทรทัศน์ และการผลิตสื่อสตรีมมิ่ง',
-        'สาขาวิชาการผลิตเนื้อหาสร้างสรรค์และประสบการณ์ดิจิทัล',
-        'สาขาวิชาศิลปะการแสดง',
-        'สาขาวิชาการผลิตอีเว้นท์ และการจัดการนิทรรศการและการประชุม'
-      ],
-      majorsEn: [
-        'Communication and New Media',
-        'Broadcasting and Streaming Media Production',
-        'Creative Content Production and Digital Experience',
-        'Performing Arts',
-        'Event Production and MICE Management'
-      ]
-    },
-    {
-      name: 'คณะนิติศาสตร์',
-      nameEn: 'Law',
-      majors: ['สาขาวิชานิติศาสตร์'],
-      majorsEn: ['Law Program']
+      name: 'คณะบัญชี',
+      nameEn: 'School of Accounting',
+      majors: ['สาขาวิชาบัญชี'],
+      majorsEn: ['Accounting Program']
     },
     {
       name: 'คณะมนุษยศาสตร์และการจัดการการท่องเที่ยว',
-      nameEn: 'Humanities and Tourism Management',
+      nameEn: 'School of Humanities and Tourism Management',
       majors: [
         'สาขาวิชาภาษาอังกฤษ',
         'สาขาวิชาการจัดการการท่องเที่ยวและเรือสำราญ',
-        'สาขาวิชาการจัดการการโรงแรม',
+        'สาขาวิชาการจัดการโรงแรม',
         'สาขาวิชาการจัดการธุรกิจสายการบิน',
-        'สาขาวิชาศิลปะและการออกแบบ'
+        'สาขาวิชาศิลปะการประกอบอาหารและการจัดการบริการธุรกิจร้านอาหาร'
       ],
       majorsEn: [
         'English',
         'Tourism and Cruise Management',
         'Hotel Management',
         'Airline Business Management',
-        'Art and Design'
-      ]
-    },
-    {
-      name: 'วิทยาลัยนานาชาติจีน',
-      nameEn: 'Chinese International College',
-      majors: ['สาขาวิชาภาษาจีนธุรกิจ'],
-      majorsEn: ['Business Chinese']
-    },
-    {
-      name: 'คณะเศรษฐศาสตร์และการลงทุน',
-      nameEn: 'Economics and Investment',
-      majors: ['สาขาวิชาเศรษฐศาสตร์'],
-      majorsEn: ['Economics Program']
-    },
-    {
-      name: 'คณะศิลปกรรมศาสตร์',
-      nameEn: 'Fine and Applied Arts',
-      majors: [
-        'สาขาวิชาการออกแบบนิเทศศิลป์',
-        'สาขาวิชาการออกแบบแฟชั่น'
-      ],
-      majorsEn: [
-        'Communication Design',
-        'Fashion Design'
-      ]
-    },
-    {
-      name: 'คณะสถาปัตยกรรมศาสตร์',
-      nameEn: 'Architecture',
-      majors: [
-        'สาขาวิชาสถาปัตยกรรม',
-        'สาขาวิชาศิลปะออกแบบภายใน'
-      ],
-      majorsEn: [
-        'Architecture Program',
-        'Interior Architecture'
-      ]
-    },
-    {
-      name: 'คณะการสร้างเจ้าของธุรกิจและการบริหารจัดการ',
-      nameEn: 'Entrepreneurship and Management',
-      majors: ['สาขาวิชาการเป็นเจ้าของธุรกิจ'],
-      majorsEn: ['Entrepreneurship']
-    },
-    {
-      name: 'คณะดิจิทัลมีเดียและศิลปะภาพยนตร์',
-      nameEn: 'Digital Media and Cinematic Arts',
-      majors: [
-        'สาขาวิชาภาพยนตร์',
-        'สาขาวิชาดิจิทัลมีเดีย',
-        'สาขาวิชาการผลิตภาพยนตร์และธุรกิจภาพยนตร์ ซีรีส์ และเนื้อหาสากล (หลักสูตรนานาชาติ)'
-      ],
-      majorsEn: [
-        'Film',
-        'Digital Media',
-        'Film, Series and Global Content Production and Business (International Program)'
-      ]
-    },
-    {
-      name: 'คณะเทคโนโลยีสารสนเทศและนวัตกรรม',
-      nameEn: 'Information Technology and Innovation',
-      majors: [
-        'สาขาวิชาวิทยาการคอมพิวเตอร์',
-        'สาขาวิชาเทคโนโลยีสารสนเทศ',
-        'สาขาวิชาเกมและสื่อเชิงโต้ตอบ'
-      ],
-      majorsEn: [
-        'Computer Science',
-        'Information Technology',
-        'Games and Interactive Media'
+        'Culinary Arts and Restaurant Service Management'
       ]
     },
     {
       name: 'คณะวิศวกรรมศาสตร์',
-      nameEn: 'Engineering',
+      nameEn: 'School of Engineering',
       majors: [
         'สาขาวิชาวิศวกรรมไฟฟ้า',
         'สาขาวิชาวิศวกรรมคอมพิวเตอร์และหุ่นยนต์',
@@ -330,28 +276,98 @@ export const BU_FACULTIES_BY_DEGREE: Record<'Bachelor' | 'Master' | 'Doctoral', 
         'Multimedia and Entertainment Engineering',
         'Artificial Intelligence Engineering and Data Science'
       ]
+    },
+    {
+      name: 'คณะศิลปกรรมศาสตร์',
+      nameEn: 'School of Fine and Applied Arts',
+      majors: [
+        'สาขาวิชาการออกแบบนิเทศศิลป์',
+        'สาขาวิชาการออกแบบแฟชั่น'
+      ],
+      majorsEn: [
+        'Communication Design',
+        'Fashion Design'
+      ]
+    },
+    {
+      name: 'คณะเศรษฐศาสตร์และการลงทุน',
+      nameEn: 'School of Economics and Investment',
+      majors: ['สาขาวิชาเศรษฐศาสตร์'],
+      majorsEn: ['Economics Program']
+    },
+    {
+      name: 'คณะสถาปัตยกรรมศาสตร์',
+      nameEn: 'School of Architecture',
+      majors: [
+        'สาขาวิชาสถาปัตยกรรม',
+        'สาขาวิชาสถาปัตยกรรมภายใน'
+      ],
+      majorsEn: [
+        'Architecture Program',
+        'Interior Architecture'
+      ]
+    },
+    {
+      name: 'วิทยาลัยนานาชาติ',
+      nameEn: 'Bangkok University International',
+      majors: [
+        'สาขาวิชาการตลาด (หลักสูตรนานาชาติ)',
+        'สาขาวิชาบริหารธุรกิจ (หลักสูตรนานาชาติ)',
+        'สาขาวิชาการผลิตสื่อนวัตกรรม (หลักสูตรนานาชาติ)',
+        'สาขาวิชาสื่อและการสื่อสาร (หลักสูตรนานาชาติ)',
+        'สาขาวิชาภาษาอังกฤษธุรกิจ (หลักสูตรนานาชาติ)',
+        'สาขาวิชาการจัดการท่องเที่ยวและการบริการนานาชาติ (หลักสูตรนานาชาติ)',
+        'สาขาวิชาศิลปะการประกอบและออกแบบอาหาร (หลักสูตรนานาชาติ)',
+        'สาขาวิชาการออกแบบนิเทศศิลป์เชิงสร้างสรรค์ (หลักสูตรนานาชาติ)',
+        'สาขาวิชาวิทยาการคอมพิวเตอร์ (หลักสูตรนานาชาติ)'
+      ],
+      majorsEn: [
+        'Marketing (International Program)',
+        'Business Administration (International Program)',
+        'Innovative Media Production (International Program)',
+        'Media and Communication (International Program)',
+        'Business English (International Program)',
+        'International Tourism and Hospitality Management (International Program)',
+        'Culinary Arts and Design (International Program)',
+        'Creative Communication Design (International Program)',
+        'Computer Science (International Program)'
+      ]
+    },
+    {
+      name: 'วิทยาลัยนานาชาติจีน',
+      nameEn: 'Bangkok University Chinese International',
+      majors: [
+        'สาขาวิชาภาษาจีนธุรกิจ',
+        'สาขาวิชาบริหารธุรกิจสองภาษา (หลักสูตรสองภาษา)'
+      ],
+      majorsEn: [
+        'Business Chinese',
+        'Business Administration Program (Bilingual Program)'
+      ]
     }
   ],
   Master: [
     {
-      name: 'คณะบริหารธุรกิจ',
-      nameEn: 'Business Administration',
-      majors: [
-        'สาขาวิชาบริหารธุรกิจ (หลักสูตรภาษาไทย)',
-        'สาขาวิชาบริหารธุรกิจ (หลักสูตรภาษาอังกฤษ)',
-        'สาขาวิชาการจัดการศึกษาผ่านระบบเทคโนโลยีสารสนเทศ',
-        'สาขาวิชาการจัดการนวัตกรรม (หลักสูตรนานาชาติ)'
-      ],
-      majorsEn: [
-        'Business Administration',
-        'Business Administration (English Program)',
-        'Educational Management through Information Technology',
-        'Innovation Management (International Program)'
-      ]
+      name: 'คณะการสร้างเจ้าของธุรกิจและการบริหารกิจการ',
+      nameEn: 'School of Entrepreneurship and Management',
+      majors: ['สาขาวิชาความเป็นผู้ประกอบการ'],
+      majorsEn: ['Entrepreneurship and Emerging Enterprises']
+    },
+    {
+      name: 'คณะเทคโนโลยีสารสนเทศและนวัตกรรม',
+      nameEn: 'School of Information Technology and Innovation',
+      majors: ['สาขาวิชาเทคโนโลยีสารสนเทศและวิทยาการข้อมูล'],
+      majorsEn: ['Information Technology and Data Science']
+    },
+    {
+      name: 'คณะนิติศาสตร์',
+      nameEn: 'School of Law',
+      majors: ['สาขาวิชานิติศาสตร์'],
+      majorsEn: ['Laws Program']
     },
     {
       name: 'คณะนิเทศศาสตร์',
-      nameEn: 'Communication Arts',
+      nameEn: 'School of Communication Arts',
       majors: [
         'สาขาวิชาการบริหารแบรนด์และการสื่อสารเชิงกลยุทธ์',
         'สาขาวิชาการสื่อสารสากล (หลักสูตรนานาชาติ)',
@@ -364,54 +380,50 @@ export const BU_FACULTIES_BY_DEGREE: Record<'Bachelor' | 'Master' | 'Doctoral', 
       ]
     },
     {
-      name: 'คณะนิติศาสตร์',
-      nameEn: 'Law',
-      majors: ['สาขาวิชานิติศาสตร์'],
-      majorsEn: ['Laws Program']
+      name: 'คณะบริหารธุรกิจ',
+      nameEn: 'School of Business Administration',
+      majors: [
+        'สาขาวิชาบริหารธุรกิจ (หลักสูตรภาษาไทย)',
+        'สาขาวิชาบริหารธุรกิจ (หลักสูตรภาษาอังกฤษ)',
+        'สาขาวิชาการจัดการศึกษาผ่านระบบเทคโนโลยีสารสนเทศ'
+      ],
+      majorsEn: [
+        'Business Administration',
+        'Business Administration (English Program)',
+        'Educational Management through Information Technology'
+      ]
     },
     {
       name: 'คณะมนุษยศาสตร์และการจัดการการท่องเที่ยว',
-      nameEn: 'Humanities and Tourism Management',
-      majors: ['สาขาวิชานวัตกรรมการจัดการการท่องเที่ยวและบริการ'],
+      nameEn: 'School of Humanities and Tourism Management',
+      majors: ['สาขาวิชานวัตกรรมการจัดการท่องเที่ยวและการบริการ'],
       majorsEn: ['Tourism and Hospitality Management Innovation (International Program)']
     },
     {
+      name: 'คณะวิศวกรรมศาสตร์',
+      nameEn: 'School of Engineering',
+      majors: ['สาขาวิชาวิศวกรรมไฟฟ้าและคอมพิวเตอร์ (หลักสูตรนานาชาติ)'],
+      majorsEn: ['Electrical & Computer Engineering (International Program)']
+    },
+    {
       name: 'คณะสถาปัตยกรรมศาสตร์',
-      nameEn: 'Architecture',
+      nameEn: 'School of Architecture',
       majors: ['สาขาวิชาสถาปัตยกรรม'],
       majorsEn: ['Architecture Program']
     },
     {
-      name: 'คณะการสร้างเจ้าของธุรกิจและการบริหารจัดการ',
-      nameEn: 'Entrepreneurship and Management',
-      majors: ['สาขาวิชาความเป็นผู้ประกอบการ'],
-      majorsEn: ['Entrepreneurship and Emerging Enterprises']
-    },
-    {
-      name: 'คณะเทคโนโลยีสารสนเทศและนวัตกรรม',
-      nameEn: 'Information Technology and Innovation',
-      majors: ['สาขาวิชาเทคโนโลยีสารสนเทศและวิทยาการข้อมูล'],
-      majorsEn: ['Information Technology and Data Science']
-    },
-    {
-      name: 'คณะวิศวกรรมศาสตร์',
-      nameEn: 'Engineering',
-      majors: ['สาขาวิชาวิศวกรรมไฟฟ้าและคอมพิวเตอร์ (หลักสูตรนานาชาติ)'],
-      majorsEn: ['Electrical & Computer Engineering (International Program)']
+      name: 'วิทยาลัยนานาชาติ',
+      nameEn: 'Bangkok University International',
+      majors: ['สาขาวิชาการจัดการนวัตกรรม (หลักสูตรนานาชาติ)'],
+      majorsEn: ['Innovation Management (International Program)']
     }
   ],
   Doctoral: [
     {
-      name: 'คณะบริหารธุรกิจ',
-      nameEn: 'Business Administration',
-      majors: ['สาขาวิชาการจัดการความรู้และนวัตกรรม (หลักสูตรนานาชาติ)'],
-      majorsEn: ['Knowledge Management and Innovation Management (International Program)']
-    },
-    {
       name: 'คณะนิเทศศาสตร์',
-      nameEn: 'Communication Arts',
+      nameEn: 'School of Communication Arts',
       majors: [
-        'สาขาวิชาการจัดการสื่อสารสากล (หลักสูตรนานาชาติ)',
+        'สาขาวิชาการสื่อสารสากล (หลักสูตรนานาชาติ)',
         'สาขาวิชาการบริหารแบรนด์และการสื่อสารเชิงกลยุทธ์'
       ],
       majorsEn: [
@@ -421,9 +433,15 @@ export const BU_FACULTIES_BY_DEGREE: Record<'Bachelor' | 'Master' | 'Doctoral', 
     },
     {
       name: 'คณะวิศวกรรมศาสตร์',
-      nameEn: 'Engineering',
+      nameEn: 'School of Engineering',
       majors: ['สาขาวิชาวิศวกรรมไฟฟ้าและคอมพิวเตอร์ (หลักสูตรนานาชาติ)'],
       majorsEn: ['Electrical and Computer Engineering (International Program)']
+    },
+    {
+      name: 'วิทยาลัยนานาชาติ',
+      nameEn: 'Bangkok University International',
+      majors: ['สาขาวิชาการจัดการความรู้และนวัตกรรม (หลักสูตรนานาชาติ)'],
+      majorsEn: ['Knowledge Management and Innovation Management (International Program)']
     }
   ]
 };
