@@ -34,10 +34,13 @@ import {
   Copy,
   Award,
   FileDown,
-  Sparkles
+  Sparkles,
+  Wallet,
+  ShieldCheck,
+  GraduationCap
 } from 'lucide-react';
 import { SurveyResponse, StatisticsItem } from '../types';
-import { SURVEY_OPTIONS, BU_FACULTIES, CAREGIVER_OPTIONS, CAREGIVER_INCOME_OPTIONS } from '../data/mockData';
+import { SURVEY_OPTIONS, BU_FACULTIES, BU_FACULTIES_BY_DEGREE, CAREGIVER_OPTIONS, CAREGIVER_INCOME_OPTIONS } from '../data/mockData';
 
 interface FacultyContact {
   dean: string;
@@ -259,12 +262,21 @@ const MAJOR_TARGETS: Record<string, number> = {
   'สาขาวิชาการจัดการโลจิสติกส์และโซ่อุปทาน': 293,
   'สาขาวิชาการตลาดดิจิทัล': 441,
   
-  // บัณฑิตวิทยาลัย / คณะบริหารธุรกิจ (Master/Doctoral)
+  // บัณฑิตวิทยาลัย / Graduate School (Master/Doctoral)
   'สาขาวิชาบริหารธุรกิจ (หลักสูตรภาษาไทย)': 79,
   'สาขาวิชาบริหารธุรกิจ (หลักสูตรภาษาอังกฤษ)': 49,
-  'สาขาวิชาการจัดการศึกษาผ่านระบบเทคโนโลยีสารสนเทศ': 0,
+  'สาขาวิชาการจัดการศึกษาผ่านระบบเทคโนโลยีสารสนเทศ': 10,
   'สาขาวิชาการจัดการนวัตกรรม (หลักสูตรนานาชาติ)': 8,
   'สาขาวิชาการจัดการความรู้และนวัตกรรม (หลักสูตรนานาชาติ)': 4,
+  'สาขาวิชาการตลาดเชิงข้อมูลและการสื่อสาร': 25,
+  'สาขาวิชาความเป็นผู้ประกอบการ': 22,
+  'สาขาวิชาเทคโนโลยีสารสนเทศและวิทยาการข้อมูล': 15,
+  'สาขาวิชานิติศาสตร์': 284,
+  'สาขาวิชาการบริหารแบรนด์และการสื่อสารเชิงกลยุทธ์': 43,
+  'สาขาวิชาการสื่อสารสากล (หลักสูตรนานาชาติ)': 33,
+  'สาขาวิชานวัตกรรมการจัดการท่องเที่ยวและการบริการ': 20,
+  'สาขาวิชาวิศวกรรมไฟฟ้าและคอมพิวเตอร์ (หลักสูตรนานาชาติ)': 10,
+  'สาขาวิชาสถาปัตยกรรม': 70,
 
   // วิทยาลัยนานาชาติ
   'สาขาวิชาการตลาด (หลักสูตรนานาชาติ)': 49,
@@ -284,13 +296,9 @@ const MAJOR_TARGETS: Record<string, number> = {
   'สาขาวิชาการผลิตเนื้อหาสร้างสรรค์และประสบการณ์ดิจิทัล': 193,
   'สาขาวิชาศิลปะการแสดง': 253,
   'สาขาวิชาการผลิตอีเว้นท์ และการจัดการนิทรรศการและการประชุม': 526,
-  'สาขาวิชาการบริหารแบรนด์และการสื่อสารเชิงกลยุทธ์': 43,
-  'สาขาวิชาการสื่อสารสากล (หลักสูตรนานาชาติ)': 33,
+  'สาขาวิชาการสร้างสรรค์และการสร้างแบรนด์อินฟลูเอนเซอร์ระดับสากล': 60,
   'สาขาวิชาการสื่อสารการตลาดดิจิทัล': 25,
   'สาขาวิชาการจัดการสื่อสารสากล (หลักสูตรนานาชาติ)': 0,
-
-  // คณะนิติศาสตร์
-  'สาขาวิชานิติศาสตร์': 284,
 
   // คณะมนุษยศาสตร์และการจัดการการท่องเที่ยว
   'สาขาวิชาภาษาอังกฤษ': 299,
@@ -298,7 +306,7 @@ const MAJOR_TARGETS: Record<string, number> = {
   'สาขาวิชาการจัดการการโรงแรม': 190,
   'สาขาวิชาการจัดการธุรกิจสายการบิน': 309,
   'สาขาวิชาศิลปะและการออกแบบ': 102,
-  'สาขาวิชานวัตกรรมการจัดการการท่องเที่ยวและบริการ': 0,
+  'สาขาวิชานวัตกรรมการจัดการการท่องเที่ยวและบริการ': 20,
 
   // วิทยาลัยนานาชาติจีน
   'สาขาวิชาภาษาจีนธุรกิจ': 124,
@@ -310,15 +318,14 @@ const MAJOR_TARGETS: Record<string, number> = {
   // คณะศิลปกรรมศาสตร์
   'สาขาวิชาการออกแบบนิเทศศิลป์': 96,
   'สาขาวิชาการออกแบบแฟชั่น': 58,
+  'สาขาวิชาการออกแบบผลิตภัณฑ์': 45,
 
   // คณะสถาปัตยกรรมศาสตร์
-  'สาขาวิชาสถาปัตยกรรม': 70,
   'สาขาวิชาศิลปะออกแบบภายใน': 51,
   'สาขาวิชาสถาปัตยกรรมภายใน': 8,
 
   // คณะการสร้างเจ้าของธุรกิจและการบริหารจัดการ
   'สาขาวิชาการเป็นเจ้าของธุรกิจ': 256,
-  'สาขาวิชาความเป็นผู้ประกอบการ': 22,
 
   // คณะดิจิทัลมีเดียและศิลปะภาพยนตร์
   'สาขาวิชาภาพยนตร์': 515,
@@ -329,14 +336,12 @@ const MAJOR_TARGETS: Record<string, number> = {
   'สาขาวิชาวิทยาการคอมพิวเตอร์': 305,
   'สาขาวิชาเทคโนโลยีสารสนเทศ': 82,
   'สาขาวิชาเกมและสื่อเชิงโต้ตอบ': 215,
-  'สาขาวิชาเทคโนโลยีสารสนเทศและวิทยาการข้อมูล': 1,
 
   // คณะวิศวกรรมศาสตร์
   'สาขาวิชาวิศวกรรมไฟฟ้า': 74,
   'สาขาวิชาวิศวกรรมคอมพิวเตอร์และหุ่นยนต์': 142,
   'สาขาวิชาวิศวกรรมมัลติมีเดียและเอ็นเตอร์เทนเมนต์': 61,
-  'สาขาวิชาวิศวกรรมปัญญาประดิษฐ์และวิทยาการข้อมูล': 78,
-  'สาขาวิชาวิศวกรรมไฟฟ้าและคอมพิวเตอร์ (หลักสูตรนานาชาติ)': 1
+  'สาขาวิชาวิศวกรรมปัญญาประดิษฐ์และวิทยาการข้อมูล': 78
 };
 
 const getMajorTarget = (majorName: string): number => {
@@ -346,15 +351,72 @@ const getMajorTarget = (majorName: string): number => {
   }
   // Try mapping common variations/substrings
   const foundKey = Object.keys(MAJOR_TARGETS).find(k => {
-    // If the keys have slight text variations, match them
     const cleanK = k.replace(/[\s\(\)\/]/g, '').toLowerCase();
     const cleanNorm = normalized.replace(/[\s\(\)\/]/g, '').toLowerCase();
-    return cleanK.includes(cleanNorm) || cleanNorm.includes(cleanK);
+    return cleanK === cleanNorm || cleanK.includes(cleanNorm) || cleanNorm.includes(cleanK);
   });
   if (foundKey) {
     return MAJOR_TARGETS[foundKey];
   }
   return 15; // default fallback for unrecognized majors
+};
+
+// Robust matcher between a survey submission and a targeted major name
+export const isSubmissionMatchingMajor = (subMajor?: string, targetMajor?: string): boolean => {
+  if (!subMajor || !targetMajor) return false;
+  const s = subMajor.trim();
+  const t = targetMajor.trim();
+  if (s === t) return true;
+  // Clean prefixes and punctuation for comparison
+  const cleanSub = s.replace(/^สาขาวิชา/, '').replace(/[\s\(\)\/]/g, '').toLowerCase();
+  const cleanTarget = t.replace(/^สาขาวิชา/, '').replace(/[\s\(\)\/]/g, '').toLowerCase();
+  return cleanSub === cleanTarget;
+};
+
+// Robust matcher between a submission and a faculty within a degree filter scope
+export const isSubmissionInFaculty = (
+  sub: SurveyResponse,
+  fac: { name: string; nameEn?: string; majors?: string[] },
+  degreeFilter: 'ALL' | 'Bachelor' | 'Master' | 'Doctoral'
+): boolean => {
+  const subDegree = sub.degreeLevel || 'Bachelor';
+  const isGraduateSchool = fac.name === 'บัณฑิตวิทยาลัย' || (fac.nameEn && fac.nameEn.toLowerCase().includes('graduate'));
+
+  if (degreeFilter !== 'ALL') {
+    // When specific degree filter is selected
+    if (subDegree !== degreeFilter) return false;
+    if (isGraduateSchool) {
+      // In Master or Doctoral view, all submissions of that degree belong to Graduate School
+      return true;
+    }
+    // For Bachelor faculties: match Thai name, English name, or any major
+    return (
+      sub.faculty === fac.name ||
+      (fac.nameEn && sub.faculty === fac.nameEn) ||
+      (fac.nameEn && sub.faculty?.toLowerCase().includes(fac.nameEn.toLowerCase())) ||
+      (fac.majors && fac.majors.some(m => isSubmissionMatchingMajor(sub.major, m)))
+    );
+  }
+
+  // When degreeFilter is 'ALL'
+  if (isGraduateSchool) {
+    // Graduate School includes all Master and Doctoral respondents, or any submission explicitly labeled Graduate School
+    return (
+      sub.faculty === 'บัณฑิตวิทยาลัย' ||
+      (fac.nameEn && sub.faculty === fac.nameEn) ||
+      subDegree === 'Master' ||
+      subDegree === 'Doctoral'
+    );
+  } else {
+    // Bachelor faculties in ALL view: only include Bachelor respondents so totals and major sums match 100%
+    if (subDegree !== 'Bachelor') return false;
+    return (
+      sub.faculty === fac.name ||
+      (fac.nameEn && sub.faculty === fac.nameEn) ||
+      (fac.nameEn && sub.faculty?.toLowerCase().includes(fac.nameEn.toLowerCase())) ||
+      (fac.majors && fac.majors.some(m => isSubmissionMatchingMajor(sub.major, m)))
+    );
+  }
 };
 
 interface AdminDashboardProps {
@@ -373,6 +435,7 @@ export default function AdminDashboard({ submissions, onClearSubmissions, onRese
   const [isDeleting, setIsDeleting] = useState(false);
 
   // Response Tracking States
+  const [trackerDegreeFilter, setTrackerDegreeFilter] = useState<'ALL' | 'Bachelor' | 'Master' | 'Doctoral'>('ALL');
   const [expandedFacultyId, setExpandedFacultyId] = useState<string | null>(null);
   const [emailModalData, setEmailModalData] = useState<{
     facultyName: string;
@@ -399,6 +462,8 @@ export default function AdminDashboard({ submissions, onClearSubmissions, onRese
   const [selectedMajor, setSelectedMajor] = useState<string>('');
   const [selectedProgram, setSelectedProgram] = useState<string>('');
   const [selectedDegree, setSelectedDegree] = useState<string>('');
+  const [selectedCaregiver, setSelectedCaregiver] = useState<string>('');
+  const [selectedIncome, setSelectedIncome] = useState<string>('');
   const [timeFilter, setTimeFilter] = useState<string>('all'); // 'all' | '24h' | '7d'
   const [searchQuery, setSearchQuery] = useState<string>('');
 
@@ -480,13 +545,25 @@ export default function AdminDashboard({ submissions, onClearSubmissions, onRese
       const submittedAt = sub.submittedAt || '';
 
       // 1. Faculty Filter
-      if (selectedFaculty && faculty !== selectedFaculty) return false;
+      if (selectedFaculty) {
+        if (selectedFaculty === 'บัณฑิตวิทยาลัย') {
+          const isGrad = faculty === 'บัณฑิตวิทยาลัย' || degreeLevel === 'Master' || degreeLevel === 'Doctoral';
+          if (!isGrad) return false;
+        } else {
+          if (degreeLevel === 'Master' || degreeLevel === 'Doctoral') return false;
+          if (faculty !== selectedFaculty) return false;
+        }
+      }
       // 2. Major Filter
       if (selectedMajor && major !== selectedMajor) return false;
       // 3. Program Filter
       if (selectedProgram && program !== selectedProgram) return false;
       // 3.5. Degree Filter
       if (selectedDegree && degreeLevel !== selectedDegree) return false;
+      // 3.6. Caregiver Filter
+      if (selectedCaregiver && sub.primaryCaregiver !== selectedCaregiver) return false;
+      // 3.7. Income Filter
+      if (selectedIncome && sub.caregiverIncomeRange !== selectedIncome) return false;
       // 4. Time Filter
       if (timeFilter !== 'all') {
         if (!submittedAt) return false;
@@ -503,12 +580,13 @@ export default function AdminDashboard({ submissions, onClearSubmissions, onRese
         const emailMatch = sub.email?.toLowerCase().includes(q) || false;
         const majorMatch = major.toLowerCase().includes(q);
         const otherTextMatch = sub.otherText?.toLowerCase().includes(q) || false;
-        if (!studentIdMatch && !emailMatch && !majorMatch && !otherTextMatch) return false;
+        const caregiverOtherMatch = sub.primaryCaregiverOther?.toLowerCase().includes(q) || false;
+        if (!studentIdMatch && !emailMatch && !majorMatch && !otherTextMatch && !caregiverOtherMatch) return false;
       }
 
       return true;
     });
-  }, [submissions, selectedFaculty, selectedMajor, selectedProgram, selectedDegree, timeFilter, searchQuery]);
+  }, [submissions, selectedFaculty, selectedMajor, selectedProgram, selectedDegree, selectedCaregiver, selectedIncome, timeFilter, searchQuery]);
 
   useEffect(() => {
     const facultyStr = selectedFaculty ? `สำหรับ${selectedFaculty}` : '';
@@ -648,6 +726,115 @@ export default function AdminDashboard({ submissions, onClearSubmissions, onRese
       doctoralCount: dCount,
       doctoralPercent: total > 0 ? Math.round((dCount / total) * 100) : 0,
       total,
+    };
+  }, [filteredSubmissions]);
+
+  // 4.6. PRIMARY CAREGIVER METRICS (Distribution of Primary Caregivers)
+  const caregiverMetrics = useMemo(() => {
+    const counts: Record<string, number> = {};
+    const otherDetails: Array<{ id: string; studentId: string; faculty: string; major: string; otherText: string }> = [];
+    let specifiedTotal = 0;
+
+    // Initialize with all predefined options
+    CAREGIVER_OPTIONS.forEach((opt) => {
+      counts[opt.id] = 0;
+    });
+
+    filteredSubmissions.forEach((sub) => {
+      const caregiverId = sub.primaryCaregiver;
+      if (caregiverId) {
+        specifiedTotal++;
+        if (counts[caregiverId] !== undefined) {
+          counts[caregiverId]++;
+        } else {
+          counts[caregiverId] = (counts[caregiverId] || 0) + 1;
+        }
+
+        if (caregiverId === 'other' && sub.primaryCaregiverOther) {
+          otherDetails.push({
+            id: sub.id,
+            studentId: sub.studentId || '-',
+            faculty: sub.faculty || '-',
+            major: sub.major || '-',
+            otherText: sub.primaryCaregiverOther,
+          });
+        }
+      }
+    });
+
+    const totalSubmissions = filteredSubmissions.length;
+    const unspecifiedCount = totalSubmissions - specifiedTotal;
+
+    const list = CAREGIVER_OPTIONS.map((opt) => {
+      const count = counts[opt.id] || 0;
+      const percentage = totalSubmissions > 0 ? Math.round((count / totalSubmissions) * 100) : 0;
+      const specifiedPercentage = specifiedTotal > 0 ? Math.round((count / specifiedTotal) * 100) : 0;
+      return {
+        id: opt.id,
+        label: opt.label,
+        labelEn: opt.labelEn,
+        count,
+        percentage,
+        specifiedPercentage,
+      };
+    }).sort((a, b) => b.count - a.count);
+
+    return {
+      list,
+      totalSubmissions,
+      specifiedTotal,
+      unspecifiedCount,
+      otherDetails,
+    };
+  }, [filteredSubmissions]);
+
+  // 4.7. CAREGIVER INCOME RANGE METRICS (Monthly Income Distribution)
+  const caregiverIncomeMetrics = useMemo(() => {
+    const counts: Record<string, number> = {};
+    let specifiedTotal = 0;
+
+    CAREGIVER_INCOME_OPTIONS.forEach((opt) => {
+      counts[opt.id] = 0;
+    });
+
+    filteredSubmissions.forEach((sub) => {
+      const incomeId = sub.caregiverIncomeRange;
+      if (incomeId) {
+        specifiedTotal++;
+        if (counts[incomeId] !== undefined) {
+          counts[incomeId]++;
+        } else {
+          counts[incomeId] = (counts[incomeId] || 0) + 1;
+        }
+      }
+    });
+
+    const totalSubmissions = filteredSubmissions.length;
+    const unspecifiedCount = totalSubmissions - specifiedTotal;
+
+    // Keep natural chronological income order for charts, plus provide a sorted version
+    const list = CAREGIVER_INCOME_OPTIONS.map((opt) => {
+      const count = counts[opt.id] || 0;
+      const percentage = totalSubmissions > 0 ? Math.round((count / totalSubmissions) * 100) : 0;
+      const specifiedPercentage = specifiedTotal > 0 ? Math.round((count / specifiedTotal) * 100) : 0;
+      return {
+        id: opt.id,
+        label: opt.label,
+        labelEn: opt.labelEn,
+        count,
+        percentage,
+        specifiedPercentage,
+      };
+    });
+
+    const sortedList = [...list].sort((a, b) => b.count - a.count);
+
+    return {
+      list,
+      sortedList,
+      totalSubmissions,
+      specifiedTotal,
+      unspecifiedCount,
     };
   }, [filteredSubmissions]);
 
@@ -835,7 +1022,15 @@ ${methodologyText}
 - **หลักสูตรภาษาไทย (ปกติ):** ${programMetrics.thaiCount} คน (${programMetrics.thaiPercent}%)
 - **หลักสูตรนานาชาติ/อังกฤษ:** ${programMetrics.interCount} คน (${programMetrics.interPercent}%)
 
-### 3.2 ${lang === 'TH' ? 'ลำดับความคาดหวังสูงสุด 10 อันดับแรกของนักศึกษาใหม่' : 'Top 10 New Student Expectations Ranking'}
+### 3.2 ข้อมูลประชากรศาสตร์: ผู้ปกครองหรือผู้ดูแลหลัก (Primary Caregiver Distribution)
+${caregiverMetrics.list.map((c) => `- **${c.label} (${c.labelEn}):** ${c.count} คน (${c.percentage}%)`).join('\n')}
+${caregiverMetrics.unspecifiedCount > 0 ? `- **ยังไม่ได้ระบุ / ไม่ประสงค์ระบุ:** ${caregiverMetrics.unspecifiedCount} คน` : ''}
+
+### 3.3 ข้อมูลประชากรศาสตร์: รายได้เฉลี่ยต่อเดือนของผู้ปกครอง (Caregiver Income Bracket)
+${caregiverIncomeMetrics.list.map((inc) => `- **${inc.label} (${inc.labelEn}):** ${inc.count} คน (${inc.percentage}%)`).join('\n')}
+${caregiverIncomeMetrics.unspecifiedCount > 0 ? `- **ยังไม่ได้ระบุ / ไม่ประสงค์ระบุ:** ${caregiverIncomeMetrics.unspecifiedCount} คน` : ''}
+
+### 3.4 ${lang === 'TH' ? 'ลำดับความคาดหวังสูงสุด 10 อันดับแรกของนักศึกษาใหม่' : 'Top 10 New Student Expectations Ranking'}
 ${topExpectations.map((item, idx) => `${idx + 1}. **ข้อเลือก ${item.id}** - ${lang === 'TH' ? item.label : (item.labelEn || item.label)} (โหวต: ${item.count} ครั้ง | ${item.percentage}%)`).join('\n')}
 
 ---
@@ -889,19 +1084,34 @@ ${recommendationsText}
   };
 
   const openEmailModal = (facName: string) => {
-    const facObj = BU_FACULTIES.find(f => f.name === facName);
+    // Find faculty in active degree set or BU_FACULTIES
+    const activeFacList = trackerDegreeFilter === 'ALL' ? BU_FACULTIES : BU_FACULTIES_BY_DEGREE[trackerDegreeFilter];
+    const facObj = activeFacList.find(f => f.name === facName) || BU_FACULTIES.find(f => f.name === facName);
     if (!facObj) return;
 
-    const facSubmissions = submissions.filter(sub => sub.faculty === facName);
+    const facSubmissions = submissions.filter(sub => isSubmissionInFaculty(sub, facObj, trackerDegreeFilter));
+
     const contact = getFacultyContact(facName);
-    const target = Math.max(contact.baseTarget, facSubmissions.length);
+    let baseTarget = contact.baseTarget;
+    if (trackerDegreeFilter === 'Master') baseTarget = 150;
+    else if (trackerDegreeFilter === 'Doctoral') baseTarget = 50;
+
+    const target = Math.max(baseTarget, facSubmissions.length);
     const responded = facSubmissions.length;
     const nonResponded = Math.max(0, target - responded);
     const rate = target > 0 ? Number(((responded / target) * 100).toFixed(1)) : 0;
 
+    const degreeLabel = trackerDegreeFilter === 'ALL'
+      ? 'ทุกระดับการศึกษา'
+      : trackerDegreeFilter === 'Bachelor'
+      ? 'ระดับปริญญาตรี'
+      : trackerDegreeFilter === 'Master'
+      ? 'ระดับปริญญาโท'
+      : 'ระดับปริญญาเอก';
+
     let majorStatsStr = '';
     facObj.majors.forEach(m => {
-      const majorSubmissions = facSubmissions.filter(sub => sub.major === m);
+      const majorSubmissions = facSubmissions.filter(sub => isSubmissionMatchingMajor(sub.major, m));
       const baseMajorTarget = getMajorTarget(m);
       const majorTarget = Math.max(baseMajorTarget, majorSubmissions.length);
       const mResponded = majorSubmissions.length;
@@ -910,8 +1120,8 @@ ${recommendationsText}
       majorStatsStr += `  - ${m.split(' - ')[0]}: ตอบแล้ว ${mResponded} จากเป้าหมาย ${majorTarget} คน (ยังไม่ตอบ ${mNonResponded} คน, คืบหน้า ${mRate}%)\n`;
     });
 
-    const subject = `[ด่วนที่สุด - ติดตามแบบสำรวจนักศึกษาใหม่ 2569] สรุปยอดผู้ตอบและไม่ตอบแบบสำรวจ: ${facName}`;
-    const body = `เรียน คณบดี${facName} (${contact.dean}) และผู้ประสานงานคณะ (${contact.coordinator})\nมหาวิทยาลัยกรุงเทพ\n\nเรื่อง: ขอความร่วมมือประชาสัมพันธ์และติดตามการตอบแบบสำรวจความคาดหวังของนักศึกษาใหม่ชั้นปีที่ 1 (ปีการศึกษา 2569)\n\nตามที่มหาวิทยาลัยได้จัดทำแบบประเมิน "ระบบสำรวจความคิดเห็นนักศึกษาใหม่ ประจำปีการศึกษา 2569" เพื่อสำรวจความต้องการพัฒนากระบวนการเรียนการสอนและสภาพแวดล้อมสถาบันการเรียนรู้ให้สอดรับกับนโยบายพัฒนาทักษะสร้างสรรค์นั้น\n\nแผนกประกันคุณภาพการศึกษา สำนักมาตรฐานคุณภาพการศึกษา ใคร่ขอเรียนรายงานสรุปรายการนักศึกษาที่เข้าร่วมและยังไม่ตอบใน ${facName} ณ ปัจจุบัน ดังนี้:\n\n• จำนวนชั้นปีที่ 1 ทั้งหมด: ${target} คน\n• ดำเนินการตอบแล้ว: ${responded} คน (คิดเป็นร้อยละ ${rate}%)\n• อยู่ระหว่างติดตามเพิ่มเติม: ${nonResponded} คน (ยังไม่ได้ทำแบบสำรวจ)\n\nสถิติจำแนกความคืบหน้าเชิงสาขาวิชาเอกสังกัดคณะ:\n${majorStatsStr}\nในการนี้ เพื่อให้บรรลุตามจำนวนที่จัดเก็บและพัฒนาคุณภาพ QA จึงใคร่ขอความร่วมมือจากคณบดี ${contact.dean} และผู้ประสานงานคณะ ${contact.coordinator} ช่วยประสานและเน้นย้ำแก่อาจารย์ที่ปรึกษา ช่วยเสริมแรงประชาสัมพันธ์แก่นักศึกษาใหม่ในสังกัดที่ยังคงค้าง ให้ตอบแบบสำรวจออนไลน์ที่ระบบสำรวจโดยด่วนที่สุด\n\nขอแสดงความขอบคุณทางคณะและผู้บริหารในความร่วมมือเป็นอย่างดีเสมอมา\n\nด้วยความเคารพอย่างสูง\nแผนกประกันคุณภาพการศึกษา สำนักมาตรฐานคุณภาพการศึกษา\nติดต่อพัฒนาและดูแลระบบ: pornpun.w@bu.ac.th`;
+    const subject = `[ด่วนที่สุด - ติดตามแบบสำรวจนักศึกษาใหม่ 2569] สรุปยอดผู้ตอบและไม่ตอบแบบสำรวจ (${degreeLabel}): ${facName}`;
+    const body = `เรียน คณบดี${facName} (${contact.dean}) และผู้ประสานงานคณะ (${contact.coordinator})\nมหาวิทยาลัยกรุงเทพ\n\nเรื่อง: ขอความร่วมมือประชาสัมพันธ์และติดตามการตอบแบบสำรวจความคาดหวังของนักศึกษาใหม่ชั้นปีที่ 1 (ปีการศึกษา 2569) [${degreeLabel}]\n\nตามที่มหาวิทยาลัยได้จัดทำแบบประเมิน "ระบบสำรวจความคิดเห็นนักศึกษาใหม่ ประจำปีการศึกษา 2569" เพื่อสำรวจความต้องการพัฒนากระบวนการเรียนการสอนและสภาพแวดล้อมสถาบันการเรียนรู้ให้สอดรับกับนโยบายพัฒนาทักษะสร้างสรรค์นั้น\n\nแผนกประกันคุณภาพการศึกษา สำนักมาตรฐานคุณภาพการศึกษา ใคร่ขอเรียนรายงานสรุปรายการนักศึกษาที่เข้าร่วมและยังไม่ตอบใน ${facName} (${degreeLabel}) ณ ปัจจุบัน ดังนี้:\n\n• จำนวนนักศึกษาใหม่ตามเป้าหมาย: ${target} คน\n• ดำเนินการตอบแล้ว: ${responded} คน (คิดเป็นร้อยละ ${rate}%)\n• อยู่ระหว่างติดตามเพิ่มเติม: ${nonResponded} คน (ยังไม่ได้ทำแบบสำรวจ)\n\nสถิติจำแนกความคืบหน้าเชิงสาขาวิชาสังกัดคณะ:\n${majorStatsStr}\nในการนี้ เพื่อให้บรรลุตามจำนวนที่จัดเก็บและพัฒนาคุณภาพ QA จึงใคร่ขอความร่วมมือจากคณบดี ${contact.dean} และผู้ประสานงานคณะ ${contact.coordinator} ช่วยประสานและเน้นย้ำแก่อาจารย์ที่ปรึกษา ช่วยเสริมแรงประชาสัมพันธ์แก่นักศึกษาใหม่ในสังกัดที่ยังคงค้าง ให้ตอบแบบสำรวจออนไลน์ที่ระบบสำรวจโดยด่วนที่สุด\n\nขอแสดงความขอบคุณทางคณะและผู้บริหารในความร่วมมือเป็นอย่างดีเสมอมา\n\nด้วยความเคารพอย่างสูง\nแผนกประกันคุณภาพการศึกษา สำนักมาตรฐานคุณภาพการศึกษา\nติดต่อพัฒนาและดูแลระบบ: pornpun.w@bu.ac.th`;
 
     setEmailModalData({
       facultyName: facName,
@@ -1000,7 +1210,7 @@ ${recommendationsText}
           </h4>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-7 gap-3">
           {/* Faculty filter */}
           <div className="space-y-1">
             <label className="block text-[11px] font-semibold text-gray-500 uppercase tracking-wider" htmlFor="filter-faculty">
@@ -1010,7 +1220,7 @@ ${recommendationsText}
               id="filter-faculty"
               value={selectedFaculty}
               onChange={handleFacultyFilterChange}
-              className="w-full bg-[#f5f7fa] border border-gray-100 rounded-xl px-3.5 py-2 text-xs focus:ring-[#003366] focus:bg-white text-gray-800 outline-none cursor-pointer"
+              className="w-full bg-[#f5f7fa] border border-gray-100 rounded-xl px-3 py-2 text-xs focus:ring-[#003366] focus:bg-white text-gray-800 outline-none cursor-pointer"
             >
               <option value="">{lang === 'TH' ? 'ทั้งหมดทุกคณะ' : 'All Faculties'}</option>
               {BU_FACULTIES.map((fac) => (
@@ -1031,7 +1241,7 @@ ${recommendationsText}
               disabled={!selectedFaculty}
               value={selectedMajor}
               onChange={(e) => setSelectedMajor(e.target.value)}
-              className="w-full bg-[#f5f7fa] disabled:opacity-50 disabled:cursor-not-allowed border border-gray-100 rounded-xl px-3.5 py-2 text-xs focus:ring-[#003366] focus:bg-white text-gray-800 outline-none cursor-pointer"
+              className="w-full bg-[#f5f7fa] disabled:opacity-50 disabled:cursor-not-allowed border border-gray-100 rounded-xl px-3 py-2 text-xs focus:ring-[#003366] focus:bg-white text-gray-800 outline-none cursor-pointer"
             >
               <option value="">{lang === 'TH' ? 'ทั้งหมดทุกสาขา' : 'All Majors'}</option>
               {filterMajorsList.map((m) => {
@@ -1056,7 +1266,7 @@ ${recommendationsText}
               id="filter-program"
               value={selectedProgram}
               onChange={(e) => setSelectedProgram(e.target.value)}
-              className="w-full bg-[#f5f7fa] border border-gray-100 rounded-xl px-3.5 py-2 text-xs focus:ring-[#003366] focus:bg-white text-gray-800 outline-none cursor-pointer"
+              className="w-full bg-[#f5f7fa] border border-gray-100 rounded-xl px-3 py-2 text-xs focus:ring-[#003366] focus:bg-white text-gray-800 outline-none cursor-pointer"
             >
               <option value="">{lang === 'TH' ? 'หลักสูตรทั้งหมด' : 'All Programs'}</option>
               <option value="Thai">{lang === 'TH' ? 'ภาคปกติ (ภาษาไทย)' : 'Regular Thai Program'}</option>
@@ -1073,12 +1283,52 @@ ${recommendationsText}
               id="filter-degree"
               value={selectedDegree}
               onChange={(e) => setSelectedDegree(e.target.value)}
-              className="w-full bg-[#f5f7fa] border border-gray-100 rounded-xl px-3.5 py-2 text-xs focus:ring-[#003366] focus:bg-white text-gray-800 outline-none cursor-pointer"
+              className="w-full bg-[#f5f7fa] border border-gray-100 rounded-xl px-3 py-2 text-xs focus:ring-[#003366] focus:bg-white text-gray-800 outline-none cursor-pointer"
             >
               <option value="">{lang === 'TH' ? 'ระดับการศึกษาทั้งหมด' : 'All Degree Levels'}</option>
               <option value="Bachelor">{lang === 'TH' ? 'ปริญญาตรี (Bachelor\'s)' : 'Bachelor\'s Degree'}</option>
               <option value="Master">{lang === 'TH' ? 'ปริญญาโท (Master\'s)' : 'Master\'s Degree'}</option>
               <option value="Doctoral">{lang === 'TH' ? 'ปริญญาเอก (Doctoral)' : 'Doctoral Degree'}</option>
+            </select>
+          </div>
+
+          {/* Caregiver Filter */}
+          <div className="space-y-1">
+            <label className="block text-[11px] font-semibold text-gray-500 uppercase tracking-wider" htmlFor="filter-caregiver">
+              {lang === 'TH' ? 'ผู้ดูแลหลัก' : 'Caregiver'}
+            </label>
+            <select
+              id="filter-caregiver"
+              value={selectedCaregiver}
+              onChange={(e) => setSelectedCaregiver(e.target.value)}
+              className="w-full bg-[#f5f7fa] border border-gray-100 rounded-xl px-3 py-2 text-xs focus:ring-[#003366] focus:bg-white text-gray-800 outline-none cursor-pointer"
+            >
+              <option value="">{lang === 'TH' ? 'ผู้ดูแลทั้งหมด' : 'All Caregivers'}</option>
+              {CAREGIVER_OPTIONS.map((c) => (
+                <option key={c.id} value={c.id}>
+                  {lang === 'TH' ? c.label : c.labelEn}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Caregiver Income Filter */}
+          <div className="space-y-1">
+            <label className="block text-[11px] font-semibold text-gray-500 uppercase tracking-wider" htmlFor="filter-income">
+              {lang === 'TH' ? 'รายได้ผู้ปกครอง' : 'Caregiver Income'}
+            </label>
+            <select
+              id="filter-income"
+              value={selectedIncome}
+              onChange={(e) => setSelectedIncome(e.target.value)}
+              className="w-full bg-[#f5f7fa] border border-gray-100 rounded-xl px-3 py-2 text-xs focus:ring-[#003366] focus:bg-white text-gray-800 outline-none cursor-pointer"
+            >
+              <option value="">{lang === 'TH' ? 'ช่วงรายได้ทั้งหมด' : 'All Income Ranges'}</option>
+              {CAREGIVER_INCOME_OPTIONS.map((inc) => (
+                <option key={inc.id} value={inc.id}>
+                  {lang === 'TH' ? inc.label : inc.labelEn}
+                </option>
+              ))}
             </select>
           </div>
 
@@ -1091,7 +1341,7 @@ ${recommendationsText}
               id="filter-time"
               value={timeFilter}
               onChange={(e) => setTimeFilter(e.target.value)}
-              className="w-full bg-[#f5f7fa] border border-gray-100 rounded-xl px-3.5 py-2 text-xs focus:ring-[#003366] focus:bg-white text-gray-800 outline-none cursor-pointer"
+              className="w-full bg-[#f5f7fa] border border-gray-100 rounded-xl px-3 py-2 text-xs focus:ring-[#003366] focus:bg-white text-gray-800 outline-none cursor-pointer"
             >
               <option value="all">{lang === 'TH' ? 'ปีการศึกษา 2569 ทั้งหมด' : 'All Academic Year 2026'}</option>
               <option value="24h">{lang === 'TH' ? 'ล่าสุด 24 ชั่วโมงที่ผ่านมา' : 'Last 24 Hours'}</option>
@@ -1122,6 +1372,8 @@ ${recommendationsText}
                 setSelectedMajor('');
                 setSelectedProgram('');
                 setSelectedDegree('');
+                setSelectedCaregiver('');
+                setSelectedIncome('');
                 setTimeFilter('all');
                 setSearchQuery('');
               }}
@@ -1453,21 +1705,318 @@ ${recommendationsText}
         </div>
       </div>
 
-      {/* 4. FACULTY & MAJOR PARTICIPATION AND OUTREACH SYSTEM */}
-      <div className="bg-white p-5 md:p-8 rounded-2xl shadow-sm border border-gray-100 space-y-6" id="faculty-outreach-section">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-gray-100 pb-4 gap-4">
-          <div className="space-y-1">
-            <h4 className="text-base font-bold text-gray-800 flex items-center gap-2">
-              <Users className="w-5 h-5 text-[#003366]" />
-              {lang === 'TH' ? 'สรุปข้อมูลการตอบและไม่ตอบ รายคณะ/สาขาวิชา (Response & Non-Response Tracker)' : 'Response & Non-Response Tracker by Faculty / Major'}
-            </h4>
-            <p className="text-xs text-gray-400 font-normal">
-              {lang === 'TH'
-                ? 'เปรียบเทียบสัดส่วนและยอดคงค้างของนักศึกษาใหม่ชั้นปีที่ 1 (ตอบเสร็จสิ้นแล้ว vs ยังคงค้างตอบกลับ) แยกรายคณะแลัวสาขา และปุ่มส่งแจ้งผ่านเมลเพื่อติดตาม'
-                : 'Compare the proportion of completed vs. pending first-year student submissions by faculty/major with outreach email workflows.'}
-            </p>
+      {/* 3.5. CAREGIVER & CAREGIVER INCOME SUMMARY SECTION */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6" id="caregiver-summary-section">
+        {/* SECTION 1: PRIMARY CAREGIVER SUMMARY */}
+        <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex flex-col justify-between space-y-5">
+          <div className="border-b border-gray-100 pb-3 flex items-start justify-between">
+            <div className="space-y-0.5">
+              <div className="flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-blue-700" />
+                <h4 className="text-sm font-bold text-gray-800 flex items-center gap-1.5">
+                  <HeartHandshake className="w-4.5 h-4.5 text-[#003366]" />
+                  {lang === 'TH' ? '1. ผู้ปกครองหรือผู้ดูแลหลักของท่านคือใคร' : '1. Primary Caregiver Distribution'}
+                </h4>
+              </div>
+              <p className="text-[11px] text-gray-400">
+                {lang === 'TH'
+                  ? `สรุปสัดส่วนผู้ดูแลหลักของนักศึกษาใหม่ (ระบุข้อมูลแล้ว ${caregiverMetrics.specifiedTotal}/${caregiverMetrics.totalSubmissions} คน)`
+                  : `Primary caregiver distribution (${caregiverMetrics.specifiedTotal}/${caregiverMetrics.totalSubmissions} specified)`}
+              </p>
+            </div>
+            <span className="text-[10px] font-semibold bg-blue-50 text-[#003366] px-2.5 py-1 rounded-full border border-blue-100">
+              {caregiverMetrics.specifiedTotal} {lang === 'TH' ? 'คน' : 'respondents'}
+            </span>
+          </div>
+
+          {/* Breakdown bars */}
+          <div className="space-y-3.5 py-1 overflow-y-auto max-h-[320px] pr-1">
+            {caregiverMetrics.list.map((item, idx) => {
+              const labelText = lang === 'TH' ? item.label : item.labelEn;
+              const isOther = item.id === 'other';
+              const colorGradients = [
+                'from-[#003366] to-blue-600',
+                'from-indigo-600 to-indigo-400',
+                'from-sky-600 to-cyan-500',
+                'from-emerald-600 to-teal-500',
+                'from-amber-600 to-yellow-500',
+                'from-purple-600 to-violet-400',
+                'from-slate-600 to-slate-400',
+              ];
+              const gradient = colorGradients[idx % colorGradients.length];
+
+              return (
+                <div key={item.id} className="space-y-1.5 group">
+                  <div className="flex justify-between text-xs items-center">
+                    <span className="text-gray-700 font-medium group-hover:text-blue-900 transition-colors flex items-center gap-1.5">
+                      <span className="w-5 h-5 rounded-full bg-slate-100 text-slate-700 font-mono text-[10px] flex items-center justify-center font-bold">
+                        {idx + 1}
+                      </span>
+                      <span>{labelText}</span>
+                      {isOther && caregiverMetrics.otherDetails.length > 0 && (
+                        <span className="text-[10px] text-amber-600 bg-amber-50 px-1.5 py-0.5 rounded-md font-normal border border-amber-200">
+                          {lang === 'TH' ? `ระบุอื่น ๆ ${caregiverMetrics.otherDetails.length} รายการ` : `${caregiverMetrics.otherDetails.length} custom`}
+                        </span>
+                      )}
+                    </span>
+                    <div className="flex items-center gap-2">
+                      <span className="text-gray-800 font-bold font-mono text-xs">
+                        {item.count} <span className="text-gray-400 font-normal text-[11px]">{lang === 'TH' ? 'คน' : ''}</span>
+                      </span>
+                      <span className="text-[11px] font-semibold text-blue-900 bg-blue-50 px-2 py-0.5 rounded-md min-w-[45px] text-right font-mono">
+                        {item.percentage}%
+                      </span>
+                    </div>
+                  </div>
+                  <div className="w-full h-2.5 bg-gray-100 rounded-full overflow-hidden">
+                    <motion.div
+                      initial={{ width: 0 }}
+                      animate={{ width: `${item.percentage}%` }}
+                      transition={{ duration: 0.5, delay: idx * 0.05 }}
+                      className={`h-full bg-gradient-to-r ${gradient} rounded-full`}
+                    />
+                  </div>
+                </div>
+              );
+            })}
+
+            {/* Unspecified notice if any */}
+            {caregiverMetrics.unspecifiedCount > 0 && (
+              <div className="text-[11px] text-gray-400 bg-gray-50 p-2.5 rounded-xl border border-dashed border-gray-200 flex justify-between items-center">
+                <span>{lang === 'TH' ? 'ยังไม่ได้ระบุ / ไม่ประสงค์ระบุ' : 'Unspecified / Anonymous'}</span>
+                <span className="font-mono font-medium text-gray-500">
+                  {caregiverMetrics.unspecifiedCount} {lang === 'TH' ? 'คน' : 'respondents'} ({Math.round((caregiverMetrics.unspecifiedCount / (caregiverMetrics.totalSubmissions || 1)) * 100)}%)
+                </span>
+              </div>
+            )}
+          </div>
+
+          {/* Drill-down of 'Other' specifics if provided */}
+          {caregiverMetrics.otherDetails.length > 0 && (
+            <div className="bg-amber-50/60 border border-amber-200/80 rounded-xl p-3 space-y-1.5">
+              <span className="text-[11px] font-bold text-amber-900 block">
+                {lang === 'TH' ? 'รายละเอียดเพิ่มเติมที่นักศึกษาระบุ (ผู้ดูแลอื่น ๆ):' : 'Custom Caregiver Details Specified:'}
+              </span>
+              <div className="max-h-24 overflow-y-auto space-y-1 text-[11px] text-amber-950 pr-1">
+                {caregiverMetrics.otherDetails.map((det, dIdx) => (
+                  <div key={det.id + dIdx} className="bg-white/80 px-2.5 py-1 rounded-lg border border-amber-100 flex justify-between items-center">
+                    <span className="font-medium">"{det.otherText}"</span>
+                    <span className="text-[10px] text-gray-400 font-mono">{det.studentId !== '-' ? det.studentId : det.faculty.split(' (')[0]}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          <div className="text-[10px] text-gray-400 pt-2 border-t border-gray-100 leading-tight">
+            {lang === 'TH'
+              ? '* คำนวณตามตัวกรองที่เลือกด้านบนแบบ Real-time สามารถกรองดูเฉพาะคณะหรือสาขาวิชาได้'
+              : '* Calculated in real-time according to active filters. You may filter by faculty or major above.'}
           </div>
         </div>
+
+        {/* SECTION 2: CAREGIVER INCOME RANGE SUMMARY */}
+        <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex flex-col justify-between space-y-5">
+          <div className="border-b border-gray-100 pb-3 flex items-start justify-between">
+            <div className="space-y-0.5">
+              <div className="flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-emerald-600" />
+                <h4 className="text-sm font-bold text-gray-800 flex items-center gap-1.5">
+                  <Wallet className="w-4.5 h-4.5 text-[#003366]" />
+                  {lang === 'TH' ? '2. รายได้เฉลี่ยต่อเดือนของผู้ปกครองหรือผู้ดูแลหลัก' : '2. Caregiver Monthly Income Distribution'}
+                </h4>
+              </div>
+              <p className="text-[11px] text-gray-400">
+                {lang === 'TH'
+                  ? `สรุปช่วงรายได้เฉลี่ยต่อเดือนของผู้ปกครอง (ระบุข้อมูลแล้ว ${caregiverIncomeMetrics.specifiedTotal}/${caregiverIncomeMetrics.totalSubmissions} คน)`
+                  : `Caregiver income brackets (${caregiverIncomeMetrics.specifiedTotal}/${caregiverIncomeMetrics.totalSubmissions} specified)`}
+              </p>
+            </div>
+            <span className="text-[10px] font-semibold bg-emerald-50 text-emerald-800 px-2.5 py-1 rounded-full border border-emerald-100">
+              {caregiverIncomeMetrics.specifiedTotal} {lang === 'TH' ? 'คน' : 'respondents'}
+            </span>
+          </div>
+
+          {/* Breakdown bars */}
+          <div className="space-y-3.5 py-1 overflow-y-auto max-h-[320px] pr-1">
+            {caregiverIncomeMetrics.list.map((item, idx) => {
+              const labelText = lang === 'TH' ? item.label : item.labelEn;
+              const incomeGradients = [
+                'from-teal-600 to-emerald-400',
+                'from-emerald-600 to-green-400',
+                'from-cyan-600 to-sky-400',
+                'from-blue-600 to-indigo-400',
+                'from-violet-600 to-purple-400',
+                'from-amber-600 to-orange-400',
+              ];
+              const gradient = incomeGradients[idx % incomeGradients.length];
+
+              return (
+                <div key={item.id} className="space-y-1.5 group">
+                  <div className="flex justify-between text-xs items-center">
+                    <span className="text-gray-700 font-medium group-hover:text-emerald-900 transition-colors flex items-center gap-1.5">
+                      <span className="w-5 h-5 rounded-full bg-slate-100 text-slate-700 font-mono text-[10px] flex items-center justify-center font-bold">
+                        {idx + 1}
+                      </span>
+                      <span>{labelText}</span>
+                    </span>
+                    <div className="flex items-center gap-2">
+                      <span className="text-gray-800 font-bold font-mono text-xs">
+                        {item.count} <span className="text-gray-400 font-normal text-[11px]">{lang === 'TH' ? 'คน' : ''}</span>
+                      </span>
+                      <span className="text-[11px] font-semibold text-emerald-900 bg-emerald-50 px-2 py-0.5 rounded-md min-w-[45px] text-right font-mono">
+                        {item.percentage}%
+                      </span>
+                    </div>
+                  </div>
+                  <div className="w-full h-2.5 bg-gray-100 rounded-full overflow-hidden">
+                    <motion.div
+                      initial={{ width: 0 }}
+                      animate={{ width: `${item.percentage}%` }}
+                      transition={{ duration: 0.5, delay: idx * 0.05 }}
+                      className={`h-full bg-gradient-to-r ${gradient} rounded-full`}
+                    />
+                  </div>
+                </div>
+              );
+            })}
+
+            {/* Unspecified notice if any */}
+            {caregiverIncomeMetrics.unspecifiedCount > 0 && (
+              <div className="text-[11px] text-gray-400 bg-gray-50 p-2.5 rounded-xl border border-dashed border-gray-200 flex justify-between items-center">
+                <span>{lang === 'TH' ? 'ยังไม่ได้ระบุ / ไม่ประสงค์ระบุ' : 'Unspecified / Anonymous'}</span>
+                <span className="font-mono font-medium text-gray-500">
+                  {caregiverIncomeMetrics.unspecifiedCount} {lang === 'TH' ? 'คน' : 'respondents'} ({Math.round((caregiverIncomeMetrics.unspecifiedCount / (caregiverIncomeMetrics.totalSubmissions || 1)) * 100)}%)
+                </span>
+              </div>
+            )}
+          </div>
+
+          <div className="text-[10px] text-gray-400 pt-2 border-t border-gray-100 leading-tight">
+            {lang === 'TH'
+              ? '* เป็นข้อมูลสำคัญสำหรับแผนกทุนการศึกษาและสวัสดิการนักศึกษา เพื่อวางแผนให้การสนับสนุนที่ตรงจุด'
+              : '* Key demographic indicator for student welfare, financial aid, and scholarship planning.'}
+          </div>
+        </div>
+      </div>
+
+      {/* 4. FACULTY & MAJOR PARTICIPATION AND OUTREACH SYSTEM WITH DEGREE-LEVEL TRACKING */}
+      <div className="bg-white p-5 md:p-8 rounded-2xl shadow-sm border border-gray-100 space-y-6" id="faculty-outreach-section">
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between border-b border-gray-100 pb-5 gap-4">
+          <div className="space-y-1">
+            <div className="flex items-center gap-2">
+              <span className="p-2 rounded-xl bg-blue-50 text-[#003366]">
+                <Users className="w-5 h-5" />
+              </span>
+              <div>
+                <h4 className="text-base font-bold text-gray-800 flex items-center gap-2">
+                  {lang === 'TH' ? 'สรุปข้อมูลการตอบและไม่ตอบ รายคณะ/สาขาวิชา (Response & Non-Response Tracker)' : 'Response & Non-Response Tracker by Faculty / Major'}
+                  <span className="text-[11px] font-medium px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-700 border border-slate-200">
+                    {trackerDegreeFilter === 'ALL'
+                      ? (lang === 'TH' ? 'ทุกระดับการศึกษา' : 'All Degree Levels')
+                      : trackerDegreeFilter === 'Bachelor'
+                      ? (lang === 'TH' ? 'ระดับปริญญาตรี' : 'Bachelor Degree')
+                      : trackerDegreeFilter === 'Master'
+                      ? (lang === 'TH' ? 'ระดับปริญญาโท' : 'Master Degree')
+                      : (lang === 'TH' ? 'ระดับปริญญาเอก' : 'Doctoral Degree')}
+                  </span>
+                </h4>
+                <p className="text-xs text-gray-500 font-normal mt-0.5">
+                  {lang === 'TH'
+                    ? 'เปรียบเทียบสัดส่วนและยอดคงค้างของนักศึกษาใหม่ (ตอบแล้ว vs ยังคงค้างตอบกลับ) ครอบคลุมทั้งระดับปริญญาตรี ปริญญาโท และปริญญาเอก แยกตามคณะและสาขาวิชา'
+                    : 'Compare completed vs. pending survey responses across Bachelor, Master, and Doctoral degree levels by faculty and major.'}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Quick Degree Filter Segmented Controller */}
+          <div className="flex flex-wrap items-center gap-2 shrink-0">
+            <span className="text-xs text-gray-500 font-semibold flex items-center gap-1.5 mr-1">
+              <GraduationCap className="w-4 h-4 text-[#003366]" />
+              {lang === 'TH' ? 'เลือกระดับการศึกษา:' : 'Degree Level:'}
+            </span>
+            <div className="inline-flex bg-slate-100 p-1 rounded-xl border border-slate-200/80 shadow-xs">
+              {[
+                { id: 'ALL', labelTh: 'ทั้งหมด (ทุกระดับ)', labelEn: 'All Degrees', count: submissions.length },
+                { id: 'Bachelor', labelTh: 'ปริญญาตรี', labelEn: 'Bachelor', count: submissions.filter(s => (s.degreeLevel || 'Bachelor') === 'Bachelor').length },
+                { id: 'Master', labelTh: 'ปริญญาโท', labelEn: 'Master', count: submissions.filter(s => s.degreeLevel === 'Master').length },
+                { id: 'Doctoral', labelTh: 'ปริญญาเอก', labelEn: 'Doctoral', count: submissions.filter(s => s.degreeLevel === 'Doctoral').length }
+              ].map((tab) => {
+                const isActive = trackerDegreeFilter === tab.id;
+                return (
+                  <button
+                    key={tab.id}
+                    type="button"
+                    onClick={() => {
+                      setTrackerDegreeFilter(tab.id as any);
+                      setExpandedFacultyId(tab.id === 'Master' || tab.id === 'Doctoral' ? 'บัณฑิตวิทยาลัย' : null);
+                    }}
+                    className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5 ${
+                      isActive
+                        ? 'bg-[#003366] text-white shadow-xs'
+                        : 'text-gray-600 hover:text-gray-900 hover:bg-slate-200/60'
+                    }`}
+                  >
+                    <span>{lang === 'TH' ? tab.labelTh : tab.labelEn}</span>
+                    <span className={`text-[10.5px] px-1.5 py-0.2 rounded-full font-mono font-bold ${
+                      isActive ? 'bg-white/20 text-white' : 'bg-slate-200 text-slate-600'
+                    }`}>
+                      {tab.count}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+
+        {/* Quick KPI summary cards for the selected degree level */}
+        {(() => {
+          // Calculate filtered summary stats
+          const degreeSubmissions = trackerDegreeFilter === 'ALL'
+            ? submissions
+            : submissions.filter(s => (s.degreeLevel || 'Bachelor') === trackerDegreeFilter);
+
+          // Get target faculties
+          const activeFacultiesList = trackerDegreeFilter === 'ALL'
+            ? BU_FACULTIES
+            : BU_FACULTIES_BY_DEGREE[trackerDegreeFilter];
+
+          const totalTarget = activeFacultiesList.reduce((acc, fac) => {
+            const facSub = submissions.filter(sub => isSubmissionInFaculty(sub, fac, trackerDegreeFilter));
+            const contact = getFacultyContact(fac.name);
+            let baseT = contact.baseTarget;
+            if (trackerDegreeFilter === 'Master') baseT = 150;
+            else if (trackerDegreeFilter === 'Doctoral') baseT = 50;
+            return acc + Math.max(baseT, facSub.length);
+          }, 0);
+
+          const totalResponded = degreeSubmissions.length;
+          const totalPending = Math.max(0, totalTarget - totalResponded);
+          const overallRate = totalTarget > 0 ? Number(((totalResponded / totalTarget) * 100).toFixed(1)) : 0;
+
+          return (
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 bg-gradient-to-r from-slate-50 via-blue-50/20 to-slate-50 p-4 rounded-xl border border-slate-200/70">
+              <div className="space-y-0.5">
+                <span className="text-[11px] text-gray-500 font-medium">{lang === 'TH' ? 'เป้าหมายรวม (คน)' : 'Total Target'}</span>
+                <p className="text-lg font-bold font-mono text-gray-800">{totalTarget.toLocaleString()}</p>
+              </div>
+              <div className="space-y-0.5">
+                <span className="text-[11px] text-emerald-600 font-medium">{lang === 'TH' ? 'ตอบแล้วเสร็จ (คน)' : 'Responded'}</span>
+                <p className="text-lg font-bold font-mono text-emerald-600">{totalResponded.toLocaleString()}</p>
+              </div>
+              <div className="space-y-0.5">
+                <span className="text-[11px] text-rose-600 font-medium">{lang === 'TH' ? 'คงค้างยังไม่ตอบ (คน)' : 'Pending'}</span>
+                <p className="text-lg font-bold font-mono text-rose-600">{totalPending.toLocaleString()}</p>
+              </div>
+              <div className="space-y-0.5">
+                <span className="text-[11px] text-[#003366] font-medium">{lang === 'TH' ? 'อัตราการตอบเฉลี่ย' : 'Overall Rate'}</span>
+                <p className="text-lg font-bold font-mono text-[#003366]">{overallRate}%</p>
+              </div>
+            </div>
+          );
+        })()}
 
         {/* Faculty response-outreach table */}
         <div className="overflow-x-auto">
@@ -1484,128 +2033,159 @@ ${recommendationsText}
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
-              {BU_FACULTIES.map((fac) => {
-                const facSubmissions = submissions.filter(sub => sub.faculty === fac.name);
-                const contact = getFacultyContact(fac.name);
-                const target = Math.max(contact.baseTarget, facSubmissions.length);
-                const responded = facSubmissions.length;
-                const nonResponded = Math.max(0, target - responded);
-                const rate = target > 0 ? Number(((responded / target) * 100).toFixed(1)) : 0;
-                const isExpanded = expandedFacultyId === fac.name;
+              {(() => {
+                const targetFaculties = trackerDegreeFilter === 'ALL'
+                  ? BU_FACULTIES
+                  : BU_FACULTIES_BY_DEGREE[trackerDegreeFilter];
 
-                // Color schemes based on response progress rate
-                let badgeClass = 'bg-rose-50 text-rose-700 border-rose-200';
-                let progressBg = 'bg-rose-500';
-                if (rate >= 50) {
-                  badgeClass = 'bg-emerald-50 text-emerald-700 border-emerald-200';
-                  progressBg = 'bg-emerald-500';
-                } else if (rate >= 20) {
-                  badgeClass = 'bg-amber-50 text-amber-700 border-amber-200';
-                  progressBg = 'bg-amber-500';
-                }
+                return targetFaculties.map((fac) => {
+                  // Filter submissions by faculty & degree level using comprehensive matcher
+                  const facSubmissions = submissions.filter(sub => isSubmissionInFaculty(sub, fac, trackerDegreeFilter));
 
-                return (
-                  <React.Fragment key={fac.name}>
-                    <tr className={`hover:bg-[#F5F7FA]/70 transition-all ${isExpanded ? 'bg-[#F5F7FA]/50' : ''}`}>
-                      <td className="py-3 px-4 text-center">
-                        <button
-                          type="button"
-                          onClick={() => setExpandedFacultyId(isExpanded ? null : fac.name)}
-                          className="p-1 hover:bg-gray-200 rounded-lg text-gray-500 transition-all"
-                          title={lang === 'TH' ? 'ดูข้อมูลเจาะลึกรายสาขาวิชา' : 'View detailed major statistics'}
-                        >
-                          {isExpanded ? <ChevronUp className="w-4 h-4 text-[#003366]" /> : <ChevronDown className="w-4 h-4" />}
-                        </button>
-                      </td>
-                      <td className="py-3 px-4">
-                        <p className="font-bold text-gray-800 text-[13px]">{lang === 'TH' ? fac.name : fac.nameEn}</p>
-                        <span className="text-[10px] text-gray-400 font-normal">{lang === 'TH' ? fac.nameEn : fac.name}</span>
-                      </td>
-                      <td className="py-3 px-4 text-center font-mono font-bold text-gray-600">{target}</td>
-                      <td className="py-3 px-4 text-center font-mono font-bold text-emerald-600">{responded}</td>
-                      <td className="py-3 px-4 text-center font-mono font-bold text-rose-600">{nonResponded}</td>
-                      <td className="py-3 px-4">
-                        <div className="flex items-center gap-2.5">
-                          <span className={`px-2 py-0.5 rounded-full font-mono text-[9.5px] font-bold border ${badgeClass}`}>
-                            {rate}%
-                          </span>
-                          <div className="w-24 h-1.5 bg-gray-100 rounded-full overflow-hidden hidden sm:block shrink-0">
-                            <div className={`h-full ${progressBg} rounded-full`} style={{ width: `${rate}%` }} />
-                          </div>
-                        </div>
-                      </td>
-                      <td className="py-3 px-4 text-center">
-                        <button
-                          type="button"
-                          onClick={() => openEmailModal(fac.name)}
-                          className="bg-[#003366] text-white hover:bg-[#002244] active:scale-[0.98] transition-all font-semibold text-[11px] px-3 py-1.5 rounded-xl inline-flex items-center gap-1.5"
-                        >
-                          <Mail className="w-3.5 h-3.5" />
-                          <span>{lang === 'TH' ? 'แจ้งข้อมูลหาคณบดี' : 'Notify Dean'}</span>
-                        </button>
-                      </td>
-                    </tr>
+                  const contact = getFacultyContact(fac.name);
+                  let baseTarget = contact.baseTarget;
+                  if (trackerDegreeFilter === 'Master') {
+                    baseTarget = 150;
+                  } else if (trackerDegreeFilter === 'Doctoral') {
+                    baseTarget = 50;
+                  }
 
-                    {isExpanded && (
-                      <tr className="bg-slate-50/40">
-                        <td colSpan={7} className="px-8 py-3 bg-gray-50/30">
-                          <div className="pl-6 border-l-2 border-[#003366]/20 space-y-2.5">
-                            <div className="text-[10px] uppercase font-bold tracking-wider text-gray-400">
-                              {lang === 'TH' ? 'ตารางแจกแจงสถิติตอบและไม่ตอบเป็นรายสาขาวิชาเอกหลัก' : 'Response & Non-Response Breakdown by Major'}
+                  const target = Math.max(baseTarget, facSubmissions.length);
+                  const responded = facSubmissions.length;
+                  const nonResponded = Math.max(0, target - responded);
+                  const rate = target > 0 ? Number(((responded / target) * 100).toFixed(1)) : 0;
+                  const isExpanded = expandedFacultyId === fac.name;
+
+                  // Color schemes based on response progress rate
+                  let badgeClass = 'bg-rose-50 text-rose-700 border-rose-200';
+                  let progressBg = 'bg-rose-500';
+                  if (rate >= 50) {
+                    badgeClass = 'bg-emerald-50 text-emerald-700 border-emerald-200';
+                    progressBg = 'bg-emerald-500';
+                  } else if (rate >= 20) {
+                    badgeClass = 'bg-amber-50 text-amber-700 border-amber-200';
+                    progressBg = 'bg-amber-500';
+                  }
+
+                  return (
+                    <React.Fragment key={fac.name}>
+                      <tr className={`hover:bg-[#F5F7FA]/70 transition-all ${isExpanded ? 'bg-[#F5F7FA]/50' : ''}`}>
+                        <td className="py-3 px-4 text-center">
+                          <button
+                            type="button"
+                            onClick={() => setExpandedFacultyId(isExpanded ? null : fac.name)}
+                            className="p-1 hover:bg-gray-200 rounded-lg text-gray-500 transition-all"
+                            title={lang === 'TH' ? 'ดูข้อมูลเจาะลึกรายสาขาวิชา' : 'View detailed major statistics'}
+                          >
+                            {isExpanded ? <ChevronUp className="w-4 h-4 text-[#003366]" /> : <ChevronDown className="w-4 h-4" />}
+                          </button>
+                        </td>
+                        <td className="py-3 px-4">
+                          <div className="flex items-center gap-2">
+                            <div>
+                              <p className="font-bold text-gray-800 text-[13px]">{lang === 'TH' ? fac.name : fac.nameEn}</p>
+                              <span className="text-[10px] text-gray-400 font-normal">{lang === 'TH' ? fac.nameEn : fac.name}</span>
                             </div>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                              {fac.majors.map((major, mIdx) => {
-                                const majorSubmissions = facSubmissions.filter(sub => sub.major === major);
-                                const baseMajorTarget = getMajorTarget(major);
-                                const majorTarget = Math.max(baseMajorTarget, majorSubmissions.length);
-                                const mResponded = majorSubmissions.length;
-                                const mNonResponded = Math.max(0, majorTarget - mResponded);
-                                const mRate = majorTarget > 0 ? Number(((mResponded / majorTarget) * 100).toFixed(1)) : 0;
-
-                                let mBadge = 'bg-rose-50/50 text-rose-700 border-rose-100';
-                                let mProg = 'bg-rose-500';
-                                if (mRate >= 50) {
-                                  mBadge = 'bg-emerald-50/50 text-emerald-700 border-emerald-100';
-                                  mProg = 'bg-emerald-500';
-                                } else if (mRate >= 20) {
-                                  mBadge = 'bg-amber-50/50 text-amber-700 border-amber-100';
-                                  mProg = 'bg-amber-500';
-                                }
-
-                                const majorDisplayName = lang === 'TH' ? major : ((fac.majorsEn && fac.majorsEn[mIdx]) || major);
-
-                                return (
-                                  <div key={mIdx} className="bg-white p-3 rounded-xl border border-gray-100 shadow-xs flex flex-col justify-between">
-                                    <div className="flex justify-between items-start gap-1.5">
-                                      <div>
-                                        <p className="font-bold text-gray-800 text-xs leading-tight">{majorDisplayName}</p>
-                                        <p className="text-[10px] text-gray-400 font-normal">
-                                          {lang === 'TH' ? ((fac.majorsEn && fac.majorsEn[mIdx]) || '') : major}
-                                        </p>
-                                      </div>
-                                      <span className={`px-1.5 py-0.5 rounded-lg font-mono text-[9px] font-bold border shrink-0 ${mBadge}`}>
-                                        {mRate}%
-                                      </span>
-                                    </div>
-                                    <div className="grid grid-cols-3 gap-2 text-[10px] text-gray-500 mt-2 pt-1.5 border-t border-dashed border-gray-100 leading-normal">
-                                      <div>{lang === 'TH' ? 'เป้าหมาย:' : 'Target:'} <strong className="font-mono text-gray-800">{majorTarget} {lang === 'TH' ? 'คน' : 'students'}</strong></div>
-                                      <div>{lang === 'TH' ? 'ตอบแล้ว:' : 'Responded:'} <strong className="font-mono text-emerald-600 font-bold">{mResponded} {lang === 'TH' ? 'คน' : 'students'}</strong></div>
-                                      <div>{lang === 'TH' ? 'ยังไม่ตอบ:' : 'Pending:'} <strong className="font-mono text-rose-600 font-bold">{mNonResponded} {lang === 'TH' ? 'คน' : 'students'}</strong></div>
-                                    </div>
-                                    <div className="w-full h-1 bg-gray-100 rounded-full overflow-hidden mt-2">
-                                      <div className={`h-full ${mProg} rounded-full`} style={{ width: `${mRate}%` }} />
-                                    </div>
-                                  </div>
-                                );
-                              })}
+                            {trackerDegreeFilter === 'ALL' && (fac.name === 'บัณฑิตวิทยาลัย' || fac.name.includes('Graduate')) && (
+                              <span className="px-2 py-0.5 rounded-md text-[10px] font-semibold bg-purple-50 text-purple-700 border border-purple-200">
+                                {lang === 'TH' ? 'ปริญญาโท-เอก' : 'Master & PhD'}
+                              </span>
+                            )}
+                          </div>
+                        </td>
+                        <td className="py-3 px-4 text-center font-mono font-bold text-gray-600">{target}</td>
+                        <td className="py-3 px-4 text-center font-mono font-bold text-emerald-600">{responded}</td>
+                        <td className="py-3 px-4 text-center font-mono font-bold text-rose-600">{nonResponded}</td>
+                        <td className="py-3 px-4">
+                          <div className="flex items-center gap-2.5">
+                            <span className={`px-2 py-0.5 rounded-full font-mono text-[9.5px] font-bold border ${badgeClass}`}>
+                              {rate}%
+                            </span>
+                            <div className="w-24 h-1.5 bg-gray-100 rounded-full overflow-hidden hidden sm:block shrink-0">
+                              <div className={`h-full ${progressBg} rounded-full`} style={{ width: `${rate}%` }} />
                             </div>
                           </div>
                         </td>
+                        <td className="py-3 px-4 text-center">
+                          <button
+                            type="button"
+                            onClick={() => openEmailModal(fac.name)}
+                            className="bg-[#003366] text-white hover:bg-[#002244] active:scale-[0.98] transition-all font-semibold text-[11px] px-3 py-1.5 rounded-xl inline-flex items-center gap-1.5 shadow-xs"
+                          >
+                            <Mail className="w-3.5 h-3.5" />
+                            <span>{lang === 'TH' ? 'แจ้งข้อมูลหาคณบดี' : 'Notify Dean'}</span>
+                          </button>
+                        </td>
                       </tr>
-                    )}
-                  </React.Fragment>
-                );
-              })}
+
+                      {isExpanded && (
+                        <tr className="bg-slate-50/40">
+                          <td colSpan={7} className="px-8 py-3 bg-gray-50/30">
+                            <div className="pl-6 border-l-2 border-[#003366]/20 space-y-2.5">
+                              <div className="flex flex-wrap items-center justify-between gap-2">
+                                <div className="text-[10px] uppercase font-bold tracking-wider text-gray-500">
+                                  {lang === 'TH' 
+                                    ? `ตารางแจกแจงสถิติตอบและไม่ตอบเป็นรายสาขาวิชา (${fac.majors.length} สาขา)` 
+                                    : `Breakdown by Major (${fac.majors.length} Majors)`}
+                                </div>
+                                <span className="text-[10px] text-gray-400 font-mono">
+                                  {lang === 'TH' ? `ระดับ: ${trackerDegreeFilter === 'ALL' ? 'ทุกระดับการศึกษา' : trackerDegreeFilter}` : `Degree: ${trackerDegreeFilter}`}
+                                </span>
+                              </div>
+                              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                {fac.majors.map((major, mIdx) => {
+                                  const majorSubmissions = facSubmissions.filter(sub => isSubmissionMatchingMajor(sub.major, major));
+                                  const baseMajorTarget = getMajorTarget(major);
+                                  const majorTarget = Math.max(baseMajorTarget, majorSubmissions.length);
+                                  const mResponded = majorSubmissions.length;
+                                  const mNonResponded = Math.max(0, majorTarget - mResponded);
+                                  const mRate = majorTarget > 0 ? Number(((mResponded / majorTarget) * 100).toFixed(1)) : 0;
+
+                                  let mBadge = 'bg-rose-50/50 text-rose-700 border-rose-100';
+                                  let mProg = 'bg-rose-500';
+                                  if (mRate >= 50) {
+                                    mBadge = 'bg-emerald-50/50 text-emerald-700 border-emerald-100';
+                                    mProg = 'bg-emerald-500';
+                                  } else if (mRate >= 20) {
+                                    mBadge = 'bg-amber-50/50 text-amber-700 border-amber-100';
+                                    mProg = 'bg-amber-500';
+                                  }
+
+                                  const majorDisplayName = lang === 'TH' ? major : ((fac.majorsEn && fac.majorsEn[mIdx]) || major);
+
+                                  return (
+                                    <div key={mIdx} className="bg-white p-3.5 rounded-xl border border-gray-200/80 shadow-xs flex flex-col justify-between hover:border-[#003366]/30 transition-all">
+                                      <div className="flex justify-between items-start gap-2">
+                                        <div className="space-y-0.5">
+                                          <p className="font-bold text-gray-800 text-xs leading-tight">{majorDisplayName}</p>
+                                          <p className="text-[10px] text-gray-400 font-normal">
+                                            {lang === 'TH' ? ((fac.majorsEn && fac.majorsEn[mIdx]) || '') : major}
+                                          </p>
+                                        </div>
+                                        <span className={`px-2 py-0.5 rounded-lg font-mono text-[9.5px] font-bold border shrink-0 ${mBadge}`}>
+                                          {mRate}%
+                                        </span>
+                                      </div>
+                                      <div className="grid grid-cols-3 gap-2 text-[10.5px] text-gray-500 mt-2.5 pt-2 border-t border-dashed border-gray-100 leading-normal">
+                                        <div>{lang === 'TH' ? 'เป้าหมาย:' : 'Target:'} <strong className="font-mono text-gray-800">{majorTarget} {lang === 'TH' ? 'คน' : 'students'}</strong></div>
+                                        <div>{lang === 'TH' ? 'ตอบแล้ว:' : 'Responded:'} <strong className="font-mono text-emerald-600 font-bold">{mResponded} {lang === 'TH' ? 'คน' : 'students'}</strong></div>
+                                        <div>{lang === 'TH' ? 'ยังไม่ตอบ:' : 'Pending:'} <strong className="font-mono text-rose-600 font-bold">{mNonResponded} {lang === 'TH' ? 'คน' : 'students'}</strong></div>
+                                      </div>
+                                      <div className="w-full h-1.5 bg-gray-100 rounded-full overflow-hidden mt-2.5">
+                                        <div className={`h-full ${mProg} rounded-full transition-all duration-500`} style={{ width: `${mRate}%` }} />
+                                      </div>
+                                    </div>
+                                  );
+                                })}
+                              </div>
+                            </div>
+                          </td>
+                        </tr>
+                      )}
+                    </React.Fragment>
+                  );
+                });
+              })()}
             </tbody>
           </table>
         </div>
@@ -1775,6 +2355,8 @@ ${recommendationsText}
                     <th className="py-2.5 px-3">{lang === 'TH' ? 'ระดับการศึกษา' : 'Degree Level'}</th>
                     <th className="py-2.5 px-3">{lang === 'TH' ? 'ข้อมูลสาขา' : 'Faculty & Major'}</th>
                     <th className="py-2.5 px-3">{lang === 'TH' ? 'หลักสูตร' : 'Program'}</th>
+                    <th className="py-2.5 px-3">{lang === 'TH' ? 'ผู้ดูแลหลัก' : 'Caregiver'}</th>
+                    <th className="py-2.5 px-3">{lang === 'TH' ? 'รายได้เฉลี่ย/เดือน' : 'Caregiver Income'}</th>
                     <th className="py-2.5 px-3 text-center">{lang === 'TH' ? 'ตัวเลือกที่เข้าตอบ' : 'Selected'}</th>
                     <th className="py-2.5 px-3 text-right rounded-r-lg">{lang === 'TH' ? 'จัดการรายละเอียด' : 'Action'}</th>
                   </tr>
@@ -1791,6 +2373,15 @@ ${recommendationsText}
                       const majorIdx = facObj?.majors.indexOf(major);
                       const majorName = lang === 'TH' ? major.split(' - ')[0] : ((facObj?.majorsEn && majorIdx !== undefined && majorIdx !== -1 && facObj.majorsEn[majorIdx]) || major);
                       const facultyName = lang === 'TH' ? faculty.split(' (')[0] : (facObj?.nameEn || faculty);
+                      const caregiverObj = CAREGIVER_OPTIONS.find(c => c.id === sub.primaryCaregiver);
+                      const caregiverLabel = caregiverObj 
+                        ? (lang === 'TH' ? caregiverObj.label : caregiverObj.labelEn) 
+                        : (sub.primaryCaregiver || '-');
+                      const incomeObj = CAREGIVER_INCOME_OPTIONS.find(i => i.id === sub.caregiverIncomeRange);
+                      const incomeLabel = incomeObj
+                        ? (lang === 'TH' ? incomeObj.label : incomeObj.labelEn)
+                        : (sub.caregiverIncomeRange || '-');
+
                       return (
                         <tr key={sub.id} className="hover:bg-[#F5F7FA]/70 transition-all text-gray-700">
                           <td className="py-2.5 px-3 font-mono text-gray-800 font-bold">{sub.id}</td>
@@ -1824,6 +2415,21 @@ ${recommendationsText}
                               }
                             </span>
                           </td>
+                          <td className="py-2.5 px-3 text-[11px]">
+                            <div className="font-medium text-gray-800">
+                              {caregiverLabel}
+                              {sub.primaryCaregiver === 'other' && sub.primaryCaregiverOther && (
+                                <span className="block text-[10px] text-amber-600 font-normal italic">
+                                  ({sub.primaryCaregiverOther})
+                                </span>
+                              )}
+                            </div>
+                          </td>
+                          <td className="py-2.5 px-3 text-[11px]">
+                            <span className="inline-block px-2 py-0.5 rounded-md bg-slate-100 text-slate-700 text-[10px] font-medium border border-slate-200">
+                              {incomeLabel}
+                            </span>
+                          </td>
                           <td className="py-2.5 px-3 text-center font-mono font-medium">
                             {selectedOptions.length} {lang === 'TH' ? 'ข้อ' : 'options'}
                           </td>
@@ -1842,7 +2448,7 @@ ${recommendationsText}
                     })
                   ) : (
                     <tr>
-                      <td colSpan={6} className="text-center py-10 text-gray-400">
+                      <td colSpan={8} className="text-center py-10 text-gray-400">
                         <Users className="w-8 h-8 mx-auto stroke-[1] mb-1 text-gray-300" />
                         <span>{lang === 'TH' ? 'ไม่พบข้อมูลที่ตรงกับเงื่อนไขการกรองข้างต้น' : 'No submissions found matching criteria'}</span>
                       </td>
@@ -2195,6 +2801,77 @@ ${recommendationsText}
                     <strong className="text-xs text-gray-700 block">
                       {lang === 'TH' ? 'โท:' : 'Master:'} {degreeMetrics.masterCount} คน ({degreeMetrics.masterPercent}%) | {lang === 'TH' ? 'เอก:' : 'Doc:'} {degreeMetrics.doctoralCount} คน ({degreeMetrics.doctoralPercent}%)
                     </strong>
+                  </div>
+                </div>
+
+                {/* Demographic Tables: Primary Caregiver and Income Range */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {/* Caregiver distribution table */}
+                  <div className="space-y-1.5">
+                    <span className="text-[11px] font-bold text-gray-700 font-sans block">
+                      {lang === 'TH' ? '1. ผู้ปกครองหรือผู้ดูแลหลักของนักศึกษา:' : '1. Primary Caregiver:'}
+                    </span>
+                    <div className="border border-gray-200 rounded-lg overflow-hidden bg-white text-xs font-sans">
+                      <table className="w-full text-left">
+                        <thead className="bg-slate-100 text-gray-600 text-[10px] uppercase font-bold">
+                          <tr>
+                            <th className="py-1.5 px-2.5">{lang === 'TH' ? 'กลุ่มผู้ดูแล' : 'Caregiver'}</th>
+                            <th className="py-1.5 px-2.5 text-center">{lang === 'TH' ? 'จำนวน (คน)' : 'Count'}</th>
+                            <th className="py-1.5 px-2.5 text-right">{lang === 'TH' ? 'ร้อยละ' : '%'}</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-gray-100 text-[11px]">
+                          {caregiverMetrics.list.map((c) => (
+                            <tr key={c.id}>
+                              <td className="py-1.5 px-2.5 text-gray-700">{lang === 'TH' ? c.label : c.labelEn}</td>
+                              <td className="py-1.5 px-2.5 text-center font-mono font-medium text-gray-800">{c.count}</td>
+                              <td className="py-1.5 px-2.5 text-right font-mono font-bold text-[#003366]">{c.percentage}%</td>
+                            </tr>
+                          ))}
+                          {caregiverMetrics.unspecifiedCount > 0 && (
+                            <tr className="bg-slate-50/50 text-gray-400 italic">
+                              <td className="py-1.5 px-2.5">{lang === 'TH' ? 'ไม่ระบุ' : 'Unspecified'}</td>
+                              <td className="py-1.5 px-2.5 text-center font-mono">{caregiverMetrics.unspecifiedCount}</td>
+                              <td className="py-1.5 px-2.5 text-right font-mono">{Math.round((caregiverMetrics.unspecifiedCount / (caregiverMetrics.totalSubmissions || 1)) * 100)}%</td>
+                            </tr>
+                          )}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+
+                  {/* Caregiver income range table */}
+                  <div className="space-y-1.5">
+                    <span className="text-[11px] font-bold text-gray-700 font-sans block">
+                      {lang === 'TH' ? '2. รายได้เฉลี่ยต่อเดือนของผู้ปกครอง:' : '2. Caregiver Income Range:'}
+                    </span>
+                    <div className="border border-gray-200 rounded-lg overflow-hidden bg-white text-xs font-sans">
+                      <table className="w-full text-left">
+                        <thead className="bg-slate-100 text-gray-600 text-[10px] uppercase font-bold">
+                          <tr>
+                            <th className="py-1.5 px-2.5">{lang === 'TH' ? 'ช่วงรายได้ (บาท/เดือน)' : 'Bracket (THB/mo)'}</th>
+                            <th className="py-1.5 px-2.5 text-center">{lang === 'TH' ? 'จำนวน (คน)' : 'Count'}</th>
+                            <th className="py-1.5 px-2.5 text-right">{lang === 'TH' ? 'ร้อยละ' : '%'}</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-gray-100 text-[11px]">
+                          {caregiverIncomeMetrics.list.map((inc) => (
+                            <tr key={inc.id}>
+                              <td className="py-1.5 px-2.5 text-gray-700">{lang === 'TH' ? inc.label : inc.labelEn}</td>
+                              <td className="py-1.5 px-2.5 text-center font-mono font-medium text-gray-800">{inc.count}</td>
+                              <td className="py-1.5 px-2.5 text-right font-mono font-bold text-emerald-800">{inc.percentage}%</td>
+                            </tr>
+                          ))}
+                          {caregiverIncomeMetrics.unspecifiedCount > 0 && (
+                            <tr className="bg-slate-50/50 text-gray-400 italic">
+                              <td className="py-1.5 px-2.5">{lang === 'TH' ? 'ไม่ระบุ' : 'Unspecified'}</td>
+                              <td className="py-1.5 px-2.5 text-center font-mono">{caregiverIncomeMetrics.unspecifiedCount}</td>
+                              <td className="py-1.5 px-2.5 text-right font-mono">{Math.round((caregiverIncomeMetrics.unspecifiedCount / (caregiverIncomeMetrics.totalSubmissions || 1)) * 100)}%</td>
+                            </tr>
+                          )}
+                        </tbody>
+                      </table>
+                    </div>
                   </div>
                 </div>
 

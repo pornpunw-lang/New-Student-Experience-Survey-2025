@@ -205,14 +205,16 @@ export const BU_FACULTIES_BY_DEGREE: Record<'Bachelor' | 'Master' | 'Doctoral', 
         'สาขาวิชาวิทยุกระจายเสียง วิทยุโทรทัศน์ และ การผลิตสื่อสตรีมมิ่ง',
         'สาขาวิชาการผลิตเนื้อหาสร้างสรรค์และประสบการณ์ดิจิทัล',
         'สาขาวิชาศิลปะการแสดง',
-        'สาขาวิชาการผลิตอีเว้นท์ และการจัดการนิทรรศการและการประชุม'
+        'สาขาวิชาการผลิตอีเว้นท์ และการจัดการนิทรรศการและการประชุม',
+        'สาขาวิชาการสร้างสรรค์และการสร้างแบรนด์อินฟลูเอนเซอร์ระดับสากล'
       ],
       majorsEn: [
         'Communication and New Media',
         'Broadcasting and Streaming Media Production',
         'Creative Content Production and Digital Experience',
         'Performing Arts',
-        'Event Production and MICE Management'
+        'Event Production and MICE Management',
+        'Global Creator and Influencer Branding'
       ]
     },
     {
