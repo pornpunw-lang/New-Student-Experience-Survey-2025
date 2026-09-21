@@ -270,6 +270,7 @@ const MAJOR_TARGETS: Record<string, number> = {
   'สาขาวิชาการจัดการความรู้และนวัตกรรม (หลักสูตรนานาชาติ)': 4,
   'สาขาวิชาการตลาดเชิงข้อมูลและการสื่อสาร': 25,
   'สาขาวิชาความเป็นผู้ประกอบการ': 22,
+  'สาขาวิชาความเป็นผู้ประกอบการและธุรกิจเกิดใหม่': 22,
   'สาขาวิชาเทคโนโลยีสารสนเทศและวิทยาการข้อมูล': 15,
   'สาขาวิชานิติศาสตร์': 284,
   'สาขาวิชาการบริหารแบรนด์และการสื่อสารเชิงกลยุทธ์': 43,
@@ -370,7 +371,26 @@ export const isSubmissionMatchingMajor = (subMajor?: string, targetMajor?: strin
   // Clean prefixes and punctuation for comparison
   const cleanSub = s.replace(/^สาขาวิชา/, '').replace(/[\s\(\)\/]/g, '').toLowerCase();
   const cleanTarget = t.replace(/^สาขาวิชา/, '').replace(/[\s\(\)\/]/g, '').toLowerCase();
-  return cleanSub === cleanTarget;
+  if (cleanSub === cleanTarget) return true;
+
+  // Handle name update for Entrepreneurship major
+  if (
+    (cleanSub === 'ความเป็นผู้ประกอบการ' && cleanTarget === 'ความเป็นผู้ประกอบการและธุรกิจเกิดใหม่') ||
+    (cleanSub === 'ความเป็นผู้ประกอบการและธุรกิจเกิดใหม่' && cleanTarget === 'ความเป็นผู้ประกอบการ')
+  ) {
+    return true;
+  }
+
+  return false;
+};
+
+// Formatter to standardize displayed major names
+export const formatMajorName = (major?: string, degreeLevel?: string): string => {
+  if (!major) return '';
+  if (degreeLevel === 'Master' && (major === 'สาขาวิชาความเป็นผู้ประกอบการ' || major === 'สาขาวิชาความเป็นผู้ประกอบการและธุรกิจเกิดใหม่')) {
+    return 'สาขาวิชาความเป็นผู้ประกอบการและธุรกิจเกิดใหม่';
+  }
+  return major;
 };
 
 // Robust matcher between a submission and a faculty within a degree filter scope
@@ -555,7 +575,7 @@ export default function AdminDashboard({ submissions, onClearSubmissions, onRese
         }
       }
       // 2. Major Filter
-      if (selectedMajor && major !== selectedMajor) return false;
+      if (selectedMajor && !isSubmissionMatchingMajor(major, selectedMajor)) return false;
       // 3. Program Filter
       if (selectedProgram && program !== selectedProgram) return false;
       // 3.5. Degree Filter
@@ -960,7 +980,7 @@ export default function AdminDashboard({ submissions, onClearSubmissions, onRese
         degreeLevel === 'Bachelor' ? 'ปริญญาตรี' : degreeLevel === 'Master' ? 'ปริญญาโท' : 'ปริญญาเอก',
         program === 'Thai' ? 'ภาคปกติ (ภาษาไทย)' : 'นานาชาติ/อังกฤษ',
         sub.faculty || '',
-        sub.major || '',
+        formatMajorName(sub.major, degreeLevel),
         caregiverName,
         sub.primaryCaregiverOther || '-',
         incomeName,
@@ -2365,8 +2385,8 @@ ${recommendationsText}
                   {filteredSubmissions.length > 0 ? (
                     filteredSubmissions.slice().reverse().map((sub) => {
                       const faculty = sub.faculty || '';
-                      const major = sub.major || '';
                       const degreeLevel = sub.degreeLevel || 'Bachelor';
+                      const major = formatMajorName(sub.major || '', degreeLevel);
                       const program = sub.program || 'Thai';
                       const selectedOptions = sub.selectedOptions || [];
                       const facObj = BU_FACULTIES.find(f => f.name === faculty);
@@ -3040,8 +3060,8 @@ ${recommendationsText}
               {(() => {
                 const detId = activeDetailSubmission.id || '';
                 const detFaculty = activeDetailSubmission.faculty || '';
-                const detMajor = activeDetailSubmission.major || '';
                 const detDegreeLevel = activeDetailSubmission.degreeLevel || 'Bachelor';
+                const detMajor = formatMajorName(activeDetailSubmission.major || '', detDegreeLevel);
                 const detProgram = activeDetailSubmission.program || 'Thai';
                 const detSelectedOptions = activeDetailSubmission.selectedOptions || [];
                 const detSubmittedAt = activeDetailSubmission.submittedAt || '';
@@ -3111,8 +3131,10 @@ ${recommendationsText}
                             {lang === 'TH' 
                               ? detMajor 
                               : (() => {
-                                  const facObj = BU_FACULTIES.find(f => f.name === detFaculty);
-                                  const mIdx = facObj?.majors.indexOf(detMajor);
+                                  const facObj = (detDegreeLevel === 'Master' || detDegreeLevel === 'Doctoral')
+                                    ? BU_FACULTIES_BY_DEGREE[detDegreeLevel]?.[0]
+                                    : BU_FACULTIES.find(f => f.name === detFaculty);
+                                  const mIdx = facObj?.majors.findIndex(m => isSubmissionMatchingMajor(detMajor, m));
                                   return (facObj?.majorsEn && mIdx !== undefined && mIdx !== -1 && facObj.majorsEn[mIdx]) || detMajor;
                                 })()
                             }
