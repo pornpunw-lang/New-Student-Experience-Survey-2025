@@ -282,11 +282,13 @@ export const BU_FACULTIES_BY_DEGREE: Record<'Bachelor' | 'Master' | 'Doctoral', 
       nameEn: 'School of Fine and Applied Arts',
       majors: [
         'สาขาวิชาการออกแบบนิเทศศิลป์',
-        'สาขาวิชาการออกแบบแฟชั่น'
+        'สาขาวิชาการออกแบบแฟชั่น',
+        'สาขาวิชาศิลปะและการออกแบบ'
       ],
       majorsEn: [
         'Communication Design',
-        'Fashion Design'
+        'Fashion Design',
+        'Art and Design'
       ]
     },
     {
@@ -356,7 +358,7 @@ export const BU_FACULTIES_BY_DEGREE: Record<'Bachelor' | 'Master' | 'Doctoral', 
         'สาขาวิชานิติศาสตร์',
         'สาขาวิชาการบริหารแบรนด์และการสื่อสารเชิงกลยุทธ์',
         'สาขาวิชาการสื่อสารสากล (หลักสูตรนานาชาติ)',
-        'สาขาวิชาการสื่อสารการตลาดดิจิทัล',
+        'สาขาวิชาการตลาดเชิงข้อมูลและการสื่อสาร',
         'สาขาวิชาบริหารธุรกิจ (หลักสูตรภาษาไทย)',
         'สาขาวิชาบริหารธุรกิจ (หลักสูตรภาษาอังกฤษ)',
         'สาขาวิชาการจัดการศึกษาผ่านระบบเทคโนโลยีสารสนเทศ',
@@ -371,7 +373,7 @@ export const BU_FACULTIES_BY_DEGREE: Record<'Bachelor' | 'Master' | 'Doctoral', 
         'Laws Program',
         'Strategic Brand and Communication Management',
         'Global Communication (International Program)',
-        'Digital Marketing Communications',
+        'Data-Driven Marketing and Communications',
         'Business Administration',
         'Business Administration (English Program)',
         'Educational Management through Information Technology',
