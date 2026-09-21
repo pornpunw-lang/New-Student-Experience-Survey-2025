@@ -348,100 +348,56 @@ export const BU_FACULTIES_BY_DEGREE: Record<'Bachelor' | 'Master' | 'Doctoral', 
   ],
   Master: [
     {
-      name: 'คณะการสร้างเจ้าของธุรกิจและการบริหารกิจการ',
-      nameEn: 'School of Entrepreneurship and Management',
-      majors: ['สาขาวิชาความเป็นผู้ประกอบการ'],
-      majorsEn: ['Entrepreneurship and Emerging Enterprises']
-    },
-    {
-      name: 'คณะเทคโนโลยีสารสนเทศและนวัตกรรม',
-      nameEn: 'School of Information Technology and Innovation',
-      majors: ['สาขาวิชาเทคโนโลยีสารสนเทศและวิทยาการข้อมูล'],
-      majorsEn: ['Information Technology and Data Science']
-    },
-    {
-      name: 'คณะนิติศาสตร์',
-      nameEn: 'School of Law',
-      majors: ['สาขาวิชานิติศาสตร์'],
-      majorsEn: ['Laws Program']
-    },
-    {
-      name: 'คณะนิเทศศาสตร์',
-      nameEn: 'School of Communication Arts',
+      name: 'บัณฑิตวิทยาลัย',
+      nameEn: 'Graduate School',
       majors: [
+        'สาขาวิชาความเป็นผู้ประกอบการ',
+        'สาขาวิชาเทคโนโลยีสารสนเทศและวิทยาการข้อมูล',
+        'สาขาวิชานิติศาสตร์',
         'สาขาวิชาการบริหารแบรนด์และการสื่อสารเชิงกลยุทธ์',
         'สาขาวิชาการสื่อสารสากล (หลักสูตรนานาชาติ)',
-        'สาขาวิชาการสื่อสารการตลาดดิจิทัล'
-      ],
-      majorsEn: [
-        'Strategic Brand and Communication Management',
-        'Global Communication (International Program)',
-        'Digital Marketing Communications'
-      ]
-    },
-    {
-      name: 'คณะบริหารธุรกิจ',
-      nameEn: 'School of Business Administration',
-      majors: [
+        'สาขาวิชาการสื่อสารการตลาดดิจิทัล',
         'สาขาวิชาบริหารธุรกิจ (หลักสูตรภาษาไทย)',
         'สาขาวิชาบริหารธุรกิจ (หลักสูตรภาษาอังกฤษ)',
-        'สาขาวิชาการจัดการศึกษาผ่านระบบเทคโนโลยีสารสนเทศ'
+        'สาขาวิชาการจัดการศึกษาผ่านระบบเทคโนโลยีสารสนเทศ',
+        'สาขาวิชานวัตกรรมการจัดการท่องเที่ยวและการบริการ',
+        'สาขาวิชาวิศวกรรมไฟฟ้าและคอมพิวเตอร์ (หลักสูตรนานาชาติ)',
+        'สาขาวิชาสถาปัตยกรรม',
+        'สาขาวิชาการจัดการนวัตกรรม (หลักสูตรนานาชาติ)'
       ],
       majorsEn: [
+        'Entrepreneurship and Emerging Enterprises',
+        'Information Technology and Data Science',
+        'Laws Program',
+        'Strategic Brand and Communication Management',
+        'Global Communication (International Program)',
+        'Digital Marketing Communications',
         'Business Administration',
         'Business Administration (English Program)',
-        'Educational Management through Information Technology'
+        'Educational Management through Information Technology',
+        'Tourism and Hospitality Management Innovation (International Program)',
+        'Electrical & Computer Engineering (International Program)',
+        'Architecture Program',
+        'Innovation Management (International Program)'
       ]
-    },
-    {
-      name: 'คณะมนุษยศาสตร์และการจัดการการท่องเที่ยว',
-      nameEn: 'School of Humanities and Tourism Management',
-      majors: ['สาขาวิชานวัตกรรมการจัดการท่องเที่ยวและการบริการ'],
-      majorsEn: ['Tourism and Hospitality Management Innovation (International Program)']
-    },
-    {
-      name: 'คณะวิศวกรรมศาสตร์',
-      nameEn: 'School of Engineering',
-      majors: ['สาขาวิชาวิศวกรรมไฟฟ้าและคอมพิวเตอร์ (หลักสูตรนานาชาติ)'],
-      majorsEn: ['Electrical & Computer Engineering (International Program)']
-    },
-    {
-      name: 'คณะสถาปัตยกรรมศาสตร์',
-      nameEn: 'School of Architecture',
-      majors: ['สาขาวิชาสถาปัตยกรรม'],
-      majorsEn: ['Architecture Program']
-    },
-    {
-      name: 'วิทยาลัยนานาชาติ',
-      nameEn: 'Bangkok University International',
-      majors: ['สาขาวิชาการจัดการนวัตกรรม (หลักสูตรนานาชาติ)'],
-      majorsEn: ['Innovation Management (International Program)']
     }
   ],
   Doctoral: [
     {
-      name: 'คณะนิเทศศาสตร์',
-      nameEn: 'School of Communication Arts',
+      name: 'บัณฑิตวิทยาลัย',
+      nameEn: 'Graduate School',
       majors: [
         'สาขาวิชาการสื่อสารสากล (หลักสูตรนานาชาติ)',
-        'สาขาวิชาการบริหารแบรนด์และการสื่อสารเชิงกลยุทธ์'
+        'สาขาวิชาการบริหารแบรนด์และการสื่อสารเชิงกลยุทธ์',
+        'สาขาวิชาวิศวกรรมไฟฟ้าและคอมพิวเตอร์ (หลักสูตรนานาชาติ)',
+        'สาขาวิชาการจัดการความรู้และนวัตกรรม (หลักสูตรนานาชาติ)'
       ],
       majorsEn: [
         'Global Communication (International Program)',
-        'Strategic Brand and Communication Management'
+        'Strategic Brand and Communication Management',
+        'Electrical and Computer Engineering (International Program)',
+        'Knowledge Management and Innovation Management (International Program)'
       ]
-    },
-    {
-      name: 'คณะวิศวกรรมศาสตร์',
-      nameEn: 'School of Engineering',
-      majors: ['สาขาวิชาวิศวกรรมไฟฟ้าและคอมพิวเตอร์ (หลักสูตรนานาชาติ)'],
-      majorsEn: ['Electrical and Computer Engineering (International Program)']
-    },
-    {
-      name: 'วิทยาลัยนานาชาติ',
-      nameEn: 'Bangkok University International',
-      majors: ['สาขาวิชาการจัดการความรู้และนวัตกรรม (หลักสูตรนานาชาติ)'],
-      majorsEn: ['Knowledge Management and Innovation Management (International Program)']
     }
   ]
 };

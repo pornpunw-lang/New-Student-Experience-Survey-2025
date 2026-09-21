@@ -81,7 +81,11 @@ export default function StudentSurvey({ onSurveySubmit, onAdminToggle, lang, set
   // Handle Degree level change to clear previously selected Faculty & Major
   const handleDegreeChange = (level: 'Bachelor' | 'Master' | 'Doctoral') => {
     setDegreeLevel(level);
-    setFaculty('');
+    if (level === 'Master' || level === 'Doctoral') {
+      setFaculty('บัณฑิตวิทยาลัย');
+    } else {
+      setFaculty('');
+    }
     setMajor('');
     if (level !== 'Bachelor') {
       setPrimaryCaregiver('');

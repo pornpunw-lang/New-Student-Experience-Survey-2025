@@ -218,6 +218,15 @@ const FACULTY_CONTACTS: Record<string, FacultyContact> = {
     ],
     baseTarget: 356,
     email: 'wisarn.p@bu.ac.th'
+  },
+  'บัณฑิตวิทยาลัย': {
+    dean: 'คณบดีบัณฑิตวิทยาลัย',
+    deanEmail: 'graduateschool@bu.ac.th',
+    coordinator: 'เจ้าหน้าที่ประสานงานบัณฑิตวิทยาลัย',
+    coordinatorEmail: 'graduateschool@bu.ac.th',
+    viceDeans: [],
+    baseTarget: 150,
+    email: 'graduateschool@bu.ac.th'
   }
 };
 
