@@ -322,6 +322,7 @@ const MAJOR_TARGETS: Record<string, number> = {
   'สาขาวิชาการออกแบบผลิตภัณฑ์': 45,
 
   // คณะสถาปัตยกรรมศาสตร์
+  'สาขาวิชาสถาปัตยกรรม (หลักสูตร 5 ปี)': 70,
   'สาขาวิชาศิลปะออกแบบภายใน': 51,
   'สาขาวิชาสถาปัตยกรรมภายใน': 8,
 
@@ -331,6 +332,8 @@ const MAJOR_TARGETS: Record<string, number> = {
   // คณะดิจิทัลมีเดียและศิลปะภาพยนตร์
   'สาขาวิชาภาพยนตร์': 515,
   'สาขาวิชาดิจิทัลมีเดีย': 182,
+  'สาขาวิชาการผลิตและธุรกิจภาพยนตร์ ซีรีส์ และเนื้อหาสากล (หลักสูตรนานาชาติ)': 83,
+  'สาขาวิชาการผลิตแพลตฟอร์มภาพยนตร์ ซีรีส์ และเนื้อหาสากล (หลักสูตรนานาชาติ)': 83,
   'สาขาวิชาการผลิตภาพยนตร์และธุรกิจภาพยนตร์ ซีรีส์ และเนื้อหาสากล (หลักสูตรนานาชาติ)': 83,
 
   // คณะเทคโนโลยีสารสนเทศและนวัตกรรม
@@ -381,6 +384,22 @@ export const isSubmissionMatchingMajor = (subMajor?: string, targetMajor?: strin
     return true;
   }
 
+  // Handle name variations for Film, Series and Global Content Production and Business major
+  const isFilmSeriesMajor = (val: string) => {
+    return val.includes('ซีรีส์') && (val.includes('ภาพยนตร์') || val.includes('เนื้อหาสากล') || val.includes('ธุรกิจ'));
+  };
+  if (isFilmSeriesMajor(cleanSub) && isFilmSeriesMajor(cleanTarget)) {
+    return true;
+  }
+
+  // Handle Architecture major variation (5-year curriculum) without matching Interior Architecture
+  const isArchitectureGeneral = (val: string) => {
+    return val.startsWith('สถาปัตยกรรม') && !val.includes('ภายใน');
+  };
+  if (isArchitectureGeneral(cleanSub) && isArchitectureGeneral(cleanTarget)) {
+    return true;
+  }
+
   return false;
 };
 
@@ -389,6 +408,18 @@ export const formatMajorName = (major?: string, degreeLevel?: string): string =>
   if (!major) return '';
   if (degreeLevel === 'Master' && (major === 'สาขาวิชาความเป็นผู้ประกอบการ' || major === 'สาขาวิชาความเป็นผู้ประกอบการและธุรกิจเกิดใหม่')) {
     return 'สาขาวิชาความเป็นผู้ประกอบการและธุรกิจเกิดใหม่';
+  }
+  if (
+    major.includes('ซีรีส์') &&
+    (major.includes('ภาพยนตร์') || major.includes('เนื้อหาสากล') || major.includes('แพลตฟอร์ม') || major.includes('ธุรกิจ'))
+  ) {
+    return 'สาขาวิชาการผลิตและธุรกิจภาพยนตร์ ซีรีส์ และเนื้อหาสากล (หลักสูตรนานาชาติ)';
+  }
+  if (
+    (degreeLevel === 'Bachelor' || !degreeLevel) &&
+    (major === 'สาขาวิชาสถาปัตยกรรม' || major === 'สาขาวิชาสถาปัตยกรรม (หลักสูตร 5 ปี)')
+  ) {
+    return 'สาขาวิชาสถาปัตยกรรม (หลักสูตร 5 ปี)';
   }
   return major;
 };
@@ -775,7 +806,7 @@ export default function AdminDashboard({ submissions, onClearSubmissions, onRese
             id: sub.id,
             studentId: sub.studentId || '-',
             faculty: sub.faculty || '-',
-            major: sub.major || '-',
+            major: formatMajorName(sub.major, sub.degreeLevel) || '-',
             otherText: sub.primaryCaregiverOther,
           });
         }
@@ -926,7 +957,7 @@ export default function AdminDashboard({ submissions, onClearSubmissions, onRese
       .map((sub) => ({
         id: sub.id,
         faculty: sub.faculty || '',
-        major: sub.major || '',
+        major: formatMajorName(sub.major, sub.degreeLevel) || '',
         text: sub.otherText || '',
         submittedAt: sub.submittedAt || '',
       }))
