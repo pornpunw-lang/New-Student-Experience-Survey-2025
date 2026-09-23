@@ -759,11 +759,12 @@ export default function AdminDashboard({ submissions, onClearSubmissions, onRese
     BU_FACULTIES.forEach((f) => { counts[f.name] = 0; });
 
     filteredSubmissions.forEach((sub) => {
-      const faculty = sub.faculty || '';
-      if (faculty && counts[faculty] !== undefined) {
-        counts[faculty]++;
-      } else if (faculty) {
-        counts[faculty] = 1;
+      const matchedFac = BU_FACULTIES.find(f => isSubmissionInFaculty(sub, f, 'ALL'));
+      const facultyName = matchedFac ? matchedFac.name : (sub.faculty || '');
+      if (facultyName && counts[facultyName] !== undefined) {
+        counts[facultyName]++;
+      } else if (facultyName) {
+        counts[facultyName] = (counts[facultyName] || 0) + 1;
       }
     });
 
@@ -785,17 +786,25 @@ export default function AdminDashboard({ submissions, onClearSubmissions, onRese
     let interCount = 0;
 
     filteredSubmissions.forEach((sub) => {
-      const program = sub.program || '';
-      if (program === 'Thai') thaiCount++;
-      else if (program === 'International') interCount++;
+      const isInter =
+        sub.program === 'International' ||
+        sub.isInternational ||
+        sub.faculty?.includes('วิทยาลัยนานาชาติ') ||
+        sub.faculty?.toLowerCase().includes('international') ||
+        sub.major?.includes('นานาชาติ') ||
+        sub.major?.toLowerCase().includes('international');
+      if (isInter) interCount++;
+      else thaiCount++;
     });
 
-    const total = thaiCount + interCount;
+    const total = filteredSubmissions.length;
     return {
       thaiCount,
-      thaiPercent: total > 0 ? Math.round((thaiCount / total) * 100) : 0,
+      thaiPercent: total > 0 ? Number(((thaiCount / total) * 100).toFixed(1)) : 0,
+      thaiPercentRound: total > 0 ? Math.round((thaiCount / total) * 100) : 0,
       interCount,
-      interPercent: total > 0 ? Math.round((interCount / total) * 100) : 0,
+      interPercent: total > 0 ? Number(((interCount / total) * 100).toFixed(1)) : 0,
+      interPercentRound: total > 0 ? Math.round((interCount / total) * 100) : 0,
       total,
     };
   }, [filteredSubmissions]);
@@ -807,20 +816,23 @@ export default function AdminDashboard({ submissions, onClearSubmissions, onRese
     let dCount = 0;
 
     filteredSubmissions.forEach((sub) => {
-      const degreeLevel = sub.degreeLevel || '';
-      if (degreeLevel === 'Bachelor') bCount++;
-      else if (degreeLevel === 'Master') mCount++;
+      const degreeLevel = sub.degreeLevel;
+      if (degreeLevel === 'Master') mCount++;
       else if (degreeLevel === 'Doctoral') dCount++;
+      else bCount++;
     });
 
-    const total = bCount + mCount + dCount;
+    const total = filteredSubmissions.length;
     return {
       bachelorCount: bCount,
-      bachelorPercent: total > 0 ? Math.round((bCount / total) * 100) : 0,
+      bachelorPercent: total > 0 ? Number(((bCount / total) * 100).toFixed(1)) : 0,
+      bachelorPercentRound: total > 0 ? Math.round((bCount / total) * 100) : 0,
       masterCount: mCount,
-      masterPercent: total > 0 ? Math.round((mCount / total) * 100) : 0,
+      masterPercent: total > 0 ? Number(((mCount / total) * 100).toFixed(1)) : 0,
+      masterPercentRound: total > 0 ? Math.round((mCount / total) * 100) : 0,
       doctoralCount: dCount,
-      doctoralPercent: total > 0 ? Math.round((dCount / total) * 100) : 0,
+      doctoralPercent: total > 0 ? Number(((dCount / total) * 100).toFixed(1)) : 0,
+      doctoralPercentRound: total > 0 ? Math.round((dCount / total) * 100) : 0,
       total,
     };
   }, [filteredSubmissions]);
@@ -1538,9 +1550,14 @@ ${recommendationsText}
                 <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider block">
                   {lang === 'TH' ? 'หลักสูตรภาคปกติ (ภาษาไทย)' : 'Regular Thai Program'}
                 </span>
-                <span className="text-3xl font-extrabold text-[#003366] block">
-                  {programMetrics.thaiCount} <span className="text-xs font-normal text-emerald-600">{programMetrics.thaiPercent}%</span>
-                </span>
+                <div className="flex items-baseline gap-2">
+                  <span className="text-3xl font-extrabold text-[#003366]">
+                    {programMetrics.thaiCount}
+                  </span>
+                  <span className="text-xs font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full">
+                    {programMetrics.thaiPercent}%
+                  </span>
+                </div>
               </div>
               <div className="p-3.5 bg-sky-50 text-sky-700 rounded-xl">
                 <BookOpen className="w-6 h-6" />
@@ -1553,9 +1570,14 @@ ${recommendationsText}
                 <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider block">
                   {lang === 'TH' ? 'หลักสูตรภาษาอังกฤษ/นานาชาติ' : 'English / International'}
                 </span>
-                <span className="text-3xl font-extrabold text-[#003366] block">
-                  {programMetrics.interCount} <span className="text-xs font-normal text-sky-600">{programMetrics.interPercent}%</span>
-                </span>
+                <div className="flex items-baseline gap-2">
+                  <span className="text-3xl font-extrabold text-[#003366]">
+                    {programMetrics.interCount}
+                  </span>
+                  <span className="text-xs font-semibold text-sky-700 bg-sky-50 border border-sky-200 px-2 py-0.5 rounded-full">
+                    {programMetrics.interPercent}%
+                  </span>
+                </div>
               </div>
               <div className="p-3.5 bg-indigo-50 text-indigo-700 rounded-xl">
                 <Globe className="w-6 h-6" />
@@ -1568,14 +1590,16 @@ ${recommendationsText}
                 <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider block">
                   {lang === 'TH' ? 'เฉลี่ยความหวัง / คน' : 'Avg Expectations / Student'}
                 </span>
-                <span className="text-3xl font-extrabold text-[#003366] block">
-                  {filteredSubmissions.length > 0
-                    ? (filteredSubmissions.reduce((sum, s) => sum + (s.selectedOptions || []).length, 0) / filteredSubmissions.length).toFixed(1)
-                    : '0.0'}{' '}
-                  <span className="text-xs font-normal text-gray-400">
+                <div className="flex items-baseline gap-2">
+                  <span className="text-3xl font-extrabold text-[#003366]">
+                    {filteredSubmissions.length > 0
+                      ? (filteredSubmissions.reduce((sum, s) => sum + (s.selectedOptions || []).length, 0) / filteredSubmissions.length).toFixed(1)
+                      : '0.0'}
+                  </span>
+                  <span className="text-xs font-semibold text-amber-700 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded-full">
                     {lang === 'TH' ? 'รายการ' : 'options'}
                   </span>
-                </span>
+                </div>
               </div>
               <div className="p-3.5 bg-amber-50 text-amber-700 rounded-xl">
                 <HeartHandshake className="w-6 h-6 animate-pulse" />
@@ -1599,7 +1623,7 @@ ${recommendationsText}
 
           <div className="relative flex justify-center items-center py-4">
             {/* SVG Custom Donut rendering */}
-            {programMetrics.total > 0 ? (
+            {filteredSubmissions.length > 0 ? (
               <>
                 <svg width="200" height="200" viewBox="0 0 200 200" className="transform -rotate-90">
                   {/* Outer circle tracker */}
@@ -1613,29 +1637,30 @@ ${recommendationsText}
                      stroke="#003366" // BU Navy Primary ID
                      strokeWidth="22"
                      strokeDasharray={`${2 * Math.PI * 70}`}
-                     strokeDashoffset={`${2 * Math.PI * 70 * (1 - programMetrics.thaiPercent / 100)}`}
+                     strokeDashoffset={`${2 * Math.PI * 70 * (1 - (programMetrics.thaiCount / (filteredSubmissions.length || 1)))}`}
                   />
                   {/* International sector */}
-                  <circle
-                     cx="100"
-                     cy="100"
-                     r="70"
-                     fill="transparent"
-                     stroke="#00A2E8" // Bright cyan accent
-                     strokeWidth="24" // slightly thicker for emphasize
-                     strokeDasharray={`${2 * Math.PI * 70}`}
-                     strokeDashoffset={`${2 * Math.PI * 70}`}
-                     style={{
-                       strokeDashoffset: `${2 * Math.PI * 70 * (1 - programMetrics.interPercent / 100)}`,
-                       transform: `rotate(${Math.round(3.6 * programMetrics.thaiPercent)}deg)`,
-                       transformOrigin: '100px 100px',
-                     }}
-                  />
+                  {programMetrics.interCount > 0 && (
+                    <circle
+                       cx="100"
+                       cy="100"
+                       r="70"
+                       fill="transparent"
+                       stroke="#00A2E8" // Bright cyan accent
+                       strokeWidth="24" // slightly thicker for emphasize
+                       strokeDasharray={`${2 * Math.PI * 70}`}
+                       strokeDashoffset={`${2 * Math.PI * 70 * (1 - (programMetrics.interCount / (filteredSubmissions.length || 1)))}`}
+                       style={{
+                         transform: `rotate(${360 * (programMetrics.thaiCount / (filteredSubmissions.length || 1))}deg)`,
+                         transformOrigin: '100px 100px',
+                       }}
+                    />
+                  )}
                 </svg>
                 {/* Embedded absolute center label text */}
-                <div className="absolute flex flex-col items-center justify-center">
+                <div className="absolute flex flex-col items-center justify-center pointer-events-none">
                   <span className="text-xs text-gray-400 font-medium">{lang === 'TH' ? 'รวมผลตอบ' : 'Total'}</span>
-                  <span className="text-3xl font-extrabold text-gray-800">{programMetrics.total}</span>
+                  <span className="text-3xl font-extrabold text-[#003366]">{filteredSubmissions.length}</span>
                   <span className="text-[10px] text-gray-400">{lang === 'TH' ? 'ตัวแทนนักศึกษา' : 'Students'}</span>
                 </div>
               </>

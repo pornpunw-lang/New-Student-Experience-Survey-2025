@@ -137,14 +137,42 @@ const safeSessionStorage = {
   }
 };
 
+const isTestSubmission = (sub: any): boolean => {
+  if (!sub) return true;
+  if (typeof sub.id === 'string' && sub.id.startsWith('TEST-')) return true;
+  if (sub.studentName === 'Test Student') return true;
+  return false;
+};
+
 const normalizeSubmission = (sub: SurveyResponse): SurveyResponse => {
+  const degreeLevel = sub.degreeLevel || 'Bachelor';
+
+  let program = sub.program;
+  if (program !== 'Thai' && program !== 'International') {
+    const isInter =
+      (sub as any).isInternational ||
+      sub.faculty?.includes('นานาชาติ') ||
+      sub.faculty?.toLowerCase().includes('international') ||
+      sub.major?.includes('นานาชาติ') ||
+      sub.major?.toLowerCase().includes('international');
+    program = isInter ? 'International' : 'Thai';
+  }
+
+  let faculty = sub.faculty;
+  // Specific transfer: Financial and Investment Planning belongs strictly to School of Economics and Investment
   if (
     sub.major === 'สาขาวิชาการวางแผนการเงินและการลงทุน' &&
-    (sub.faculty === 'คณะบริหารธุรกิจ' || !sub.faculty)
+    (faculty === 'คณะบริหารธุรกิจ' || !faculty)
   ) {
-    return { ...sub, faculty: 'คณะเศรษฐศาสตร์และการลงทุน' };
+    faculty = 'คณะเศรษฐศาสตร์และการลงทุน';
   }
-  return sub;
+
+  return {
+    ...sub,
+    degreeLevel,
+    program,
+    faculty
+  };
 };
 
 export default function App() {
@@ -155,14 +183,14 @@ export default function App() {
       try {
         const parsed = JSON.parse(saved);
         if (Array.isArray(parsed) && parsed.length > 0) {
-          return parsed.map(normalizeSubmission);
+          return parsed.filter(s => !isTestSubmission(s)).map(normalizeSubmission);
         }
       } catch (e) {
         console.error('Failed to parse saved submissions', e);
       }
     }
     // Default to the 180 beautiful responses so the dashboard is immediately interactive and never blank
-    const initialMocks = generateMockSubmissions(180).map(normalizeSubmission);
+    const initialMocks = generateMockSubmissions(180).filter(s => !isTestSubmission(s)).map(normalizeSubmission);
     try {
       safeLocalStorage.setItem('bu_new_student_submissions_2569', JSON.stringify(initialMocks));
     } catch (err) {
@@ -351,7 +379,10 @@ export default function App() {
       } else {
         const docsData: SurveyResponse[] = [];
         snapshot.forEach((doc) => {
-          docsData.push(normalizeSubmission(doc.data() as SurveyResponse));
+          const raw = doc.data() as SurveyResponse;
+          if (!isTestSubmission(raw)) {
+            docsData.push(normalizeSubmission(raw));
+          }
         });
 
         setSubmissions(docsData);
@@ -366,14 +397,14 @@ export default function App() {
         try {
           const parsed = JSON.parse(saved);
           if (Array.isArray(parsed) && parsed.length > 0) {
-            setSubmissions(parsed.map(normalizeSubmission));
+            setSubmissions(parsed.filter(s => !isTestSubmission(s)).map(normalizeSubmission));
             return;
           }
         } catch (e) {
           // Ignore
         }
       }
-      setSubmissions(generateMockSubmissions(180).map(normalizeSubmission));
+      setSubmissions(generateMockSubmissions(180).filter(s => !isTestSubmission(s)).map(normalizeSubmission));
     });
 
     return () => unsubscribe();

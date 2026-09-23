@@ -2,10 +2,11 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     match /submissions/{document} {
-      // Allow creation for public student submissions (anonymous survey respondents)
-      allow create: if true;
-      // Allow read, update, and delete only to the authorized administrator pornpun.w@bu.ac.th
-      allow read, update, delete: if request.auth != null && request.auth.token.email.lower() == 'pornpun.w@bu.ac.th';
+      allow read, create: if true;
+      allow update, delete: if request.auth != null && request.auth.token.email.lower() == 'pornpun.w@bu.ac.th';
     }
   }
 }
+
+
+
