@@ -226,7 +226,6 @@ export const BU_FACULTIES_BY_DEGREE: Record<'Bachelor' | 'Master' | 'Doctoral', 
         'สาขาวิชาการจัดการ',
         'สาขาวิชาการจัดการธุรกิจระหว่างประเทศ',
         'สาขาวิชาการจัดการโลจิสติกส์และโซ่อุปทาน',
-        'สาขาวิชาการวางแผนการเงินและการลงทุน',
         'สาขาวิชาการตลาดดิจิทัล'
       ],
       majorsEn: [
@@ -235,7 +234,6 @@ export const BU_FACULTIES_BY_DEGREE: Record<'Bachelor' | 'Master' | 'Doctoral', 
         'Management',
         'International Business Management',
         'Logistics and Supply Chain Management',
-        'Financial and Investment Planning',
         'Digital Marketing'
       ]
     },
@@ -296,8 +294,14 @@ export const BU_FACULTIES_BY_DEGREE: Record<'Bachelor' | 'Master' | 'Doctoral', 
     {
       name: 'คณะเศรษฐศาสตร์และการลงทุน',
       nameEn: 'School of Economics and Investment',
-      majors: ['สาขาวิชาเศรษฐศาสตร์'],
-      majorsEn: ['Economics Program']
+      majors: [
+        'สาขาวิชาเศรษฐศาสตร์',
+        'สาขาวิชาการวางแผนการเงินและการลงทุน'
+      ],
+      majorsEn: [
+        'Economics Program',
+        'Financial and Investment Planning'
+      ]
     },
     {
       name: 'คณะสถาปัตยกรรมศาสตร์',
@@ -367,6 +371,7 @@ export const BU_FACULTIES_BY_DEGREE: Record<'Bachelor' | 'Master' | 'Doctoral', 
         'สาขาวิชานวัตกรรมการจัดการท่องเที่ยวและการบริการ',
         'สาขาวิชาวิศวกรรมไฟฟ้าและคอมพิวเตอร์ (หลักสูตรนานาชาติ)',
         'สาขาวิชาสถาปัตยกรรม',
+        'สาขาวิชาการจัดการความรู้และนวัตกรรม (หลักสูตรนานาชาติ)',
         'สาขาวิชาการจัดการนวัตกรรม (หลักสูตรนานาชาติ)'
       ],
       majorsEn: [
@@ -382,6 +387,7 @@ export const BU_FACULTIES_BY_DEGREE: Record<'Bachelor' | 'Master' | 'Doctoral', 
         'Tourism and Hospitality Management Innovation (International Program)',
         'Electrical & Computer Engineering (International Program)',
         'Architecture Program',
+        'Knowledge Management and Innovation Management (International Program)',
         'Innovation Management (International Program)'
       ]
     }

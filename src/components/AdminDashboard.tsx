@@ -400,6 +400,20 @@ export const isSubmissionMatchingMajor = (subMajor?: string, targetMajor?: strin
     return true;
   }
 
+  // Handle Knowledge Management vs Innovation Management separately
+  const isKnowledgeManagement = (val: string) => {
+    return val.includes('ความรู้') || val.includes('knowledge');
+  };
+  const isInnovationManagement = (val: string) => {
+    return (val.includes('การจัดการนวัตกรรม') || (val.includes('innovation') && val.includes('management'))) && !isKnowledgeManagement(val);
+  };
+  if (isKnowledgeManagement(cleanSub) && isKnowledgeManagement(cleanTarget)) {
+    return true;
+  }
+  if (isInnovationManagement(cleanSub) && isInnovationManagement(cleanTarget)) {
+    return true;
+  }
+
   return false;
 };
 
@@ -433,20 +447,51 @@ export const isSubmissionInFaculty = (
   const subDegree = sub.degreeLevel || 'Bachelor';
   const isGraduateSchool = fac.name === 'บัณฑิตวิทยาลัย' || (fac.nameEn && fac.nameEn.toLowerCase().includes('graduate'));
 
+  // Specific transfer: Financial and Investment Planning belongs strictly to School of Economics and Investment
+  if (isSubmissionMatchingMajor(sub.major, 'สาขาวิชาการวางแผนการเงินและการลงทุน')) {
+    if (degreeFilter !== 'ALL' && subDegree !== 'Bachelor') return false;
+    return fac.name === 'คณะเศรษฐศาสตร์และการลงทุน';
+  }
+
   if (degreeFilter !== 'ALL') {
     // When specific degree filter is selected
     if (subDegree !== degreeFilter) return false;
-    if (isGraduateSchool) {
-      // In Master or Doctoral view, all submissions of that degree belong to Graduate School
-      return true;
-    }
-    // For Bachelor faculties: match Thai name, English name, or any major
-    return (
+
+    // Direct faculty name match
+    if (
       sub.faculty === fac.name ||
       (fac.nameEn && sub.faculty === fac.nameEn) ||
-      (fac.nameEn && sub.faculty?.toLowerCase().includes(fac.nameEn.toLowerCase())) ||
-      (fac.majors && fac.majors.some(m => isSubmissionMatchingMajor(sub.major, m)))
-    );
+      (fac.nameEn && sub.faculty?.toLowerCase().includes(fac.nameEn.toLowerCase()))
+    ) {
+      return true;
+    }
+
+    // Match by major
+    if (fac.majors && fac.majors.some(m => isSubmissionMatchingMajor(sub.major, m))) {
+      // If submission explicitly specifies another faculty in this degree level, let the explicitly named faculty claim it
+      if (sub.faculty && sub.faculty !== fac.name && sub.faculty !== fac.nameEn) {
+        const otherFacMatches = BU_FACULTIES_BY_DEGREE[degreeFilter]?.some(f => 
+          f.name !== fac.name && (f.name === sub.faculty || f.nameEn === sub.faculty)
+        );
+        if (otherFacMatches) return false;
+      }
+      return true;
+    }
+
+    if (isGraduateSchool) {
+      // Graduate School is the fallback for any Master/Doctoral submission that didn't match another faculty in this degree
+      const matchesOtherFacInDegree = BU_FACULTIES_BY_DEGREE[degreeFilter]?.some(f => 
+        f.name !== 'บัณฑิตวิทยาลัย' && (
+          f.name === sub.faculty ||
+          f.nameEn === sub.faculty ||
+          (f.majors && f.majors.some(m => isSubmissionMatchingMajor(sub.major, m)))
+        )
+      );
+      if (matchesOtherFacInDegree) return false;
+      return true;
+    }
+
+    return false;
   }
 
   // When degreeFilter is 'ALL'
@@ -1144,8 +1189,11 @@ ${recommendationsText}
 
     const contact = getFacultyContact(facName);
     let baseTarget = contact.baseTarget;
-    if (trackerDegreeFilter === 'Master') baseTarget = 150;
-    else if (trackerDegreeFilter === 'Doctoral') baseTarget = 50;
+    if (trackerDegreeFilter === 'Master') {
+      baseTarget = facName === 'บัณฑิตวิทยาลัย' ? 150 : (facObj.majors.reduce((sum, m) => sum + getMajorTarget(m), 0) || 10);
+    } else if (trackerDegreeFilter === 'Doctoral') {
+      baseTarget = facName === 'บัณฑิตวิทยาลัย' ? 50 : (facObj.majors.reduce((sum, m) => sum + getMajorTarget(m), 0) || 10);
+    }
 
     const target = Math.max(baseTarget, facSubmissions.length);
     const responded = facSubmissions.length;
@@ -2038,8 +2086,11 @@ ${recommendationsText}
             const facSub = submissions.filter(sub => isSubmissionInFaculty(sub, fac, trackerDegreeFilter));
             const contact = getFacultyContact(fac.name);
             let baseT = contact.baseTarget;
-            if (trackerDegreeFilter === 'Master') baseT = 150;
-            else if (trackerDegreeFilter === 'Doctoral') baseT = 50;
+            if (trackerDegreeFilter === 'Master') {
+              baseT = fac.name === 'บัณฑิตวิทยาลัย' ? 150 : (fac.majors.reduce((sum, m) => sum + getMajorTarget(m), 0) || 10);
+            } else if (trackerDegreeFilter === 'Doctoral') {
+              baseT = fac.name === 'บัณฑิตวิทยาลัย' ? 50 : (fac.majors.reduce((sum, m) => sum + getMajorTarget(m), 0) || 10);
+            }
             return acc + Math.max(baseT, facSub.length);
           }, 0);
 
@@ -2096,9 +2147,9 @@ ${recommendationsText}
                   const contact = getFacultyContact(fac.name);
                   let baseTarget = contact.baseTarget;
                   if (trackerDegreeFilter === 'Master') {
-                    baseTarget = 150;
+                    baseTarget = fac.name === 'บัณฑิตวิทยาลัย' ? 150 : (fac.majors.reduce((sum, m) => sum + getMajorTarget(m), 0) || 10);
                   } else if (trackerDegreeFilter === 'Doctoral') {
-                    baseTarget = 50;
+                    baseTarget = fac.name === 'บัณฑิตวิทยาลัย' ? 50 : (fac.majors.reduce((sum, m) => sum + getMajorTarget(m), 0) || 10);
                   }
 
                   const target = Math.max(baseTarget, facSubmissions.length);
@@ -3163,7 +3214,7 @@ ${recommendationsText}
                               ? detMajor 
                               : (() => {
                                   const facObj = (detDegreeLevel === 'Master' || detDegreeLevel === 'Doctoral')
-                                    ? BU_FACULTIES_BY_DEGREE[detDegreeLevel]?.[0]
+                                    ? (BU_FACULTIES_BY_DEGREE[detDegreeLevel]?.find(f => f.name === detFaculty) || BU_FACULTIES_BY_DEGREE[detDegreeLevel]?.[0])
                                     : BU_FACULTIES.find(f => f.name === detFaculty);
                                   const mIdx = facObj?.majors.findIndex(m => isSubmissionMatchingMajor(detMajor, m));
                                   return (facObj?.majorsEn && mIdx !== undefined && mIdx !== -1 && facObj.majorsEn[mIdx]) || detMajor;

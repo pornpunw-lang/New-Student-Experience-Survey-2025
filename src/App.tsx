@@ -137,6 +137,16 @@ const safeSessionStorage = {
   }
 };
 
+const normalizeSubmission = (sub: SurveyResponse): SurveyResponse => {
+  if (
+    sub.major === 'สาขาวิชาการวางแผนการเงินและการลงทุน' &&
+    (sub.faculty === 'คณะบริหารธุรกิจ' || !sub.faculty)
+  ) {
+    return { ...sub, faculty: 'คณะเศรษฐศาสตร์และการลงทุน' };
+  }
+  return sub;
+};
+
 export default function App() {
   // Initialize state from localStorage or fallback to 180 starter mock items so there is always data
   const [submissions, setSubmissions] = useState<SurveyResponse[]>(() => {
@@ -145,14 +155,14 @@ export default function App() {
       try {
         const parsed = JSON.parse(saved);
         if (Array.isArray(parsed) && parsed.length > 0) {
-          return parsed;
+          return parsed.map(normalizeSubmission);
         }
       } catch (e) {
         console.error('Failed to parse saved submissions', e);
       }
     }
     // Default to the 180 beautiful responses so the dashboard is immediately interactive and never blank
-    const initialMocks = generateMockSubmissions(180);
+    const initialMocks = generateMockSubmissions(180).map(normalizeSubmission);
     try {
       safeLocalStorage.setItem('bu_new_student_submissions_2569', JSON.stringify(initialMocks));
     } catch (err) {
@@ -341,7 +351,7 @@ export default function App() {
       } else {
         const docsData: SurveyResponse[] = [];
         snapshot.forEach((doc) => {
-          docsData.push(doc.data() as SurveyResponse);
+          docsData.push(normalizeSubmission(doc.data() as SurveyResponse));
         });
 
         setSubmissions(docsData);
@@ -356,14 +366,14 @@ export default function App() {
         try {
           const parsed = JSON.parse(saved);
           if (Array.isArray(parsed) && parsed.length > 0) {
-            setSubmissions(parsed);
+            setSubmissions(parsed.map(normalizeSubmission));
             return;
           }
         } catch (e) {
           // Ignore
         }
       }
-      setSubmissions(generateMockSubmissions(180));
+      setSubmissions(generateMockSubmissions(180).map(normalizeSubmission));
     });
 
     return () => unsubscribe();
