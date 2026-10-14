@@ -37,7 +37,9 @@ import {
   Sparkles,
   Wallet,
   ShieldCheck,
-  GraduationCap
+  GraduationCap,
+  Table,
+  CheckCircle2
 } from 'lucide-react';
 import { SurveyResponse, StatisticsItem } from '../types';
 import { SURVEY_OPTIONS, BU_FACULTIES, BU_FACULTIES_BY_DEGREE, CAREGIVER_OPTIONS, CAREGIVER_INCOME_OPTIONS } from '../data/mockData';
@@ -569,6 +571,13 @@ export default function AdminDashboard({ submissions, onClearSubmissions, onRese
   // Currently viewing single submission detail modal State
   const [activeDetailSubmission, setActiveDetailSubmission] = useState<SurveyResponse | null>(null);
 
+  // CSV Export Modal & Analysis States
+  const [showExportModal, setShowExportModal] = useState<boolean>(false);
+  const [exportScope, setExportScope] = useState<'filtered' | 'all'>('filtered');
+  const [exportFormat, setExportFormat] = useState<'standard' | 'matrix'>('standard');
+  const [isExporting, setIsExporting] = useState<boolean>(false);
+  const [exportToast, setExportToast] = useState<{ message: string; count: number } | null>(null);
+
   // Institutional Research (IR) Report States
   const [currentTab, setCurrentTab] = useState<'dashboard' | 'ir-report'>('dashboard');
   const [reportTitle, setReportTitle] = useState<string>('');
@@ -1025,69 +1034,204 @@ export default function AdminDashboard({ submissions, onClearSubmissions, onRese
       });
   }, [filteredSubmissions]);
 
-  // 6. EXPORT CSV METHOD
-  // Incorporating UTF-8 BOM \uFEFF ensures Excel displays non-ASCII (Thai characters) correctly without corruption
+  // 6. EXPORT CSV ENGINE & OFFLINE ANALYSIS UTILITIES
+  // Safe CSV cell escaper: normalizes line breaks, quotes properly, and prevents CSV injection
+  const escapeCsvCell = (val: any): string => {
+    if (val === null || val === undefined) return '""';
+    const str = String(val).replace(/\r\n/g, ' ').replace(/[\r\n]/g, ' ').trim();
+    return `"${str.replace(/"/g, '""')}"`;
+  };
+
+  // Incorporating UTF-8 BOM (\uFEFF) ensures Excel and statistical software display Thai characters correctly
+  const handleExecuteExportCSV = (scope: 'filtered' | 'all', format: 'standard' | 'matrix') => {
+    const dataset = scope === 'filtered' ? filteredSubmissions : submissions;
+    if (dataset.length === 0) return;
+
+    setIsExporting(true);
+
+    try {
+      let csvContent = '';
+      const dateStamp = new Date().toISOString().slice(0, 10).replace(/-/g, '');
+      let filename = '';
+
+      if (format === 'standard') {
+        filename = `BU_Survey_2569_${scope === 'filtered' ? 'Filtered' : 'All'}_Standard_N${dataset.length}_${dateStamp}.csv`;
+        const headers = [
+          'หมายเลขอ้างอิง (Ref ID)',
+          'รหัสนักศึกษา (Student ID)',
+          'ระดับการศึกษา (Degree Level TH)',
+          'ระดับการศึกษา (Degree Level EN)',
+          'ประเภทหลักสูตร (Program)',
+          'คณะที่ศึกษา (Faculty TH)',
+          'Faculty (EN)',
+          'สาขาวิชา (Major TH)',
+          'Major (EN)',
+          'ผู้ปกครองหรือผู้ดูแลหลัก (Caregiver TH)',
+          'Caregiver (EN)',
+          'ระบุผู้ดูแลอื่น (Caregiver Other)',
+          'ช่วงรายได้เฉลี่ยต่อเดือนของผู้ปกครอง (Caregiver Monthly Income)',
+          'อีเมล (Email)',
+          'จำนวนความคาดหวังที่เลือก (Total Selected Expectations)',
+          'รหัสข้อความคาดหวังที่เลือก (Selected Option IDs)',
+          'รายการความคาดหวังที่เลือกแบบข้อความเต็ม (Selected Options Text)',
+          'ความคิดเห็นหรือข้อเสนอแนะเพิ่มเติมอื่น ๆ (Other Details / Comments)',
+          'วันที่และเวลาที่บันทึกข้อมูล (Submitted At TH)',
+          'Submitted At (ISO Standard)',
+        ];
+
+        const rows = dataset.map((sub) => {
+          const degreeLevel = sub.degreeLevel || 'Bachelor';
+          const program = sub.program || 'Thai';
+          const facObj = BU_FACULTIES.find(f => f.name === sub.faculty);
+          const facultyEn = facObj?.nameEn || sub.faculty || '';
+          
+          const major = formatMajorName(sub.major, degreeLevel);
+          const majorIdx = facObj?.majors.indexOf(major);
+          const majorEn = (facObj?.majorsEn && majorIdx !== undefined && majorIdx !== -1 && facObj.majorsEn[majorIdx]) || major;
+
+          const caregiverObj = CAREGIVER_OPTIONS.find(c => c.id === sub.primaryCaregiver);
+          const caregiverLabel = caregiverObj ? caregiverObj.label : (sub.primaryCaregiver || '-');
+          const caregiverLabelEn = caregiverObj ? caregiverObj.labelEn : (sub.primaryCaregiver || '-');
+
+          const incomeObj = CAREGIVER_INCOME_OPTIONS.find(i => i.id === sub.caregiverIncomeRange);
+          const incomeLabel = incomeObj ? incomeObj.label : (sub.caregiverIncomeRange || '-');
+
+          const selectedOptions = sub.selectedOptions || [];
+          const optionsText = selectedOptions
+            .map((optId) => {
+              const opt = SURVEY_OPTIONS.find((o) => o.id === optId);
+              return opt ? `[${optId}] ${opt.label}` : optId;
+            })
+            .join(' | ');
+
+          return [
+            escapeCsvCell(sub.id),
+            escapeCsvCell(sub.studentId || '-'),
+            escapeCsvCell(degreeLevel === 'Bachelor' ? 'ปริญญาตรี' : degreeLevel === 'Master' ? 'ปริญญาโท' : 'ปริญญาเอก'),
+            escapeCsvCell(degreeLevel),
+            escapeCsvCell(program === 'Thai' ? 'ภาคปกติ (ภาษาไทย)' : 'นานาชาติ/อังกฤษ (International)'),
+            escapeCsvCell(sub.faculty || '-'),
+            escapeCsvCell(facultyEn || '-'),
+            escapeCsvCell(major || '-'),
+            escapeCsvCell(majorEn || '-'),
+            escapeCsvCell(caregiverLabel),
+            escapeCsvCell(caregiverLabelEn),
+            escapeCsvCell(sub.primaryCaregiverOther || '-'),
+            escapeCsvCell(incomeLabel),
+            escapeCsvCell(sub.email || '-'),
+            selectedOptions.length,
+            escapeCsvCell(selectedOptions.join('; ')),
+            escapeCsvCell(optionsText),
+            escapeCsvCell(sub.otherText || '-'),
+            escapeCsvCell(sub.submittedAt ? new Date(sub.submittedAt).toLocaleString('th-TH') : '-'),
+            escapeCsvCell(sub.submittedAt || '-'),
+          ].join(',');
+        });
+
+        csvContent = '\uFEFF' + [headers.map(escapeCsvCell).join(','), ...rows].join('\n');
+      } else {
+        // Statistical Analysis Matrix Format (SPSS / Jamovi / Python / Excel Pivot ready)
+        filename = `BU_Survey_2569_${scope === 'filtered' ? 'Filtered' : 'All'}_SPSS_Matrix_N${dataset.length}_${dateStamp}.csv`;
+        
+        const baseHeaders = [
+          'Ref_ID',
+          'Student_ID',
+          'Degree_Level',
+          'Program_Type',
+          'Faculty_TH',
+          'Faculty_EN',
+          'Major_TH',
+          'Major_EN',
+          'Caregiver',
+          'Caregiver_Other',
+          'Caregiver_Income',
+          'Email',
+          'Total_Selected_Count',
+        ];
+
+        // 22 Binary Columns (0 or 1) for each expectation option
+        const questionHeaders = SURVEY_OPTIONS.map(opt => `Q${opt.id}_${opt.label.replace(/[\s/\\-]+/g, '_').slice(0, 30)}`);
+
+        const trailingHeaders = [
+          'Other_Comments_Text',
+          'Submitted_Date_TH',
+          'Submitted_At_ISO'
+        ];
+
+        const allHeaders = [...baseHeaders, ...questionHeaders, ...trailingHeaders];
+
+        const rows = dataset.map((sub) => {
+          const degreeLevel = sub.degreeLevel || 'Bachelor';
+          const program = sub.program || 'Thai';
+          const facObj = BU_FACULTIES.find(f => f.name === sub.faculty);
+          const facultyEn = facObj?.nameEn || sub.faculty || '';
+          const major = formatMajorName(sub.major, degreeLevel);
+          const majorIdx = facObj?.majors.indexOf(major);
+          const majorEn = (facObj?.majorsEn && majorIdx !== undefined && majorIdx !== -1 && facObj.majorsEn[majorIdx]) || major;
+          const caregiverObj = CAREGIVER_OPTIONS.find(c => c.id === sub.primaryCaregiver);
+          const caregiverLabel = caregiverObj ? caregiverObj.label : (sub.primaryCaregiver || '-');
+          const incomeObj = CAREGIVER_INCOME_OPTIONS.find(i => i.id === sub.caregiverIncomeRange);
+          const incomeLabel = incomeObj ? incomeObj.label : (sub.caregiverIncomeRange || '-');
+          const selectedOptions = sub.selectedOptions || [];
+
+          const baseValues = [
+            escapeCsvCell(sub.id),
+            escapeCsvCell(sub.studentId || '-'),
+            escapeCsvCell(degreeLevel),
+            escapeCsvCell(program),
+            escapeCsvCell(sub.faculty || '-'),
+            escapeCsvCell(facultyEn || '-'),
+            escapeCsvCell(major || '-'),
+            escapeCsvCell(majorEn || '-'),
+            escapeCsvCell(caregiverLabel),
+            escapeCsvCell(sub.primaryCaregiverOther || '-'),
+            escapeCsvCell(incomeLabel),
+            escapeCsvCell(sub.email || '-'),
+            selectedOptions.length,
+          ];
+
+          const questionValues = SURVEY_OPTIONS.map(opt => (selectedOptions.includes(opt.id) ? 1 : 0));
+
+          const trailingValues = [
+            escapeCsvCell(sub.otherText || '-'),
+            escapeCsvCell(sub.submittedAt ? new Date(sub.submittedAt).toLocaleString('th-TH') : '-'),
+            escapeCsvCell(sub.submittedAt || '-'),
+          ];
+
+          return [...baseValues, ...questionValues, ...trailingValues].join(',');
+        });
+
+        csvContent = '\uFEFF' + [allHeaders.map(escapeCsvCell).join(','), ...rows].join('\n');
+      }
+
+      // Download file to client browser
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', filename);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+
+      setExportToast({
+        message: lang === 'TH' 
+          ? `ส่งออกไฟล์ ${filename} สำเร็จ (${dataset.length} รายการ)` 
+          : `Exported ${filename} successfully (${dataset.length} records)`,
+        count: dataset.length
+      });
+      setTimeout(() => setExportToast(null), 6000);
+      setShowExportModal(false);
+    } catch (err) {
+      console.error('Error generating CSV export:', err);
+    } finally {
+      setIsExporting(false);
+    }
+  };
+
   const handleExportCSV = () => {
-    if (filteredSubmissions.length === 0) return;
-
-    const headers = [
-      'หมายเลขอ้างอิง (Reference ID)',
-      'รหัสนักศึกษา (Student ID)',
-      'ระดับการศึกษา (Degree Level)',
-      'ประเภทหลักสูตร (Program)',
-      'คณะที่ศึกษา (Faculty)',
-      'สาขาวิชา (Major)',
-      'ผู้ปกครองหรือผู้ดูแลหลัก (Caregiver)',
-      'ระบุบุคคลอื่น (Caregiver Other)',
-      'รายได้เฉลี่ยต่อเดือนของผู้ปกครอง (Caregiver Income)',
-      'อีเมล (Email)',
-      'รายการความคาดหวังที่เลือก (Selected Options)',
-      'คำอธิบายเพิ่มเติมอื่น ๆ (Other details)',
-      'วันที่ส่งแบบสอบถาม (Submitted At)',
-    ];
-
-    const rows = filteredSubmissions.map((sub) => {
-      const selectedOptions = sub.selectedOptions || [];
-      const optionsJoined = selectedOptions
-        .map((optId) => {
-          const opt = SURVEY_OPTIONS.find((o) => o.id === optId);
-          return `${optId}:${opt ? `${opt.label} (${opt.labelEn})` : ''}`;
-        })
-        .join(' | ');
-
-      const degreeLevel = sub.degreeLevel || 'Bachelor';
-      const program = sub.program || 'Thai';
-      const caregiverObj = CAREGIVER_OPTIONS.find(c => c.id === sub.primaryCaregiver);
-      const caregiverName = caregiverObj ? caregiverObj.label : (sub.primaryCaregiver || '-');
-      const incomeObj = CAREGIVER_INCOME_OPTIONS.find(i => i.id === sub.caregiverIncomeRange);
-      const incomeName = incomeObj ? incomeObj.label : (sub.caregiverIncomeRange || '-');
-
-      return [
-        sub.id,
-        sub.studentId || '-',
-        degreeLevel === 'Bachelor' ? 'ปริญญาตรี' : degreeLevel === 'Master' ? 'ปริญญาโท' : 'ปริญญาเอก',
-        program === 'Thai' ? 'ภาคปกติ (ภาษาไทย)' : 'นานาชาติ/อังกฤษ',
-        sub.faculty || '',
-        formatMajorName(sub.major, degreeLevel),
-        caregiverName,
-        sub.primaryCaregiverOther || '-',
-        incomeName,
-        sub.email || '-',
-        `"${optionsJoined.replace(/"/g, '""')}"`,
-        `"${(sub.otherText || '').replace(/"/g, '""')}"`,
-        sub.submittedAt ? new Date(sub.submittedAt).toLocaleString('th-TH') : '',
-      ];
-    });
-
-    const csvContent = '\uFEFF' + [headers.join(','), ...rows.map((r) => r.join(','))].join('\n');
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.setAttribute('download', `BU_Survey_Export_${new Date().toISOString().slice(0, 10)}.csv`);
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    setShowExportModal(true);
   };
 
   const generateMarkdownReport = () => {
@@ -1476,6 +1620,21 @@ ${recommendationsText}
 
           {/* Action reset controls */}
           <div className="flex flex-wrap gap-2 w-full sm:w-auto justify-end">
+            {/* CSV Export Trigger Button */}
+            <button
+              type="button"
+              id="top-export-csv-btn"
+              onClick={() => setShowExportModal(true)}
+              className="bg-[#003366] hover:bg-[#002244] text-white font-semibold text-xs px-3.5 py-2 rounded-xl flex items-center gap-1.5 shadow-sm transition-all active:scale-[0.98] cursor-pointer"
+              title={lang === 'TH' ? 'ส่งออกข้อมูลแบบสอบถามเป็นไฟล์ CSV' : 'Export survey submissions as CSV'}
+            >
+              <FileSpreadsheet className="w-3.5 h-3.5 text-emerald-400" />
+              <span>{lang === 'TH' ? 'ส่งออกข้อมูล CSV' : 'Export CSV'}</span>
+              <span className="bg-white/20 text-white text-[10px] px-1.5 py-0.5 rounded-full font-mono font-bold">
+                {filteredSubmissions.length}
+              </span>
+            </button>
+
             <button
               type="button"
               onClick={() => {
@@ -1488,7 +1647,7 @@ ${recommendationsText}
                 setTimeFilter('all');
                 setSearchQuery('');
               }}
-              className="text-xs text-gray-500 hover:text-gray-800 hover:underline bg-gray-100 px-3 py-2 rounded-xl transition-all"
+              className="text-xs text-gray-500 hover:text-gray-800 hover:underline bg-gray-100 px-3 py-2 rounded-xl transition-all cursor-pointer"
             >
               {lang === 'TH' ? 'ล้างตัวกรองทั้งหมด' : 'Clear All Filters'}
             </button>
@@ -2845,6 +3004,15 @@ ${recommendationsText}
                 <FileDown className="w-4 h-4" />
                 <span>{lang === 'TH' ? 'ดาวน์โหลดรายงาน (.md)' : 'Download Report (.md)'}</span>
               </button>
+
+              <button
+                type="button"
+                onClick={() => setShowExportModal(true)}
+                className="w-full bg-[#003366] hover:bg-[#002244] text-white active:scale-[0.98] transition-all font-bold text-xs py-2.5 rounded-xl flex items-center justify-center gap-2 cursor-pointer shadow-sm"
+              >
+                <FileSpreadsheet className="w-4 h-4 text-emerald-400" />
+                <span>{lang === 'TH' ? 'ส่งออกชุดข้อมูลแบบสอบถาม (CSV)' : 'Export Survey Dataset (CSV)'}</span>
+              </button>
             </div>
           </div>
 
@@ -3656,6 +3824,276 @@ ${recommendationsText}
               </form>
             </motion.div>
           </div>
+        )}
+
+        {/* CSV EXPORT MODAL */}
+        {showExportModal && (
+          <div
+            key="modal-export-csv-backdrop"
+            className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 backdrop-blur-xs"
+            onClick={(e) => {
+              if (e.target === e.currentTarget) setShowExportModal(false);
+            }}
+            id="export-csv-modal-backdrop"
+          >
+            <motion.div
+              key="modal-export-csv-content"
+              initial={{ scale: 0.95, opacity: 0, y: 15 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.95, opacity: 0, y: 15 }}
+              onClick={(e) => e.stopPropagation()}
+              className="bg-white rounded-3xl w-full max-w-xl overflow-hidden shadow-2xl border border-gray-100 flex flex-col max-h-[92vh]"
+              id="export-csv-modal"
+            >
+              {/* Modal Header */}
+              <div className="bg-[#003366] text-white p-5 flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-2xl bg-white/10 flex items-center justify-center text-emerald-400 border border-white/20">
+                    <FileSpreadsheet className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <h3 className="text-base font-bold flex items-center gap-2">
+                      {lang === 'TH' ? 'ส่งออกชุดข้อมูลแบบสอบถาม (CSV Export)' : 'Export Survey Dataset (CSV)'}
+                    </h3>
+                    <p className="text-[11px] text-blue-200">
+                      {lang === 'TH'
+                        ? 'สำหรับนำไปวิเคราะห์ผลแบบออฟไลน์ (Offline Analysis) ใน Excel, SPSS, Python หรือ R'
+                        : 'Facilitate offline analysis in Excel, SPSS, Python, R, or Power BI'}
+                    </p>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setShowExportModal(false)}
+                  className="text-white/70 hover:text-white hover:bg-white/10 p-2 rounded-xl transition-all cursor-pointer"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+
+              {/* Modal Body */}
+              <div className="p-6 overflow-y-auto space-y-5 text-gray-700 text-xs">
+                {/* 1. Scope Selection */}
+                <div>
+                  <label className="block text-[11px] font-bold text-gray-500 uppercase tracking-wider mb-2">
+                    {lang === 'TH' ? '1. เลือกขอบเขตข้อมูลที่ต้องการส่งออก (Data Scope)' : '1. Select Data Scope'}
+                  </label>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    {/* Filtered Scope Card */}
+                    <button
+                      type="button"
+                      onClick={() => setExportScope('filtered')}
+                      className={`p-3.5 rounded-2xl border text-left transition-all flex flex-col justify-between cursor-pointer ${
+                        exportScope === 'filtered'
+                          ? 'border-[#003366] bg-blue-50/60 ring-2 ring-[#003366]/20'
+                          : 'border-gray-200 bg-white hover:border-gray-300'
+                      }`}
+                    >
+                      <div className="flex items-center justify-between mb-1.5">
+                        <span className="font-bold text-gray-900 flex items-center gap-1.5">
+                          <Filter className="w-3.5 h-3.5 text-[#003366]" />
+                          {lang === 'TH' ? 'ตามตัวกรองปัจจุบัน' : 'Current Filtered'}
+                        </span>
+                        {exportScope === 'filtered' && (
+                          <CheckCircle2 className="w-4 h-4 text-[#003366]" />
+                        )}
+                      </div>
+                      <div className="text-2xl font-extrabold text-[#003366]">
+                        {filteredSubmissions.length} <span className="text-xs font-normal text-gray-500">{lang === 'TH' ? 'คน' : 'records'}</span>
+                      </div>
+                      <div className="text-[10px] text-gray-500 mt-1">
+                        {selectedFaculty || selectedDegree || selectedProgram || selectedCaregiver || searchQuery
+                          ? (lang === 'TH' ? 'ตัวกรองที่เลือกไว้กำลังทำงาน' : 'Applying active filters')
+                          : (lang === 'TH' ? 'รวมนักศึกษาทั้งหมดในขณะนี้' : 'Matches all records currently')}
+                      </div>
+                    </button>
+
+                    {/* All Scope Card */}
+                    <button
+                      type="button"
+                      onClick={() => setExportScope('all')}
+                      className={`p-3.5 rounded-2xl border text-left transition-all flex flex-col justify-between cursor-pointer ${
+                        exportScope === 'all'
+                          ? 'border-[#003366] bg-blue-50/60 ring-2 ring-[#003366]/20'
+                          : 'border-gray-200 bg-white hover:border-gray-300'
+                      }`}
+                    >
+                      <div className="flex items-center justify-between mb-1.5">
+                        <span className="font-bold text-gray-900 flex items-center gap-1.5">
+                          <BookOpen className="w-3.5 h-3.5 text-[#003366]" />
+                          {lang === 'TH' ? 'ข้อมูลทั้งหมดในระบบ' : 'All System Records'}
+                        </span>
+                        {exportScope === 'all' && (
+                          <CheckCircle2 className="w-4 h-4 text-[#003366]" />
+                        )}
+                      </div>
+                      <div className="text-2xl font-extrabold text-gray-800">
+                        {submissions.length} <span className="text-xs font-normal text-gray-500">{lang === 'TH' ? 'คน' : 'records'}</span>
+                      </div>
+                      <div className="text-[10px] text-gray-500 mt-1">
+                        {lang === 'TH' ? 'ข้ามตัวกรองทั้งหมด นำส่งทุกเรคคอร์ด' : 'Bypass filters, export entire database'}
+                      </div>
+                    </button>
+                  </div>
+                </div>
+
+                {/* 2. Format Selection */}
+                <div>
+                  <label className="block text-[11px] font-bold text-gray-500 uppercase tracking-wider mb-2">
+                    {lang === 'TH' ? '2. เลือกรูปแบบไฟล์และการจัดโครงสร้าง (Export Structure)' : '2. Select Export Structure'}
+                  </label>
+                  <div className="space-y-2.5">
+                    {/* Format A: Standard */}
+                    <button
+                      type="button"
+                      onClick={() => setExportFormat('standard')}
+                      className={`w-full p-3.5 rounded-2xl border text-left transition-all cursor-pointer ${
+                        exportFormat === 'standard'
+                          ? 'border-[#003366] bg-blue-50/60 ring-2 ring-[#003366]/20'
+                          : 'border-gray-200 bg-white hover:border-gray-300'
+                      }`}
+                    >
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <Table className="w-4 h-4 text-[#003366]" />
+                          <span className="font-bold text-gray-900 text-xs">
+                            {lang === 'TH' ? 'รูปแบบมาตรฐานสมบูรณ์ (Standard Detailed Format)' : 'Standard Detailed Format'}
+                          </span>
+                        </div>
+                        <span className="text-[10px] font-bold bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full">
+                          {lang === 'TH' ? 'แนะนำสำหรับ Excel' : 'Recommended for Excel'}
+                        </span>
+                      </div>
+                      <p className="text-[11px] text-gray-500 mt-1 pl-6">
+                        {lang === 'TH'
+                          ? '20 คอลัมน์: ข้อมูลประชากรศาสตร์, ผู้ปกครอง, รายได้, รายชื่อความคาดหวังที่เลือกแบบข้อความเต็ม, และข้อคิดเห็นเพิ่มเติม อ่านเข้าใจง่ายทันที'
+                          : '20 columns: Full demographics, plain-text selected expectations, caregiver info, and written student remarks.'}
+                      </p>
+                    </button>
+
+                    {/* Format B: Statistical Matrix (SPSS) */}
+                    <button
+                      type="button"
+                      onClick={() => setExportFormat('matrix')}
+                      className={`w-full p-3.5 rounded-2xl border text-left transition-all cursor-pointer ${
+                        exportFormat === 'matrix'
+                          ? 'border-[#003366] bg-blue-50/60 ring-2 ring-[#003366]/20'
+                          : 'border-gray-200 bg-white hover:border-gray-300'
+                      }`}
+                    >
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <BarChart3 className="w-4 h-4 text-[#003366]" />
+                          <span className="font-bold text-gray-900 text-xs">
+                            {lang === 'TH' ? 'รูปแบบตารางเมทริกซ์สถิติ (Statistical Matrix / SPSS / Binary 0-1)' : 'Statistical Matrix / SPSS Ready (0/1)'}
+                          </span>
+                        </div>
+                        <span className="text-[10px] font-bold bg-indigo-100 text-indigo-800 px-2 py-0.5 rounded-full">
+                          {lang === 'TH' ? 'สำหรับ SPSS / R / Python' : 'For SPSS / R / Data Science'}
+                        </span>
+                      </div>
+                      <p className="text-[11px] text-gray-500 mt-1 pl-6">
+                        {lang === 'TH'
+                          ? '38 คอลัมน์: ข้อมูลประชากรศาสตร์ พร้อมแยกข้อความความคาดหวังทั้ง 22 ข้อเป็นคอลัมน์ตัวเลขไบนารี (1=เลือก, 0=ไม่เลือก) เหมาะอย่างยิ่งสำหรับรันสถิติ Frequencies, Crosstab, Correlation'
+                          : '38 columns: Demographics + 22 discrete binary columns (1 if checked, 0 if not). Ready for direct import into SPSS, R, Python, or Excel Pivot.'}
+                      </p>
+                    </button>
+                  </div>
+                </div>
+
+                {/* 3. Export Summary & File Details */}
+                <div className="bg-slate-50 border border-slate-200 rounded-2xl p-3.5 space-y-2">
+                  <div className="flex items-center justify-between text-[11px]">
+                    <span className="text-gray-500">{lang === 'TH' ? 'จำนวนเรคคอร์ดที่จะส่งออก:' : 'Records to export:'}</span>
+                    <strong className="text-gray-900 font-mono">
+                      {exportScope === 'filtered' ? filteredSubmissions.length : submissions.length} {lang === 'TH' ? 'รายการ' : 'rows'}
+                    </strong>
+                  </div>
+                  <div className="flex items-center justify-between text-[11px]">
+                    <span className="text-gray-500">{lang === 'TH' ? 'การเข้ารหัสฟอนต์ภาษาไทย:' : 'Text Encoding:'}</span>
+                    <strong className="text-emerald-700 font-mono">
+                      UTF-8 with BOM (\uFEFF)
+                    </strong>
+                  </div>
+                  <div className="flex items-center justify-between text-[11px]">
+                    <span className="text-gray-500">{lang === 'TH' ? 'จำนวนคอลัมน์ในไฟล์:' : 'Estimated Columns:'}</span>
+                    <strong className="text-gray-900 font-mono">
+                      {exportFormat === 'standard' ? '20 Columns' : '38 Columns (22 Binary Items)'}
+                    </strong>
+                  </div>
+                  <div className="flex items-center justify-between text-[11px] pt-1 border-t border-slate-200/80">
+                    <span className="text-gray-500">{lang === 'TH' ? 'ความเข้ากันได้:' : 'Compatibility:'}</span>
+                    <span className="text-[10px] text-gray-600 font-medium">
+                      MS Excel, Google Sheets, SPSS, PSPP, R, Python Pandas, Power BI
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Modal Footer */}
+              <div className="bg-[#F5F7FA] p-4 flex items-center justify-between border-t border-gray-200">
+                <button
+                  type="button"
+                  onClick={() => setShowExportModal(false)}
+                  className="px-4 py-2 text-xs font-semibold text-gray-600 hover:text-gray-800 hover:bg-gray-200/60 rounded-xl transition-all cursor-pointer"
+                >
+                  {lang === 'TH' ? 'ยกเลิก' : 'Cancel'}
+                </button>
+
+                <button
+                  type="button"
+                  id="confirm-export-csv-btn"
+                  disabled={isExporting || (exportScope === 'filtered' ? filteredSubmissions.length === 0 : submissions.length === 0)}
+                  onClick={() => handleExecuteExportCSV(exportScope, exportFormat)}
+                  className="bg-[#003366] hover:bg-[#002244] disabled:bg-gray-300 text-white font-bold text-xs px-5 py-2.5 rounded-xl shadow-md transition-all flex items-center gap-2 active:scale-[0.98] cursor-pointer"
+                >
+                  {isExporting ? (
+                    <>
+                      <div className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                      <span>{lang === 'TH' ? 'กำลังประมวลผลไฟล์...' : 'Generating CSV...'}</span>
+                    </>
+                  ) : (
+                    <>
+                      <Download className="w-4 h-4" />
+                      <span>
+                        {lang === 'TH'
+                          ? `ดาวน์โหลดไฟล์ CSV (${exportScope === 'filtered' ? filteredSubmissions.length : submissions.length} รายการ)`
+                          : `Download CSV (${exportScope === 'filtered' ? filteredSubmissions.length : submissions.length} records)`}
+                      </span>
+                    </>
+                  )}
+                </button>
+              </div>
+            </motion.div>
+          </div>
+        )}
+
+        {/* EXPORT TOAST NOTIFICATION */}
+        {exportToast && (
+          <motion.div
+            key="export-toast"
+            initial={{ opacity: 0, y: -20, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -20, scale: 0.95 }}
+            className="fixed top-5 right-5 z-50 bg-[#003366] text-white px-4 py-3 rounded-2xl shadow-2xl flex items-center gap-3 border border-emerald-400/40 text-xs font-semibold max-w-md"
+          >
+            <div className="w-7 h-7 rounded-full bg-emerald-500 flex items-center justify-center text-white shrink-0">
+              <Check className="w-4 h-4 stroke-[3]" />
+            </div>
+            <div className="flex-1">
+              <div className="text-white text-xs">{exportToast.message}</div>
+              <div className="text-[10px] text-emerald-300 font-normal">
+                {lang === 'TH' ? 'พร้อมเปิดใช้งานใน Excel / SPSS ทันที' : 'Ready for offline analysis in Excel / SPSS'}
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={() => setExportToast(null)}
+              className="text-white/60 hover:text-white text-xs p-1 cursor-pointer"
+            >
+              <X className="w-3.5 h-3.5" />
+            </button>
+          </motion.div>
         )}
       </AnimatePresence>
     </div>
