@@ -150,98 +150,106 @@ export const SURVEY_OPTIONS: SurveyOption[] = [
 export const BU_FACULTIES_BY_DEGREE: Record<'Bachelor' | 'Master' | 'Doctoral', FacultyData[]> = {
   Bachelor: [
     {
-      name: 'คณะการสร้างเจ้าของธุรกิจและการบริหารกิจการ',
-      nameEn: 'School of Entrepreneurship and Management',
-      majors: [
-        'สาขาวิชาการเป็นเจ้าของธุรกิจ',
-        'สาขาวิชาการเป็นเจ้าของธุรกิจ (หลักสูตรนานาชาติ)'
-      ],
-      majorsEn: [
-        'Entrepreneurship',
-        'Entrepreneurship (International Program)'
-      ]
-    },
-    {
-      name: 'คณะดิจิทัลมีเดียและศิลปะภาพยนตร์',
-      nameEn: 'School of Digital Media and Cinematic Arts',
-      majors: [
-        'สาขาวิชาภาพยนตร์',
-        'สาขาวิชาดิจิทัลมีเดีย',
-        'สาขาวิชาการผลิตและธุรกิจภาพยนตร์ ซีรีส์ และเนื้อหาสากล (หลักสูตรนานาชาติ)',
-        'สาขาวิชาการผลิตเสมือนและการออกแบบประสบการณ์โลกเสมือนจริง'
-      ],
-      majorsEn: [
-        'Film',
-        'Digital Media',
-        'Film, Series and Global Content Production and Business (International Program)',
-        'Virtual Production and Immersive Experience Design'
-      ]
-    },
-    {
       name: 'คณะเทคโนโลยีสารสนเทศและนวัตกรรม',
       nameEn: 'School of Information Technology and Innovation',
       majors: [
-        'สาขาวิชาวิทยาการคอมพิวเตอร์',
+        'สาขาวิชาเกมและสื่อเชิงโต้ตอบ',
         'สาขาวิชาเทคโนโลยีสารสนเทศ',
-        'สาขาวิชาเกมและสื่อเชิงโต้ตอบ'
+        'สาขาวิชาวิทยาการคอมพิวเตอร์'
       ],
       majorsEn: [
-        'Computer Science',
+        'Games and Interactive Media',
         'Information Technology',
-        'Games and Interactive Media'
+        'Computer Science'
       ]
     },
     {
-      name: 'คณะนิติศาสตร์',
-      nameEn: 'School of Law',
-      majors: ['สาขาวิชานิติศาสตร์'],
-      majorsEn: ['Law Program']
-    },
-    {
-      name: 'คณะนิเทศศาสตร์',
-      nameEn: 'School of Communication Arts',
+      name: 'คณะวิศวกรรมศาสตร์',
+      nameEn: 'School of Engineering',
       majors: [
-        'สาขาวิชาการสื่อสารและสื่อใหม่',
-        'สาขาวิชาวิทยุกระจายเสียง วิทยุโทรทัศน์ และ การผลิตสื่อสตรีมมิ่ง',
-        'สาขาวิชาการผลิตเนื้อหาสร้างสรรค์และประสบการณ์ดิจิทัล',
-        'สาขาวิชาศิลปะการแสดง',
-        'สาขาวิชาการผลิตอีเว้นท์ และการจัดการนิทรรศการและการประชุม',
-        'สาขาวิชาการสร้างสรรค์และการสร้างแบรนด์อินฟลูเอนเซอร์ระดับสากล'
+        'สาขาวิชาวิศวกรรมคอมพิวเตอร์และหุ่นยนต์',
+        'สาขาวิชาวิศวกรรมปัญญาประดิษฐ์และวิทยาการข้อมูล',
+        'สาขาวิชาวิศวกรรมไฟฟ้า',
+        'สาขาวิชาวิศวกรรมมัลติมีเดียและเอ็นเตอร์เทนเมนต์'
       ],
       majorsEn: [
-        'Communication and New Media',
-        'Broadcasting and Streaming Media Production',
-        'Creative Content Production and Digital Experience',
-        'Performing Arts',
-        'Event Production and MICE Management',
-        'Global Creator and Influencer Branding'
+        'Computer and Robotics Engineering',
+        'Artificial Intelligence Engineering and Data Science',
+        'Electrical Engineering',
+        'Multimedia and Entertainment Engineering'
+      ]
+    },
+    {
+      name: 'คณะบัญชี',
+      nameEn: 'School of Accounting',
+      majors: [
+        'สาขาวิชาบัญชีบัณฑิต'
+      ],
+      majorsEn: [
+        'Bachelor of Accountancy'
       ]
     },
     {
       name: 'คณะบริหารธุรกิจ',
       nameEn: 'School of Business Administration',
       majors: [
-        'สาขาวิชาการตลาด',
-        'สาขาวิชาการเงิน',
         'สาขาวิชาการจัดการ',
+        'สาขาวิชาการเงิน',
+        'สาขาวิชาการตลาด',
+        'สาขาวิชาการตลาดดิจิทัล',
         'สาขาวิชาการจัดการธุรกิจระหว่างประเทศ',
-        'สาขาวิชาการจัดการโลจิสติกส์และโซ่อุปทาน',
-        'สาขาวิชาการตลาดดิจิทัล'
+        'สาขาวิชาการจัดการโลจิสติกส์และโซ่อุปทาน'
       ],
       majorsEn: [
-        'Marketing',
-        'Finance',
         'Management',
+        'Finance',
+        'Marketing',
+        'Digital Marketing',
         'International Business Management',
-        'Logistics and Supply Chain Management',
-        'Digital Marketing'
+        'Logistics and Supply Chain Management'
       ]
     },
     {
-      name: 'คณะบัญชี',
-      nameEn: 'School of Accounting',
-      majors: ['สาขาวิชาบัญชี'],
-      majorsEn: ['Accounting Program']
+      name: 'คณะเศรษฐศาสตร์และการลงทุน',
+      nameEn: 'School of Economics and Investment',
+      majors: [
+        'สาขาวิชาเศรษฐศาสตร์',
+        'สาขาวิชาการวางแผนการเงินและการลงทุน'
+      ],
+      majorsEn: [
+        'Economics Program',
+        'Financial and Investment Planning'
+      ]
+    },
+    {
+      name: 'คณะนิติศาสตร์',
+      nameEn: 'School of Law',
+      majors: [
+        'สาขาวิชานิติศาสตร์'
+      ],
+      majorsEn: [
+        'Law Program'
+      ]
+    },
+    {
+      name: 'คณะนิเทศศาสตร์',
+      nameEn: 'School of Communication Arts',
+      majors: [
+        'สาขาวิชาสื่อสารและสื่อใหม่',
+        'สาขาวิชาการผลิตเนื้อหาสร้างสรรค์และประสบการณ์ดิจิทัล',
+        'สาขาวิชาวิทยุกระจายเสียง วิทยุโทรทัศน์ และการผลิตสื่อสตรีมมิ่ง',
+        'สาขาวิชาการสร้างสรรค์และการสร้างแบรนด์อินฟลูเอนเซอร์ระดับสากล',
+        'สาขาวิชาศิลปะการแสดง',
+        'สาขาวิชาการผลิตอีเว้นท์ และการจัดการนิทรรศการและการประชุม'
+      ],
+      majorsEn: [
+        'Communication and New Media',
+        'Creative Content Production and Digital Experience',
+        'Broadcasting, Television and Streaming Media Production',
+        'Global Creator and Influencer Branding',
+        'Performing Arts',
+        'Event Production and MICE Management'
+      ]
     },
     {
       name: 'คณะมนุษยศาสตร์และการจัดการการท่องเที่ยว',
@@ -251,7 +259,7 @@ export const BU_FACULTIES_BY_DEGREE: Record<'Bachelor' | 'Master' | 'Doctoral', 
         'สาขาวิชาการจัดการการท่องเที่ยวและเรือสำราญ',
         'สาขาวิชาการจัดการโรงแรม',
         'สาขาวิชาการจัดการธุรกิจสายการบิน',
-        'สาขาวิชาศิลปะการประกอบอาหารและการจัดการบริการธุรกิจร้านอาหาร'
+        'สาขาวิชาศิลปะการประกอบอาหารและการจัดการการบริการธุรกิจร้านอาหาร'
       ],
       majorsEn: [
         'English',
@@ -259,22 +267,6 @@ export const BU_FACULTIES_BY_DEGREE: Record<'Bachelor' | 'Master' | 'Doctoral', 
         'Hotel Management',
         'Airline Business Management',
         'Culinary Arts and Restaurant Service Management'
-      ]
-    },
-    {
-      name: 'คณะวิศวกรรมศาสตร์',
-      nameEn: 'School of Engineering',
-      majors: [
-        'สาขาวิชาวิศวกรรมไฟฟ้า',
-        'สาขาวิชาวิศวกรรมคอมพิวเตอร์และหุ่นยนต์',
-        'สาขาวิชาวิศวกรรมมัลติมีเดียและเอ็นเตอร์เทนเมนต์',
-        'สาขาวิชาวิศวกรรมปัญญาประดิษฐ์และวิทยาการข้อมูล'
-      ],
-      majorsEn: [
-        'Electrical Engineering',
-        'Computer and Robotics Engineering',
-        'Multimedia and Entertainment Engineering',
-        'Artificial Intelligence Engineering and Data Science'
       ]
     },
     {
@@ -292,22 +284,10 @@ export const BU_FACULTIES_BY_DEGREE: Record<'Bachelor' | 'Master' | 'Doctoral', 
       ]
     },
     {
-      name: 'คณะเศรษฐศาสตร์และการลงทุน',
-      nameEn: 'School of Economics and Investment',
-      majors: [
-        'สาขาวิชาเศรษฐศาสตร์',
-        'สาขาวิชาการวางแผนการเงินและการลงทุน'
-      ],
-      majorsEn: [
-        'Economics Program',
-        'Financial and Investment Planning'
-      ]
-    },
-    {
       name: 'คณะสถาปัตยกรรมศาสตร์',
       nameEn: 'School of Architecture',
       majors: [
-        'สาขาวิชาสถาปัตยกรรม (หลักสูตร 5 ปี)',
+        'สาขาวิชาสถาปัตยกรรม',
         'สาขาวิชาสถาปัตยกรรมภายใน'
       ],
       majorsEn: [
@@ -316,12 +296,52 @@ export const BU_FACULTIES_BY_DEGREE: Record<'Bachelor' | 'Master' | 'Doctoral', 
       ]
     },
     {
+      name: 'คณะการสร้างเจ้าของธุรกิจและการบริหารกิจการ',
+      nameEn: 'School of Entrepreneurship and Management',
+      majors: [
+        'สาขาวิชาการเป็นเจ้าของธุรกิจ',
+        'สาขาวิชาการเป็นเจ้าของธุรกิจ (หลักสูตรนานาชาติ)'
+      ],
+      majorsEn: [
+        'Entrepreneurship',
+        'Entrepreneurship (International Program)'
+      ]
+    },
+    {
+      name: 'คณะดิจิทัลมีเดียและศิลปะภาพยนตร์',
+      nameEn: 'School of Digital Media and Cinematic Arts',
+      majors: [
+        'สาขาวิชาภาพยนตร์',
+        'สาขาวิชาสื่อดิจิทัล',
+        'สาขาวิชาการผลิตและธุรกิจภาพยนตร์ ซีรีส์ และเนื้อหาสากล (หลักสูตรนานาชาติ)',
+        'สาขาวิชาการผลิตเสมือนและการออกแบบประสบการณ์โลกเสมือนจริง'
+      ],
+      majorsEn: [
+        'Film',
+        'Digital Media',
+        'Film, Series and Global Content Production and Business (International Program)',
+        'Virtual Production and Immersive Experience Design'
+      ]
+    },
+    {
+      name: 'วิทยาลัยนานาชาติจีน',
+      nameEn: 'Bangkok University Chinese International',
+      majors: [
+        'สาขาวิชาภาษาจีนธุรกิจ',
+        'สาขาวิชาบริหารธุรกิจ (หลักสูตรสองภาษา)'
+      ],
+      majorsEn: [
+        'Business Chinese',
+        'Business Administration Program (Bilingual Program)'
+      ]
+    },
+    {
       name: 'วิทยาลัยนานาชาติ',
       nameEn: 'Bangkok University International',
       majors: [
-        'สาขาวิชาการตลาด (หลักสูตรนานาชาติ)',
         'สาขาวิชาบริหารธุรกิจ (หลักสูตรนานาชาติ)',
-        'สาขาวิชาการผลิตสื่อนวัตกรรม (หลักสูตรนานาชาติ)',
+        'สาขาวิชาการตลาด (หลักสูตรนานาชาติ)',
+        'สาขาวิชาการผลิตสื่อและนวัตกรรม (หลักสูตรนานาชาติ)',
         'สาขาวิชาสื่อและการสื่อสาร (หลักสูตรนานาชาติ)',
         'สาขาวิชาภาษาอังกฤษธุรกิจ (หลักสูตรนานาชาติ)',
         'สาขาวิชาการจัดการท่องเที่ยวและการบริการนานาชาติ (หลักสูตรนานาชาติ)',
@@ -330,8 +350,8 @@ export const BU_FACULTIES_BY_DEGREE: Record<'Bachelor' | 'Master' | 'Doctoral', 
         'สาขาวิชาวิทยาการคอมพิวเตอร์ (หลักสูตรนานาชาติ)'
       ],
       majorsEn: [
-        'Marketing (International Program)',
         'Business Administration (International Program)',
+        'Marketing (International Program)',
         'Innovative Media Production (International Program)',
         'Media and Communication (International Program)',
         'Business English (International Program)',
@@ -340,73 +360,85 @@ export const BU_FACULTIES_BY_DEGREE: Record<'Bachelor' | 'Master' | 'Doctoral', 
         'Creative Communication Design (International Program)',
         'Computer Science (International Program)'
       ]
-    },
-    {
-      name: 'วิทยาลัยนานาชาติจีน',
-      nameEn: 'Bangkok University Chinese International',
-      majors: [
-        'สาขาวิชาภาษาจีนธุรกิจ',
-        'สาขาวิชาบริหารธุรกิจสองภาษา (หลักสูตรสองภาษา)'
-      ],
-      majorsEn: [
-        'Business Chinese',
-        'Business Administration Program (Bilingual Program)'
-      ]
     }
   ],
   Master: [
     {
-      name: 'บัณฑิตวิทยาลัย',
-      nameEn: 'Graduate School',
+      name: 'คณะการสร้างเจ้าของธุรกิจและการบริหารกิจการ',
+      nameEn: 'School of Entrepreneurship and Management',
       majors: [
-        'สาขาวิชาความเป็นผู้ประกอบการและธุรกิจเกิดใหม่',
-        'สาขาวิชาเทคโนโลยีสารสนเทศและวิทยาการข้อมูล',
-        'สาขาวิชานิติศาสตร์',
-        'สาขาวิชาการบริหารแบรนด์และการสื่อสารเชิงกลยุทธ์',
-        'สาขาวิชาการสื่อสารสากล (หลักสูตรนานาชาติ)',
-        'สาขาวิชาการตลาดเชิงข้อมูลและการสื่อสาร',
-        'สาขาวิชาบริหารธุรกิจ (หลักสูตรภาษาไทย)',
-        'สาขาวิชาบริหารธุรกิจ (หลักสูตรภาษาอังกฤษ)',
-        'สาขาวิชาการจัดการศึกษาผ่านระบบเทคโนโลยีสารสนเทศ',
-        'สาขาวิชานวัตกรรมการจัดการท่องเที่ยวและการบริการ',
-        'สาขาวิชาวิศวกรรมไฟฟ้าและคอมพิวเตอร์ (หลักสูตรนานาชาติ)',
-        'สาขาวิชาสถาปัตยกรรม',
+        'สาขาวิชาความเป็นผู้ประกอบการและธุรกิจเกิดใหม่'
+      ],
+      majorsEn: [
+        'Entrepreneurship and New Ventures'
+      ]
+    },
+    {
+      name: 'วิทยาลัยนานาชาติ',
+      nameEn: 'Bangkok University International',
+      majors: [
         'สาขาวิชาการจัดการความรู้และนวัตกรรม (หลักสูตรนานาชาติ)',
         'สาขาวิชาการจัดการนวัตกรรม (หลักสูตรนานาชาติ)'
       ],
       majorsEn: [
-        'Entrepreneurship and Emerging Enterprises',
-        'Information Technology and Data Science',
-        'Laws Program',
-        'Strategic Brand and Communication Management',
-        'Global Communication (International Program)',
-        'Data-Driven Marketing and Communications',
-        'Business Administration',
-        'Business Administration (English Program)',
-        'Educational Management through Information Technology',
-        'Tourism and Hospitality Management Innovation (International Program)',
-        'Electrical & Computer Engineering (International Program)',
-        'Architecture Program',
         'Knowledge Management and Innovation Management (International Program)',
         'Innovation Management (International Program)'
+      ]
+    },
+    {
+      name: 'บัณฑิตวิทยาลัย',
+      nameEn: 'Graduate School',
+      majors: [
+        'สาขาวิชาเทคโนโลยีสารสนเทศและวิทยาการข้อมูล',
+        'สาขาวิชาวิศวกรรมไฟฟ้าและคอมพิวเตอร์ (หลักสูตรนานาชาติ)',
+        'สาขาวิชาบริหารธุรกิจมหาบัณฑิต (หลักสูตรภาษาไทย)',
+        'สาขาวิชาบริหารธุรกิจมหาบัณฑิต (หลักสูตรภาษาอังกฤษ)',
+        'สาขาวิชานิติศาสตรมหาบัณฑิต',
+        'สาขาวิชาการสื่อสารสากล (หลักสูตรนานาชาติ)',
+        'สาขาวิชาการบริหารแบรนด์และการสื่อสารเชิงกลยุทธ์',
+        'สาขาวิชาการตลาดเชิงข้อมูลและการสื่อสาร',
+        'สาขาวิชานวัตกรรมการจัดการการท่องเที่ยวและการบริการ (หลักสูตรนานาชาติ)',
+        'สาขาวิชาสถาปัตยกรรมศาสตรมหาบัณฑิต'
+      ],
+      majorsEn: [
+        'Information Technology and Data Science',
+        'Electrical and Computer Engineering (International Program)',
+        'Master of Business Administration (Thai Program)',
+        'Master of Business Administration (English Program)',
+        'Master of Laws',
+        'Global Communication (International Program)',
+        'Brand Management and Strategic Communication',
+        'Data-Driven Marketing and Communication',
+        'Innovative Tourism and Hospitality Management (International Program)',
+        'Master of Architecture'
       ]
     }
   ],
   Doctoral: [
     {
-      name: 'บัณฑิตวิทยาลัย',
-      nameEn: 'Graduate School',
+      name: 'วิทยาลัยนานาชาติ',
+      nameEn: 'Bangkok University International',
       majors: [
-        'สาขาวิชาการสื่อสารสากล (หลักสูตรนานาชาติ)',
-        'สาขาวิชาการบริหารแบรนด์และการสื่อสารเชิงกลยุทธ์',
-        'สาขาวิชาวิศวกรรมไฟฟ้าและคอมพิวเตอร์ (หลักสูตรนานาชาติ)',
         'สาขาวิชาการจัดการความรู้และนวัตกรรม (หลักสูตรนานาชาติ)'
       ],
       majorsEn: [
-        'Global Communication (International Program)',
-        'Strategic Brand and Communication Management',
-        'Electrical and Computer Engineering (International Program)',
         'Knowledge Management and Innovation Management (International Program)'
+      ]
+    },
+    {
+      name: 'บัณฑิตวิทยาลัย',
+      nameEn: 'Graduate School',
+      majors: [
+        'สาขาวิชาวิศวกรรมไฟฟ้าและคอมพิวเตอร์ (หลักสูตรนานาชาติ)',
+        'สาขาวิชาการสื่อสารสากล (หลักสูตรนานาชาติ)',
+        'สาขาวิชาบริหารธุรกิจดุษฎีบัณฑิต',
+        'สาขาวิชาการบริหารแบรนด์และการสื่อสารเชิงกลยุทธ์'
+      ],
+      majorsEn: [
+        'Electrical and Computer Engineering (International Program)',
+        'Global Communication (International Program)',
+        'Doctor of Business Administration',
+        'Brand Management and Strategic Communication'
       ]
     }
   ]

@@ -158,14 +158,7 @@ const normalizeSubmission = (sub: SurveyResponse): SurveyResponse => {
     program = isInter ? 'International' : 'Thai';
   }
 
-  let faculty = sub.faculty;
-  // Specific transfer: Financial and Investment Planning belongs strictly to School of Economics and Investment
-  if (
-    sub.major === 'สาขาวิชาการวางแผนการเงินและการลงทุน' &&
-    (faculty === 'คณะบริหารธุรกิจ' || !faculty)
-  ) {
-    faculty = 'คณะเศรษฐศาสตร์และการลงทุน';
-  }
+  const faculty = sub.faculty;
 
   return {
     ...sub,

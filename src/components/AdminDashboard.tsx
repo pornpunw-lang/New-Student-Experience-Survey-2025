@@ -43,6 +43,8 @@ import {
 } from 'lucide-react';
 import { SurveyResponse, StatisticsItem } from '../types';
 import { SURVEY_OPTIONS, BU_FACULTIES, BU_FACULTIES_BY_DEGREE, CAREGIVER_OPTIONS, CAREGIVER_INCOME_OPTIONS } from '../data/mockData';
+import CurriculumReportModal from './CurriculumReportModal';
+import { generateCurriculumReportCSV, generateCurriculumTabularCSV } from '../data/curriculumReportData';
 
 interface FacultyContact {
   dean: string;
@@ -64,7 +66,7 @@ const FACULTY_CONTACTS: Record<string, FacultyContact> = {
       { name: 'ผศ.กานดาวรรณ แก้วผาบ', email: 'kandawan.k@bu.ac.th' },
       { name: 'ผศ.ภัสพร ตังใจกตัญญู', email: 'manee.t@bu.ac.th' }
     ],
-    baseTarget: 309,
+    baseTarget: 245,
     email: 'karuntarat.b@bu.ac.th'
   },
   'คณะบริหารธุรกิจ': {
@@ -77,7 +79,7 @@ const FACULTY_CONTACTS: Record<string, FacultyContact> = {
       { name: 'ดร.นิตนา ฐานิตธนกร', email: 'nittana.s@bu.ac.th' },
       { name: 'ผศ.ดร.นิสิต มโนตั้งวรพันธุ์', email: 'nisit.m@bu.ac.th' }
     ],
-    baseTarget: 1864,
+    baseTarget: 1551,
     email: 'krairoek.p@bu.ac.th'
   },
   'วิทยาลัยนานาชาติ': {
@@ -88,7 +90,7 @@ const FACULTY_CONTACTS: Record<string, FacultyContact> = {
     viceDeans: [
       { name: 'ดร.ณัฏฐวรรณ ปัญญวิโรจน์', email: 'natthawan.p@bu.ac.th' }
     ],
-    baseTarget: 814,
+    baseTarget: 695,
     email: 'kulisara.p@bu.ac.th'
   },
   'คณะนิเทศศาสตร์': {
@@ -101,7 +103,7 @@ const FACULTY_CONTACTS: Record<string, FacultyContact> = {
       { name: 'ผศ.ณัฐา ฉางชูโต', email: 'natta.s@bu.ac.th' },
       { name: 'ผศ.อาชวิชญ์ กฤษณสุวรรณ', email: 'aachavit.k@bu.ac.th' }
     ],
-    baseTarget: 2228,
+    baseTarget: 2128,
     email: 'arichai.a@bu.ac.th'
   },
   'คณะนิติศาสตร์': {
@@ -113,7 +115,7 @@ const FACULTY_CONTACTS: Record<string, FacultyContact> = {
       { name: 'ปกรณ์ ปาลวงษ์พานิช', email: 'pakorn.p@bu.ac.th' },
       { name: 'ปริญญาภรณ์ เต็งประเสริฐ', email: 'pariyaporn.t@bu.ac.th' }
     ],
-    baseTarget: 284,
+    baseTarget: 257,
     email: 'parada.k@bu.ac.th'
   },
   'คณะมนุษยศาสตร์และการจัดการการท่องเที่ยว': {
@@ -126,7 +128,7 @@ const FACULTY_CONTACTS: Record<string, FacultyContact> = {
       { name: 'ดร.นนทวรรณ ส่งเสริม', email: 'nonthawan.s@bu.ac.th' },
       { name: 'ณัฐพร ชื่นสุวรรณ์', email: 'nattaporn.c@bu.ac.th' }
     ],
-    baseTarget: 899,
+    baseTarget: 754,
     email: 'jermsuda.m@bu.ac.th'
   },
   'วิทยาลัยนานาชาติจีน': {
@@ -137,7 +139,7 @@ const FACULTY_CONTACTS: Record<string, FacultyContact> = {
     viceDeans: [
       { name: 'เจียง โหมว', email: 'jiang.m@bu.ac.th' }
     ],
-    baseTarget: 124,
+    baseTarget: 147,
     email: 'jiasing.c@bu.ac.th'
   },
   'คณะเศรษฐศาสตร์และการลงทุน': {
@@ -148,7 +150,7 @@ const FACULTY_CONTACTS: Record<string, FacultyContact> = {
     viceDeans: [
       { name: 'ดร.สุสณี ศุภกรโกศัย', email: 'sumanee.s@bu.ac.th' }
     ],
-    baseTarget: 259,
+    baseTarget: 164,
     email: 'karnjana.s@bu.ac.th'
   },
   'คณะศิลปกรรมศาสตร์': {
@@ -160,7 +162,7 @@ const FACULTY_CONTACTS: Record<string, FacultyContact> = {
       { name: 'ผศ.ดร.ณัฐสุภา เจริญยงวัฒนา', email: 'natsupa.j@bu.ac.th' },
       { name: 'ผศ.แทน พิธียานุวัฒน์', email: 'tan.p@bu.ac.th' }
     ],
-    baseTarget: 256,
+    baseTarget: 240,
     email: 'pattarawut.s@bu.ac.th'
   },
   'คณะสถาปัตยกรรมศาสตร์': {
@@ -172,7 +174,7 @@ const FACULTY_CONTACTS: Record<string, FacultyContact> = {
       { name: 'พรหมพร ศรีวิลาส', email: 'promporn.s@bu.ac.th' },
       { name: 'ผศ.ดร.ภาสิต ลีนิวา', email: 'pasit.l@bu.ac.th' }
     ],
-    baseTarget: 129,
+    baseTarget: 102,
     email: 'pichai.w@bu.ac.th'
   },
   'คณะการสร้างเจ้าของธุรกิจและการบริหารกิจการ': {
@@ -184,7 +186,7 @@ const FACULTY_CONTACTS: Record<string, FacultyContact> = {
       { name: 'ดร.กัญจนา พัฒนวรพันธุ์', email: 'kanjana.pa@bu.ac.th' },
       { name: 'ผศ.นนิดา สร้อยดอกสน', email: 'nanida.u@bu.ac.th' }
     ],
-    baseTarget: 359,
+    baseTarget: 423,
     email: 'wutnipong.s@bu.ac.th'
   },
   'คณะดิจิทัลมีเดียและศิลปะภาพยนตร์': {
@@ -197,7 +199,7 @@ const FACULTY_CONTACTS: Record<string, FacultyContact> = {
       { name: 'พีร์ภานุวัฒน์ วนิชย์', email: 'pea.p@bu.ac.th' },
       { name: 'นิธิศ ศวิดลธรากุล', email: 'nitis.s@bu.ac.th' }
     ],
-    baseTarget: 780,
+    baseTarget: 716,
     email: 'peerachai.k@bu.ac.th'
   },
   'คณะเทคโนโลยีสารสนเทศและนวัตกรรม': {
@@ -210,7 +212,7 @@ const FACULTY_CONTACTS: Record<string, FacultyContact> = {
       { name: 'ขวัญฤทัย กุลกิจเจริญ', email: 'kwanruthai.k@bu.ac.th' },
       { name: 'พจนีย์ จันทรศุภวงศ์', email: 'pojanee.j@bu.ac.th' }
     ],
-    baseTarget: 603,
+    baseTarget: 488,
     email: 'pakapan.l@bu.ac.th'
   },
   'คณะวิศวกรรมศาสตร์': {
@@ -221,7 +223,7 @@ const FACULTY_CONTACTS: Record<string, FacultyContact> = {
     viceDeans: [
       { name: 'ผศ.ดร.ปกรณ์ ยุบลโกศล', email: 'pakorn.u@bu.ac.th' }
     ],
-    baseTarget: 356,
+    baseTarget: 333,
     email: 'wisarn.p@bu.ac.th'
   },
   'บัณฑิตวิทยาลัย': {
@@ -230,7 +232,7 @@ const FACULTY_CONTACTS: Record<string, FacultyContact> = {
     coordinator: 'เจ้าหน้าที่ประสานงานบัณฑิตวิทยาลัย',
     coordinatorEmail: 'graduateschool@bu.ac.th',
     viceDeans: [],
-    baseTarget: 150,
+    baseTarget: 318,
     email: 'graduateschool@bu.ac.th'
   }
 };
@@ -252,106 +254,321 @@ const getFacultyContact = (facultyName: string): FacultyContact => {
   };
 };
 
-const MAJOR_TARGETS: Record<string, number> = {
-  // คณะบัญชี
-  'สาขาวิชาบัญชี': 309,
-
-  // คณะบริหารธุรกิจ
-  'สาขาวิชาการตลาด': 288,
-  'สาขาวิชาการเงิน': 118,
-  'สาขาวิชาการจัดการ': 264,
-  'สาขาวิชาการจัดการธุรกิจระหว่างประเทศ': 460,
-  'สาขาวิชาการจัดการโลจิสติกส์และโซ่อุปทาน': 293,
-  'สาขาวิชาการตลาดดิจิทัล': 441,
-  
-  // บัณฑิตวิทยาลัย / Graduate School (Master/Doctoral)
-  'สาขาวิชาบริหารธุรกิจ (หลักสูตรภาษาไทย)': 79,
-  'สาขาวิชาบริหารธุรกิจ (หลักสูตรภาษาอังกฤษ)': 49,
-  'สาขาวิชาการจัดการศึกษาผ่านระบบเทคโนโลยีสารสนเทศ': 10,
-  'สาขาวิชาการจัดการนวัตกรรม (หลักสูตรนานาชาติ)': 8,
-  'สาขาวิชาการจัดการความรู้และนวัตกรรม (หลักสูตรนานาชาติ)': 4,
-  'สาขาวิชาการตลาดเชิงข้อมูลและการสื่อสาร': 25,
-  'สาขาวิชาความเป็นผู้ประกอบการ': 22,
-  'สาขาวิชาความเป็นผู้ประกอบการและธุรกิจเกิดใหม่': 22,
-  'สาขาวิชาเทคโนโลยีสารสนเทศและวิทยาการข้อมูล': 15,
-  'สาขาวิชานิติศาสตร์': 284,
-  'สาขาวิชาการบริหารแบรนด์และการสื่อสารเชิงกลยุทธ์': 43,
-  'สาขาวิชาการสื่อสารสากล (หลักสูตรนานาชาติ)': 33,
-  'สาขาวิชานวัตกรรมการจัดการท่องเที่ยวและการบริการ': 20,
-  'สาขาวิชาวิศวกรรมไฟฟ้าและคอมพิวเตอร์ (หลักสูตรนานาชาติ)': 10,
-  'สาขาวิชาสถาปัตยกรรม': 70,
-
-  // วิทยาลัยนานาชาติ
-  'สาขาวิชาการตลาด (หลักสูตรนานาชาติ)': 49,
-  'สาขาวิชาบริหารธุรกิจ (หลักสูตรนานาชาติ)': 273,
-  'สาขาวิชาการผลิตสื่อสร้างสรรค์ (หลักสูตรนานาชาติ)': 109,
-  'สาขาวิชาสื่อและการสื่อสาร (หลักสูตรนานาชาติ)': 50,
-  'สาขาวิชาภาษาอังกฤษธุรกิจ (หลักสูตรนานาชาติ)': 41,
-  'สาขาวิชาการท่องเที่ยวและการบริการนานาชาติ (หลักสูตรนานาชาติ)': 148,
-  'สาขาวิชาศิลปะการประกอบอาหารและออกแบบอาหาร (หลักสูตรนานาชาติ)': 76,
-  'สาขาวิชาการออกแบบนิเทศศิลป์เชิงสร้างสรรค์ (หลักสูตรนานาชาติ)': 68,
-  'สาขาวิชาการเป็นเจ้าของธุรกิจ (หลักสูตรนานาชาติ)': 81,
-
-  // คณะนิเทศศาสตร์
-  'สาขาวิชาสื่อสารและการสื่อใหม่': 640,
-  'สาขาวิชาการสื่อสารและสื่อใหม่': 640,
-  'สาขาวิชาวิทยุกระจายเสียง วิทยุโทรทัศน์ และการผลิตสื่อสตรีมมิ่ง': 515,
-  'สาขาวิชาการผลิตเนื้อหาสร้างสรรค์และประสบการณ์ดิจิทัล': 193,
-  'สาขาวิชาศิลปะการแสดง': 253,
-  'สาขาวิชาการผลิตอีเว้นท์ และการจัดการนิทรรศการและการประชุม': 526,
-  'สาขาวิชาการสร้างสรรค์และการสร้างแบรนด์อินฟลูเอนเซอร์ระดับสากล': 60,
-  'สาขาวิชาการสื่อสารการตลาดดิจิทัล': 25,
-  'สาขาวิชาการจัดการสื่อสารสากล (หลักสูตรนานาชาติ)': 0,
-
-  // คณะมนุษยศาสตร์และการจัดการการท่องเที่ยว
-  'สาขาวิชาภาษาอังกฤษ': 299,
-  'สาขาวิชาการจัดการการท่องเที่ยวและเรือสำราญ': 101,
-  'สาขาวิชาการจัดการการโรงแรม': 190,
-  'สาขาวิชาการจัดการธุรกิจสายการบิน': 309,
-  'สาขาวิชาศิลปะและการออกแบบ': 102,
-  'สาขาวิชานวัตกรรมการจัดการการท่องเที่ยวและบริการ': 20,
-
-  // วิทยาลัยนานาชาติจีน
-  'สาขาวิชาภาษาจีนธุรกิจ': 124,
-
-  // คณะเศรษฐศาสตร์และการลงทุน
-  'สาขาวิชาเศรษฐศาสตร์': 142,
-  'สาขาวิชาการวางแผนการเงินและการลงทุน': 117,
-
-  // คณะศิลปกรรมศาสตร์
-  'สาขาวิชาการออกแบบนิเทศศิลป์': 96,
-  'สาขาวิชาการออกแบบแฟชั่น': 58,
-  'สาขาวิชาการออกแบบผลิตภัณฑ์': 45,
-
-  // คณะสถาปัตยกรรมศาสตร์
-  'สาขาวิชาสถาปัตยกรรม (หลักสูตร 5 ปี)': 70,
-  'สาขาวิชาศิลปะออกแบบภายใน': 51,
-  'สาขาวิชาสถาปัตยกรรมภายใน': 8,
-
-  // คณะการสร้างเจ้าของธุรกิจและการบริหารจัดการ
-  'สาขาวิชาการเป็นเจ้าของธุรกิจ': 256,
-
-  // คณะดิจิทัลมีเดียและศิลปะภาพยนตร์
-  'สาขาวิชาภาพยนตร์': 515,
-  'สาขาวิชาดิจิทัลมีเดีย': 182,
-  'สาขาวิชาการผลิตและธุรกิจภาพยนตร์ ซีรีส์ และเนื้อหาสากล (หลักสูตรนานาชาติ)': 83,
-  'สาขาวิชาการผลิตแพลตฟอร์มภาพยนตร์ ซีรีส์ และเนื้อหาสากล (หลักสูตรนานาชาติ)': 83,
-  'สาขาวิชาการผลิตภาพยนตร์และธุรกิจภาพยนตร์ ซีรีส์ และเนื้อหาสากล (หลักสูตรนานาชาติ)': 83,
-
-  // คณะเทคโนโลยีสารสนเทศและนวัตกรรม
-  'สาขาวิชาวิทยาการคอมพิวเตอร์': 305,
-  'สาขาวิชาเทคโนโลยีสารสนเทศ': 82,
-  'สาขาวิชาเกมและสื่อเชิงโต้ตอบ': 215,
-
-  // คณะวิศวกรรมศาสตร์
-  'สาขาวิชาวิศวกรรมไฟฟ้า': 74,
-  'สาขาวิชาวิศวกรรมคอมพิวเตอร์และหุ่นยนต์': 142,
-  'สาขาวิชาวิศวกรรมมัลติมีเดียและเอ็นเตอร์เทนเมนต์': 61,
-  'สาขาวิชาวิศวกรรมปัญญาประดิษฐ์และวิทยาการข้อมูล': 78
+const FACULTY_DEGREE_TARGETS: Record<'Bachelor' | 'Master' | 'Doctoral', Record<string, number>> = {
+  Bachelor: {
+    'คณะเทคโนโลยีสารสนเทศและนวัตกรรม': 488,
+    'คณะวิศวกรรมศาสตร์': 333,
+    'คณะบัญชี': 245,
+    'คณะบริหารธุรกิจ': 1551,
+    'คณะเศรษฐศาสตร์และการลงทุน': 164,
+    'คณะนิติศาสตร์': 257,
+    'คณะนิเทศศาสตร์': 2128,
+    'คณะมนุษยศาสตร์และการจัดการการท่องเที่ยว': 754,
+    'คณะศิลปกรรมศาสตร์': 240,
+    'คณะสถาปัตยกรรมศาสตร์': 102,
+    'คณะการสร้างเจ้าของธุรกิจและการบริหารกิจการ': 397,
+    'คณะดิจิทัลมีเดียและศิลปะภาพยนตร์': 716,
+    'วิทยาลัยนานาชาติ': 674,
+    'วิทยาลัยนานาชาติจีน': 147
+  },
+  Master: {
+    'คณะการสร้างเจ้าของธุรกิจและการบริหารกิจการ': 26,
+    'วิทยาลัยนานาชาติ': 18,
+    'บัณฑิตวิทยาลัย': 300
+  },
+  Doctoral: {
+    'วิทยาลัยนานาชาติ': 3,
+    'บัณฑิตวิทยาลัย': 18
+  }
 };
 
-const getMajorTarget = (majorName: string): number => {
+export const getFacultyTargetByDegree = (facultyName: string, degreeFilter: 'ALL' | 'Bachelor' | 'Master' | 'Doctoral'): number => {
+  if (degreeFilter === 'ALL') {
+    return FACULTY_CONTACTS[facultyName]?.baseTarget || 10;
+  }
+  const degMap = FACULTY_DEGREE_TARGETS[degreeFilter];
+  if (degMap && degMap[facultyName] !== undefined) {
+    return degMap[facultyName];
+  }
+  return 0;
+};
+
+const MAJOR_TARGETS: Record<string, number> = {
+  // คณะเทคโนโลยีสารสนเทศและนวัตกรรม (488)
+  'สาขาวิชาวิทยาการคอมพิวเตอร์': 292,
+  'วิทยาการคอมพิวเตอร์': 292,
+  'สาขาวิชาเทคโนโลยีสารสนเทศ': 52,
+  'เทคโนโลยีสารสนเทศ': 52,
+  'สาขาวิชาเกมและสื่อเชิงโต้ตอบ': 144,
+  'เกมและสื่อเชิงโต้ตอบ': 144,
+
+  // คณะวิศวกรรมศาสตร์ (333)
+  'สาขาวิชาวิศวกรรมไฟฟ้า': 98,
+  'วิศวกรรมไฟฟ้า': 98,
+  'สาขาวิชาวิศวกรรมมัลติมีเดียและเอ็นเตอร์เทนเมนต์': 32,
+  'วิศวกรรมมัลติมีเดียและเอ็นเตอร์เทนเมนต์': 32,
+  'สาขาวิชาวิศวกรรมคอมพิวเตอร์และหุ่นยนต์': 121,
+  'วิศวกรรมคอมพิวเตอร์และหุ่นยนต์': 121,
+  'สาขาวิชาวิศวกรรมปัญญาประดิษฐ์และวิทยาการข้อมูล': 82,
+  'วิศวกรรมปัญญาประดิษฐ์และวิทยาการข้อมูล': 82,
+
+  // คณะบัญชี (245)
+  'สาขาวิชาบัญชีบัณฑิต': 245,
+  'บัญชีบัณฑิต': 245,
+  'สาขาวิชาการบัญชี': 245,
+  'การบัญชี': 245,
+  'สาขาวิชาบัญชี': 245,
+  'หลักสูตรบัญชีบัณฑิต สาขาวิชาการบัญชี': 245,
+
+  // คณะบริหารธุรกิจ (1551)
+  'สาขาวิชาการจัดการ': 215,
+  'การจัดการ': 215,
+  'สาขาวิชาการเงิน': 56,
+  'การเงิน': 56,
+  'สาขาวิชาการตลาด': 259,
+  'การตลาด': 259,
+  'สาขาวิชาการตลาดดิจิทัล': 442,
+  'การตลาดดิจิทัล': 442,
+  'สาขาวิชาการจัดการธุรกิจระหว่างประเทศ': 332,
+  'การจัดการธุรกิจระหว่างประเทศ': 332,
+  'สาขาวิชาการจัดการโลจิสติกส์และโซ่อุปทาน': 247,
+  'การจัดการโลจิสติกส์และโซ่อุปทาน': 247,
+
+  // คณะเศรษฐศาสตร์และการลงทุน (164)
+  'สาขาวิชาเศรษฐศาสตรบัณฑิต': 75,
+  'เศรษฐศาสตรบัณฑิต': 75,
+  'สาขาวิชาเศรษฐศาสตร์': 75,
+  'เศรษฐศาสตร์': 75,
+  'สาขาวิชาการวางแผนการเงินและการลงทุน': 89,
+  'การวางแผนการเงินและการลงทุน': 89,
+
+  // คณะนิติศาสตร์ (257)
+  'สาขาวิชานิติศาสตรบัณฑิต': 257,
+  'นิติศาสตรบัณฑิต': 257,
+  'สาขาวิชานิติศาสตร์': 257,
+  'นิติศาสตร์': 257,
+
+  // คณะนิเทศศาสตร์ (2128)
+  'สาขาวิชาการสื่อสารและสื่อใหม่': 465,
+  'การสื่อสารและสื่อใหม่': 465,
+  'สาขาวิชาสื่อสารและสื่อใหม่': 465,
+  'สื่อสารและสื่อใหม่': 465,
+  'สาขาวิชาวิทยุกระจายเสียง วิทยุโทรทัศน์ และการผลิตสื่อสตรีมมิ่ง': 569,
+  'วิทยุกระจายเสียง วิทยุโทรทัศน์ และการผลิตสื่อสตรีมมิ่ง': 569,
+  'สาขาวิชาการผลิตเนื้อหาสร้างสรรค์และประสบการณ์ดิจิทัล': 84,
+  'การผลิตเนื้อหาสร้างสรรค์และประสบการณ์ดิจิทัล': 84,
+  'สาขาวิชาการสร้างสรรค์และการสร้างแบรนด์อินฟลูเอนเซอร์ระดับสากล': 20,
+  'การสร้างสรรค์และการสร้างแบรนด์อินฟลูเอนเซอร์ระดับสากล': 20,
+  'สาขาวิชาศิลปะการแสดง': 277,
+  'ศิลปะการแสดง': 277,
+  'สาขาวิชาการผลิตอีเว้นท์ และการจัดการนิทรรศการและการประชุม': 713,
+  'การผลิตอีเว้นท์ และการจัดการนิทรรศการและการประชุม': 713,
+
+  // คณะมนุษยศาสตร์และการจัดการการท่องเที่ยว (754)
+  'สาขาวิชาภาษาอังกฤษ': 258,
+  'ภาษาอังกฤษ': 258,
+  'สาขาวิชาการจัดการการโรงแรม': 127,
+  'การจัดการการโรงแรม': 127,
+  'สาขาวิชาการจัดการโรงแรม': 127,
+  'การจัดการโรงแรม': 127,
+  'สาขาวิชาการจัดการการท่องเที่ยวและเรือสำราญ': 66,
+  'การจัดการการท่องเที่ยวและเรือสำราญ': 66,
+  'สาขาวิชาการจัดการธุรกิจสายการบิน': 233,
+  'การจัดการธุรกิจสายการบิน': 233,
+  'สาขาวิชาศิลปะการประกอบอาหารและการจัดการการบริการธุรกิจร้านอาหาร': 70,
+  'ศิลปะการประกอบอาหารและการจัดการการบริการธุรกิจร้านอาหาร': 70,
+  'สาขาวิชาศิลปะการประกอบอาหารและการจัดการบริการธุรกิจร้านอาหาร': 70,
+
+  // คณะศิลปกรรมศาสตร์ (240)
+  'สาขาวิชาการออกแบบแฟชั่น': 60,
+  'การออกแบบแฟชั่น': 60,
+  'สาขาวิชาการออกแบบนิเทศศิลป์': 73,
+  'การออกแบบนิเทศศิลป์': 73,
+  'สาขาวิชาศิลปะและการออกแบบ': 107,
+  'ศิลปะและการออกแบบ': 107,
+
+  // คณะสถาปัตยกรรมศาสตร์ (102)
+  'สาขาวิชาสถาปัตยกรรม': 54,
+  'สถาปัตยกรรม': 54,
+  'สาขาวิชาสถาปัตยกรรมภายใน': 48,
+  'สถาปัตยกรรมภายใน': 48,
+  'สาขาวิชาศิลปะออกแบบภายใน': 48,
+
+  // คณะการสร้างเจ้าของธุรกิจและการบริหารกิจการ (397 + 26 = 423)
+  'สาขาวิชาการเป็นเจ้าของธุรกิจ': 325,
+  'การเป็นเจ้าของธุรกิจ': 325,
+  'สาขาวิชาการเป็นเจ้าของธุรกิจ (หลักสูตรนานาชาติ)': 72,
+  'การเป็นเจ้าของธุรกิจ (หลักสูตรนานาชาติ)': 72,
+  'สาขาวิชาความเป็นผู้ประกอบการและธุรกิจเกิดใหม่': 26,
+  'ความเป็นผู้ประกอบการและธุรกิจเกิดใหม่': 26,
+  'สาขาวิชาความเป็นผู้ประกอบการ (หลักสูตรภาษาไทย)': 26,
+  'สาขาวิชาความเป็นผู้ประกอบการ': 26,
+
+  // คณะดิจิทัลมีเดียและศิลปะภาพยนตร์ (716)
+  'สาขาวิชาภาพยนตร์': 485,
+  'ภาพยนตร์': 485,
+  'สาขาวิชาสื่อดิจิทัล': 124,
+  'สื่อดิจิทัล': 124,
+  'สาขาวิชาดิจิทัลมีเดีย': 124,
+  'ดิจิทัลมีเดีย': 124,
+  'สาขาวิชาการผลิตและธุรกิจภาพยนตร์ ซีรีส์ และเนื้อหาสากล (หลักสูตรนานาชาติ)': 97,
+  'การผลิตและธุรกิจภาพยนตร์ ซีรีส์ และเนื้อหาสากล (หลักสูตรนานาชาติ)': 97,
+  'สาขาวิชาการผลิตเสมือนและการออกแบบประสบการณ์โลกเสมือนจริง': 10,
+  'การผลิตเสมือนและการออกแบบประสบการณ์โลกเสมือนจริง': 10,
+
+  // วิทยาลัยนานาชาติ (BUI) (674 + 18 + 3 = 695)
+  'สาขาวิชาการตลาด (หลักสูตรนานาชาติ)': 29,
+  'การตลาด (หลักสูตรนานาชาติ)': 29,
+  'สาขาวิชาบริหารธุรกิจบัณฑิต (หลักสูตรนานาชาติ)': 250,
+  'บริหารธุรกิจบัณฑิต (หลักสูตรนานาชาติ)': 250,
+  'สาขาวิชาบริหารธุรกิจ (หลักสูตรนานาชาติ)': 250,
+  'บริหารธุรกิจ (หลักสูตรนานาชาติ)': 250,
+  'สาขาวิชาการผลิตสื่อนวัตกรรม (หลักสูตรนานาชาติ)': 97,
+  'การผลิตสื่อนวัตกรรม (หลักสูตรนานาชาติ)': 97,
+  'สาขาวิชาการผลิตสื่อและนวัตกรรม (หลักสูตรนานาชาติ)': 97,
+  'การผลิตสื่อและนวัตกรรม (หลักสูตรนานาชาติ)': 97,
+  'สาขาวิชาสื่อและการสื่อสาร (หลักสูตรนานาชาติ)': 38,
+  'สื่อและการสื่อสาร (หลักสูตรนานาชาติ)': 38,
+  'สาขาวิชาภาษาอังกฤษธุรกิจ (หลักสูตรนานาชาติ)': 25,
+  'ภาษาอังกฤษธุรกิจ (หลักสูตรนานาชาติ)': 25,
+  'สาขาวิชาการจัดการท่องเที่ยวและการบริการนานาชาติ (หลักสูตรนานาชาติ)': 92,
+  'การจัดการท่องเที่ยวและการบริการนานาชาติ (หลักสูตรนานาชาติ)': 92,
+  'สาขาวิชาศิลปะการประกอบและออกแบบอาหาร (หลักสูตรนานาชาติ)': 47,
+  'ศิลปะการประกอบและออกแบบอาหาร (หลักสูตรนานาชาติ)': 47,
+  'สาขาวิชาศิลปะการประกอบอาหารและออกแบบอาหาร (หลักสูตรนานาชาติ)': 47,
+  'สาขาวิชาการออกแบบนิเทศศิลป์เชิงสร้างสรรค์ (หลักสูตรนานาชาติ)': 44,
+  'การออกแบบนิเทศศิลป์เชิงสร้างสรรค์ (หลักสูตรนานาชาติ)': 44,
+  'สาขาวิชาวิทยาการคอมพิวเตอร์ (หลักสูตรนานาชาติ)': 52,
+  'วิทยาการคอมพิวเตอร์ (หลักสูตรนานาชาติ)': 52,
+  'สาขาวิชาการจัดการนวัตกรรม (หลักสูตรนานาชาติ)': 18,
+  'การจัดการนวัตกรรม (หลักสูตรนานาชาติ)': 18,
+
+  // วิทยาลัยนานาชาติจีน (147)
+  'สาขาวิชาภาษาจีนธุรกิจ': 136,
+  'ภาษาจีนธุรกิจ': 136,
+  'สาขาวิชาบริหารธุรกิจบัณฑิต (หลักสูตรสองภาษา)': 11,
+  'บริหารธุรกิจบัณฑิต (หลักสูตรสองภาษา)': 11,
+  'สาขาวิชาบริหารธุรกิจ (หลักสูตรสองภาษา)': 11,
+  'บริหารธุรกิจ (หลักสูตรสองภาษา)': 11,
+
+  // บัณฑิตวิทยาลัย (318: ปริญญาโท 300, ปริญญาเอก 18)
+  // ระดับปริญญาโท (300)
+  'สาขาวิชาเทคโนโลยีสารสนเทศและวิทยาการข้อมูล': 5,
+  'เทคโนโลยีสารสนเทศและวิทยาการข้อมูล': 5,
+  'สาขาวิชาวิศวกรรมไฟฟ้าและคอมพิวเตอร์ (หลักสูตรนานาชาติ)': 4,
+  'วิศวกรรมไฟฟ้าและคอมพิวเตอร์ (หลักสูตรนานาชาติ)': 4,
+  'สาขาวิชาบริหารธุรกิจมหาบัณฑิต (หลักสูตรภาษาไทย)': 82,
+  'บริหารธุรกิจมหาบัณฑิต (หลักสูตรภาษาไทย)': 82,
+  'สาขาวิชาบริหารธุรกิจ (หลักสูตรภาษาไทย)': 82,
+  'บริหารธุรกิจ (หลักสูตรภาษาไทย)': 82,
+  'สาขาวิชาการบริหารจัดการแบบไดนามิก': 82,
+  'การบริหารจัดการแบบไดนามิก': 82,
+  'สาขาวิชาบริหารธุรกิจมหาบัณฑิต (หลักสูตรภาษาอังกฤษ)': 62,
+  'บริหารธุรกิจมหาบัณฑิต (หลักสูตรภาษาอังกฤษ)': 62,
+  'สาขาวิชาบริหารธุรกิจ (หลักสูตรภาษาอังกฤษ)': 62,
+  'บริหารธุรกิจ (หลักสูตรภาษาอังกฤษ)': 62,
+  'สาขาวิชาการจัดการธุรกิจระดับโลก (หลักสูตรนานาชาติ)': 62,
+  'การจัดการธุรกิจระดับโลก (หลักสูตรนานาชาติ)': 62,
+  'สาขาวิชานิติศาสตรมหาบัณฑิต': 24,
+  'นิติศาสตรมหาบัณฑิต': 24,
+  'สาขาวิชาการสื่อสารสากล (หลักสูตรนานาชาติ)': 41,
+  'การสื่อสารสากล (หลักสูตรนานาชาติ)': 41,
+  'สาขาวิชาการสื่อสารเชิงกลยุทธ์': 41,
+  'การสื่อสารเชิงกลยุทธ์': 41,
+  'สาขาวิชาการบริหารแบรนด์และการสื่อสารเชิงกลยุทธ์': 41,
+  'การบริหารแบรนด์และการสื่อสารเชิงกลยุทธ์': 41,
+  'สาขาวิชาการตลาดเชิงข้อมูลและการสื่อสาร': 13,
+  'การตลาดเชิงข้อมูลและการสื่อสาร': 13,
+  'สาขาวิชานวัตกรรมการจัดการการท่องเที่ยวและการบริการ (หลักสูตรนานาชาติ)': 14,
+  'นวัตกรรมการจัดการการท่องเที่ยวและการบริการ (หลักสูตรนานาชาติ)': 14,
+  'สาขาวิชาการจัดการการท่องเที่ยว การบริการ และการจัดงาน': 14,
+  'การจัดการการท่องเที่ยว การบริการ และการจัดงาน': 14,
+  'สาขาวิชาสถาปัตยกรรมศาสตรมหาบัณฑิต': 14,
+  'สถาปัตยกรรมศาสตรมหาบัณฑิต': 14,
+  'สาขาวิชาการออกแบบสถาปัตยกรรมและเทคโนโลยีสถาปัตยกรรม': 14,
+  'การออกแบบสถาปัตยกรรมและเทคโนโลยีสถาปัตยกรรม': 14,
+
+  // ระดับปริญญาเอก (18)
+  'สาขาวิชาวิศวกรรมไฟฟ้าและคอมพิวเตอร์': 4,
+  'วิศวกรรมไฟฟ้าและคอมพิวเตอร์': 4,
+  'สาขาวิชาการสื่อสาร': 4,
+  'การสื่อสาร': 4,
+  'สาขาวิชาบริหารธุรกิจดุษฎีบัณฑิต': 7,
+  'บริหารธุรกิจดุษฎีบัณฑิต': 7,
+  'สาขาวิชาการบริหารจัดการ': 7,
+  'การบริหารจัดการ': 7,
+  'สาขาวิชาการจัดการความรู้และนวัตกรรม (หลักสูตรนานาชาติ)': 3,
+  'การจัดการความรู้และนวัตกรรม (หลักสูตรนานาชาติ)': 3
+};
+
+const getMajorTarget = (majorName: string, degreeLevel?: string, facultyName?: string): number => {
   const normalized = majorName.trim();
+
+  // Handle Doctoral level (วิทยาลัยนานาชาติ: 3, บัณฑิตวิทยาลัย: 18)
+  if (degreeLevel === 'Doctoral' || (facultyName === 'บัณฑิตวิทยาลัย' && (normalized.includes('ดุษฎีบัณฑิต') || normalized.includes('Doctoral')))) {
+    if (normalized.includes('วิศวกรรมไฟฟ้าและคอมพิวเตอร์') || normalized.toLowerCase().includes('electrical and computer')) {
+      return 4;
+    }
+    if (normalized.includes('การสื่อสาร') || normalized.toLowerCase().includes('communication')) {
+      return 4;
+    }
+    if (normalized.includes('บริหารธุรกิจ') || normalized.includes('การบริหารจัดการ') || normalized.toLowerCase().includes('management') || normalized.toLowerCase().includes('dba')) {
+      return 7;
+    }
+    if (normalized.includes('การจัดการความรู้และนวัตกรรม') || normalized.toLowerCase().includes('knowledge management') || normalized.includes('แบรนด์')) {
+      return 3;
+    }
+    return 4;
+  }
+
+  // Handle Master level (คณะการสร้างเจ้าของธุรกิจ: 26, วิทยาลัยนานาชาติ: 18, บัณฑิตวิทยาลัย: 300)
+  if (degreeLevel === 'Master' || facultyName === 'บัณฑิตวิทยาลัย') {
+    if (normalized.includes('การจัดการความรู้และนวัตกรรม') || normalized.toLowerCase().includes('knowledge management')) {
+      return 0;
+    }
+    if (normalized.includes('การจัดการนวัตกรรม') || normalized.toLowerCase().includes('innovation management')) {
+      return 18;
+    }
+    if (normalized.includes('ผู้ประกอบการ') || normalized.toLowerCase().includes('entrepreneurship')) {
+      return 26;
+    }
+    if (normalized.includes('เทคโนโลยีสารสนเทศและวิทยาการข้อมูล') || normalized.toLowerCase().includes('data science')) {
+      return 5;
+    }
+    if (normalized.includes('วิศวกรรมไฟฟ้าและคอมพิวเตอร์') || normalized.toLowerCase().includes('electrical and computer')) {
+      return 4;
+    }
+    if (normalized.includes('บริหารธุรกิจมหาบัณฑิต (หลักสูตรภาษาไทย)') || normalized.includes('บริหารธุรกิจ (หลักสูตรภาษาไทย)') || normalized.includes('ไดนามิก')) {
+      return 82;
+    }
+    if (normalized.includes('บริหารธุรกิจมหาบัณฑิต (หลักสูตรภาษาอังกฤษ)') || normalized.includes('บริหารธุรกิจ (หลักสูตรภาษาอังกฤษ)') || normalized.includes('ธุรกิจระดับโลก') || normalized.toLowerCase().includes('global business')) {
+      return 62;
+    }
+    if (normalized.includes('นิติศาสตรมหาบัณฑิต') || (facultyName === 'บัณฑิตวิทยาลัย' && normalized.includes('นิติศาสตร์'))) {
+      return 24;
+    }
+    if (normalized.includes('การสื่อสารสากล') || (normalized.includes('การสื่อสาร') && normalized.includes('นานาชาติ'))) {
+      return 41;
+    }
+    if (normalized.includes('แบรนด์') || normalized.includes('การบริหารแบรนด์และการสื่อสารเชิงกลยุทธ์') || normalized.includes('การสื่อสารเชิงกลยุทธ์')) {
+      return 41;
+    }
+    if (normalized.includes('การตลาดเชิงข้อมูลและการสื่อสาร') || normalized.includes('การตลาดเชิงข้อมูล')) {
+      return 13;
+    }
+    if (normalized.includes('การท่องเที่ยว') || normalized.includes('การจัดงาน') || normalized.toLowerCase().includes('tourism') || normalized.toLowerCase().includes('hospitality')) {
+      return 14;
+    }
+    if (normalized.includes('สถาปัตยกรรมศาสตรมหาบัณฑิต') || normalized.includes('การออกแบบสถาปัตยกรรม')) {
+      return 14;
+    }
+  }
+
+  // Handle Accounting major
+  if (normalized.includes('บัญชี') || normalized.toLowerCase().includes('account')) {
+    return 245;
+  }
+
   if (MAJOR_TARGETS[normalized] !== undefined) {
     return MAJOR_TARGETS[normalized];
   }
@@ -378,10 +595,67 @@ export const isSubmissionMatchingMajor = (subMajor?: string, targetMajor?: strin
   const cleanTarget = t.replace(/^สาขาวิชา/, '').replace(/[\s\(\)\/]/g, '').toLowerCase();
   if (cleanSub === cleanTarget) return true;
 
+  // Handle Accounting variants (บัญชี vs การบัญชี vs บัญชีบัณฑิต)
+  const isAccSub = cleanSub.includes('บัญชี') || cleanSub.includes('account');
+  const isAccTarget = cleanTarget.includes('บัญชี') || cleanTarget.includes('account');
+  if (isAccSub && isAccTarget) {
+    return true;
+  }
+
+  // Handle Digital Media variants (สื่อดิจิทัล vs ดิจิทัลมีเดีย)
+  if (
+    (cleanSub === 'สื่อดิจิทัล' || cleanSub === 'ดิจิทัลมีเดีย') &&
+    (cleanTarget === 'สื่อดิจิทัล' || cleanTarget === 'ดิจิทัลมีเดีย')
+  ) {
+    return true;
+  }
+
+  // Handle Innovative Media Production variants
+  if (
+    (cleanSub.includes('การผลิตสื่อและนวัตกรรม') || cleanSub.includes('การผลิตสื่อนวัตกรรม')) &&
+    (cleanTarget.includes('การผลิตสื่อและนวัตกรรม') || cleanTarget.includes('การผลิตสื่อนวัตกรรม'))
+  ) {
+    return true;
+  }
+
+  // Handle Communication and New Media variants
+  if (
+    (cleanSub === 'สื่อสารและสื่อใหม่' || cleanSub === 'การสื่อสารและสื่อใหม่') &&
+    (cleanTarget === 'สื่อสารและสื่อใหม่' || cleanTarget === 'การสื่อสารและสื่อใหม่')
+  ) {
+    return true;
+  }
+
+  // Handle Culinary variants
+  if (
+    cleanSub.includes('ประกอบอาหาร') && cleanSub.includes('ร้านอาหาร') &&
+    cleanTarget.includes('ประกอบอาหาร') && cleanTarget.includes('ร้านอาหาร')
+  ) {
+    return true;
+  }
+
+  // Handle Bilingual Business Administration
+  if (
+    cleanSub.includes('สองภาษา') && cleanTarget.includes('สองภาษา')
+  ) {
+    return true;
+  }
+
+  // Handle Business Administration International variants (บริหารธุรกิจบัณฑิต vs บริหารธุรกิจ (หลักสูตรนานาชาติ))
+  const isBbaInterSub = (cleanSub.includes('บริหารธุรกิจ') || cleanSub.includes('businessadmin')) && (cleanSub.includes('นานาชาติ') || cleanSub.includes('international') || cleanSub.includes('bba'));
+  const isBbaInterTarget = (cleanTarget.includes('บริหารธุรกิจ') || cleanTarget.includes('businessadmin')) && (cleanTarget.includes('นานาชาติ') || cleanTarget.includes('international') || cleanTarget.includes('bba'));
+  if (isBbaInterSub && isBbaInterTarget) {
+    return true;
+  }
+
+  // Handle Financial Planning variants
+  if (cleanSub.includes('วางแผนการเงิน') && cleanTarget.includes('วางแผนการเงิน')) {
+    return true;
+  }
+
   // Handle name update for Entrepreneurship major
   if (
-    (cleanSub === 'ความเป็นผู้ประกอบการ' && cleanTarget === 'ความเป็นผู้ประกอบการและธุรกิจเกิดใหม่') ||
-    (cleanSub === 'ความเป็นผู้ประกอบการและธุรกิจเกิดใหม่' && cleanTarget === 'ความเป็นผู้ประกอบการ')
+    cleanSub.includes('ความเป็นผู้ประกอบการ') && cleanTarget.includes('ความเป็นผู้ประกอบการ')
   ) {
     return true;
   }
@@ -394,11 +668,19 @@ export const isSubmissionMatchingMajor = (subMajor?: string, targetMajor?: strin
     return true;
   }
 
-  // Handle Architecture major variation (5-year curriculum) without matching Interior Architecture
+  // Handle Architecture major variation (5-year curriculum vs general) without matching Interior Architecture
   const isArchitectureGeneral = (val: string) => {
     return val.startsWith('สถาปัตยกรรม') && !val.includes('ภายใน');
   };
   if (isArchitectureGeneral(cleanSub) && isArchitectureGeneral(cleanTarget)) {
+    return true;
+  }
+
+  // Handle Interior Architecture variants (ศิลปะออกแบบภายใน vs สถาปัตยกรรมภายใน vs degree title)
+  const isInteriorArch = (val: string) => {
+    return val.includes('สถาปัตยกรรมภายใน') || val.includes('ออกแบบภายใน') || val.includes('interior');
+  };
+  if (isInteriorArch(cleanSub) && isInteriorArch(cleanTarget)) {
     return true;
   }
 
@@ -416,26 +698,80 @@ export const isSubmissionMatchingMajor = (subMajor?: string, targetMajor?: strin
     return true;
   }
 
+  // Handle Graduate School major variations
+  if (
+    (cleanSub.includes('การสื่อสารเชิงกลยุทธ์') || cleanSub.includes('การบริหารแบรนด์และการสื่อสารเชิงกลยุทธ์') || cleanSub.includes('strategiccommunication')) &&
+    (cleanTarget.includes('การสื่อสารเชิงกลยุทธ์') || cleanTarget.includes('การบริหารแบรนด์และการสื่อสารเชิงกลยุทธ์') || cleanTarget.includes('strategiccommunication'))
+  ) {
+    return true;
+  }
+
+  if (
+    (cleanSub.includes('การท่องเที่ยว') && (cleanSub.includes('การจัดงาน') || cleanSub.includes('การบริการ'))) &&
+    (cleanTarget.includes('การท่องเที่ยว') && (cleanTarget.includes('การจัดงาน') || cleanTarget.includes('การบริการ')))
+  ) {
+    return true;
+  }
+
+  if (
+    (cleanSub.includes('ไดนามิก') || (cleanSub.includes('บริหารธุรกิจ') && cleanSub.includes('ไทย') && !cleanSub.includes('สองภาษา'))) &&
+    (cleanTarget.includes('ไดนามิก') || (cleanTarget.includes('บริหารธุรกิจ') && cleanTarget.includes('ไทย') && !cleanTarget.includes('สองภาษา')))
+  ) {
+    return true;
+  }
+
+  if (
+    (cleanSub.includes('ธุรกิจระดับโลก') || cleanSub.includes('globalbusiness') || (cleanSub.includes('บริหารธุรกิจ') && (cleanSub.includes('อังกฤษ') || cleanSub.includes('english')))) &&
+    (cleanTarget.includes('ธุรกิจระดับโลก') || cleanTarget.includes('globalbusiness') || (cleanTarget.includes('บริหารธุรกิจ') && (cleanTarget.includes('อังกฤษ') || cleanTarget.includes('english'))))
+  ) {
+    return true;
+  }
+
+  if (
+    (cleanSub.includes('เทคโนโลยีสถาปัตยกรรม') || (cleanSub.includes('สถาปัตยกรรม') && cleanSub.includes('มหาบัณฑิต'))) &&
+    (cleanTarget.includes('เทคโนโลยีสถาปัตยกรรม') || (cleanTarget.includes('สถาปัตยกรรม') && cleanTarget.includes('มหาบัณฑิต')))
+  ) {
+    return true;
+  }
+
+  // Doctoral matching
+  if (
+    (cleanSub === 'การสื่อสาร' || cleanSub === 'การสื่อสารสากล') &&
+    (cleanTarget === 'การสื่อสาร' || cleanTarget === 'การสื่อสารสากล')
+  ) {
+    return true;
+  }
+
+  if (
+    (cleanSub === 'การบริหารจัดการ' || cleanSub.includes('บริหารจัดการ')) &&
+    (cleanTarget === 'การบริหารจัดการ' || cleanTarget.includes('บริหารจัดการ'))
+  ) {
+    return true;
+  }
+
   return false;
 };
 
 // Formatter to standardize displayed major names
 export const formatMajorName = (major?: string, degreeLevel?: string): string => {
   if (!major) return '';
-  if (degreeLevel === 'Master' && (major === 'สาขาวิชาความเป็นผู้ประกอบการ' || major === 'สาขาวิชาความเป็นผู้ประกอบการและธุรกิจเกิดใหม่')) {
+  if (major === 'สาขาวิชาบัญชี' || major === 'สาขาวิชาการบัญชี') return 'สาขาวิชาบัญชีบัณฑิต';
+  if (major === 'บัญชี' || major === 'การบัญชี') return 'สาขาวิชาบัญชีบัณฑิต';
+  if (major === 'สาขาวิชาดิจิทัลมีเดีย') return 'สาขาวิชาสื่อดิจิทัล';
+  if (major === 'สาขาวิชาการสื่อสารและสื่อใหม่') return 'สาขาวิชาสื่อสารและสื่อใหม่';
+  if (major === 'สาขาวิชาการผลิตสื่อนวัตกรรม (หลักสูตรนานาชาติ)') return 'สาขาวิชาการผลิตสื่อและนวัตกรรม (หลักสูตรนานาชาติ)';
+  if (major === 'สาขาวิชาศิลปะออกแบบภายใน') return 'สาขาวิชาสถาปัตยกรรมภายใน';
+  if (degreeLevel === 'Master' && (major === 'สาขาวิชาความเป็นผู้ประกอบการ' || major === 'สาขาวิชาความเป็นผู้ประกอบการ (หลักสูตรภาษาไทย)')) {
     return 'สาขาวิชาความเป็นผู้ประกอบการและธุรกิจเกิดใหม่';
+  }
+  if (major.includes('สถาปัตยกรรมภายใน') || major.includes('ออกแบบภายใน')) {
+    return 'สาขาวิชาสถาปัตยกรรมภายใน';
   }
   if (
     major.includes('ซีรีส์') &&
     (major.includes('ภาพยนตร์') || major.includes('เนื้อหาสากล') || major.includes('แพลตฟอร์ม') || major.includes('ธุรกิจ'))
   ) {
     return 'สาขาวิชาการผลิตและธุรกิจภาพยนตร์ ซีรีส์ และเนื้อหาสากล (หลักสูตรนานาชาติ)';
-  }
-  if (
-    (degreeLevel === 'Bachelor' || !degreeLevel) &&
-    (major === 'สาขาวิชาสถาปัตยกรรม' || major === 'สาขาวิชาสถาปัตยกรรม (หลักสูตร 5 ปี)')
-  ) {
-    return 'สาขาวิชาสถาปัตยกรรม (หลักสูตร 5 ปี)';
   }
   return major;
 };
@@ -449,11 +785,6 @@ export const isSubmissionInFaculty = (
   const subDegree = sub.degreeLevel || 'Bachelor';
   const isGraduateSchool = fac.name === 'บัณฑิตวิทยาลัย' || (fac.nameEn && fac.nameEn.toLowerCase().includes('graduate'));
 
-  // Specific transfer: Financial and Investment Planning belongs strictly to School of Economics and Investment
-  if (isSubmissionMatchingMajor(sub.major, 'สาขาวิชาการวางแผนการเงินและการลงทุน')) {
-    if (degreeFilter !== 'ALL' && subDegree !== 'Bachelor') return false;
-    return fac.name === 'คณะเศรษฐศาสตร์และการลงทุน';
-  }
 
   if (degreeFilter !== 'ALL') {
     // When specific degree filter is selected
@@ -573,8 +904,9 @@ export default function AdminDashboard({ submissions, onClearSubmissions, onRese
 
   // CSV Export Modal & Analysis States
   const [showExportModal, setShowExportModal] = useState<boolean>(false);
+  const [showCurriculumModal, setShowCurriculumModal] = useState<boolean>(false);
   const [exportScope, setExportScope] = useState<'filtered' | 'all'>('filtered');
-  const [exportFormat, setExportFormat] = useState<'standard' | 'matrix'>('standard');
+  const [exportFormat, setExportFormat] = useState<'standard' | 'matrix' | 'curriculum'>('standard');
   const [isExporting, setIsExporting] = useState<boolean>(false);
   const [exportToast, setExportToast] = useState<{ message: string; count: number } | null>(null);
 
@@ -1043,7 +1375,7 @@ export default function AdminDashboard({ submissions, onClearSubmissions, onRese
   };
 
   // Incorporating UTF-8 BOM (\uFEFF) ensures Excel and statistical software display Thai characters correctly
-  const handleExecuteExportCSV = (scope: 'filtered' | 'all', format: 'standard' | 'matrix') => {
+  const handleExecuteExportCSV = (scope: 'filtered' | 'all', format: 'standard' | 'matrix' | 'curriculum') => {
     const dataset = scope === 'filtered' ? filteredSubmissions : submissions;
     if (dataset.length === 0) return;
 
@@ -1054,7 +1386,10 @@ export default function AdminDashboard({ submissions, onClearSubmissions, onRese
       const dateStamp = new Date().toISOString().slice(0, 10).replace(/-/g, '');
       let filename = '';
 
-      if (format === 'standard') {
+      if (format === 'curriculum') {
+        filename = `BU_Survey_2569_Curriculum_Respondent_Report_${scope === 'filtered' ? 'Filtered' : 'All'}_N${dataset.length}_${dateStamp}.csv`;
+        csvContent = generateCurriculumReportCSV(dataset);
+      } else if (format === 'standard') {
         filename = `BU_Survey_2569_${scope === 'filtered' ? 'Filtered' : 'All'}_Standard_N${dataset.length}_${dateStamp}.csv`;
         const headers = [
           'หมายเลขอ้างอิง (Ref ID)',
@@ -1344,12 +1679,7 @@ ${recommendationsText}
     const facSubmissions = submissions.filter(sub => isSubmissionInFaculty(sub, facObj, trackerDegreeFilter));
 
     const contact = getFacultyContact(facName);
-    let baseTarget = contact.baseTarget;
-    if (trackerDegreeFilter === 'Master') {
-      baseTarget = facName === 'บัณฑิตวิทยาลัย' ? 150 : (facObj.majors.reduce((sum, m) => sum + getMajorTarget(m), 0) || 10);
-    } else if (trackerDegreeFilter === 'Doctoral') {
-      baseTarget = facName === 'บัณฑิตวิทยาลัย' ? 50 : (facObj.majors.reduce((sum, m) => sum + getMajorTarget(m), 0) || 10);
-    }
+    const baseTarget = getFacultyTargetByDegree(facName, trackerDegreeFilter);
 
     const target = Math.max(baseTarget, facSubmissions.length);
     const responded = facSubmissions.length;
@@ -1364,10 +1694,12 @@ ${recommendationsText}
       ? 'ระดับปริญญาโท'
       : 'ระดับปริญญาเอก';
 
+    const emailMajors = facObj.majors;
+
     let majorStatsStr = '';
-    facObj.majors.forEach(m => {
-      const majorSubmissions = facSubmissions.filter(sub => isSubmissionMatchingMajor(sub.major, m));
-      const baseMajorTarget = getMajorTarget(m);
+    emailMajors.forEach(m => {
+      const majorSubmissions = submissions.filter(sub => isSubmissionMatchingMajor(sub.major, m));
+      const baseMajorTarget = getMajorTarget(m, trackerDegreeFilter, facName);
       const majorTarget = Math.max(baseMajorTarget, majorSubmissions.length);
       const mResponded = majorSubmissions.length;
       const mNonResponded = Math.max(0, majorTarget - mResponded);
@@ -1620,6 +1952,18 @@ ${recommendationsText}
 
           {/* Action reset controls */}
           <div className="flex flex-wrap gap-2 w-full sm:w-auto justify-end">
+            {/* Curriculum Summary Report Modal Button (Official Template) */}
+            <button
+              type="button"
+              id="top-curriculum-report-btn"
+              onClick={() => setShowCurriculumModal(true)}
+              className="bg-amber-400 hover:bg-amber-500 text-slate-900 font-bold text-xs px-3.5 py-2 rounded-xl flex items-center gap-1.5 shadow-sm transition-all active:scale-[0.98] cursor-pointer"
+              title={lang === 'TH' ? 'รายงานสรุปจำนวนผู้ตอบแยกตาม คณะ / สาขา / หลักสูตร (ตามแบบฟอร์ม)' : 'Curriculum Respondent Count Report'}
+            >
+              <Table className="w-3.5 h-3.5 text-slate-900" />
+              <span>{lang === 'TH' ? 'รายงาน คณะ/สาขา/หลักสูตร' : 'Curriculum Report'}</span>
+            </button>
+
             {/* CSV Export Trigger Button */}
             <button
               type="button"
@@ -2268,13 +2612,7 @@ ${recommendationsText}
 
           const totalTarget = activeFacultiesList.reduce((acc, fac) => {
             const facSub = submissions.filter(sub => isSubmissionInFaculty(sub, fac, trackerDegreeFilter));
-            const contact = getFacultyContact(fac.name);
-            let baseT = contact.baseTarget;
-            if (trackerDegreeFilter === 'Master') {
-              baseT = fac.name === 'บัณฑิตวิทยาลัย' ? 150 : (fac.majors.reduce((sum, m) => sum + getMajorTarget(m), 0) || 10);
-            } else if (trackerDegreeFilter === 'Doctoral') {
-              baseT = fac.name === 'บัณฑิตวิทยาลัย' ? 50 : (fac.majors.reduce((sum, m) => sum + getMajorTarget(m), 0) || 10);
-            }
+            const baseT = getFacultyTargetByDegree(fac.name, trackerDegreeFilter);
             return acc + Math.max(baseT, facSub.length);
           }, 0);
 
@@ -2329,12 +2667,7 @@ ${recommendationsText}
                   const facSubmissions = submissions.filter(sub => isSubmissionInFaculty(sub, fac, trackerDegreeFilter));
 
                   const contact = getFacultyContact(fac.name);
-                  let baseTarget = contact.baseTarget;
-                  if (trackerDegreeFilter === 'Master') {
-                    baseTarget = fac.name === 'บัณฑิตวิทยาลัย' ? 150 : (fac.majors.reduce((sum, m) => sum + getMajorTarget(m), 0) || 10);
-                  } else if (trackerDegreeFilter === 'Doctoral') {
-                    baseTarget = fac.name === 'บัณฑิตวิทยาลัย' ? 50 : (fac.majors.reduce((sum, m) => sum + getMajorTarget(m), 0) || 10);
-                  }
+                  const baseTarget = getFacultyTargetByDegree(fac.name, trackerDegreeFilter);
 
                   const target = Math.max(baseTarget, facSubmissions.length);
                   const responded = facSubmissions.length;
@@ -2421,7 +2754,7 @@ ${recommendationsText}
                               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                                 {fac.majors.map((major, mIdx) => {
                                   const majorSubmissions = facSubmissions.filter(sub => isSubmissionMatchingMajor(sub.major, major));
-                                  const baseMajorTarget = getMajorTarget(major);
+                                  const baseMajorTarget = getMajorTarget(major, trackerDegreeFilter, fac.name);
                                   const majorTarget = Math.max(baseMajorTarget, majorSubmissions.length);
                                   const mResponded = majorSubmissions.length;
                                   const mNonResponded = Math.max(0, majorTarget - mResponded);
@@ -2437,32 +2770,38 @@ ${recommendationsText}
                                     mProg = 'bg-amber-500';
                                   }
 
-                                  const majorDisplayName = lang === 'TH' ? major : ((fac.majorsEn && fac.majorsEn[mIdx]) || major);
+                                  const majorDisplayName = lang === 'TH' 
+                                    ? major 
+                                    : ((fac.majorsEn && fac.majorsEn[mIdx]) || major);
 
                                   return (
                                     <div key={mIdx} className="bg-white p-3.5 rounded-xl border border-gray-200/80 shadow-xs flex flex-col justify-between hover:border-[#003366]/30 transition-all">
                                       <div className="flex justify-between items-start gap-2">
                                         <div className="space-y-0.5">
-                                          <p className="font-bold text-gray-800 text-xs leading-tight">{majorDisplayName}</p>
+                                          <p className="font-bold text-gray-800 text-xs leading-tight">
+                                            {majorDisplayName}
+                                          </p>
                                           <p className="text-[10px] text-gray-400 font-normal">
-                                            {lang === 'TH' ? ((fac.majorsEn && fac.majorsEn[mIdx]) || '') : major}
+                                            {lang === 'TH' 
+                                              ? ((fac.majorsEn && fac.majorsEn[mIdx]) || '') 
+                                              : major}
                                           </p>
                                         </div>
                                         <span className={`px-2 py-0.5 rounded-lg font-mono text-[9.5px] font-bold border shrink-0 ${mBadge}`}>
                                           {mRate}%
                                         </span>
                                       </div>
-                                      <div className="grid grid-cols-3 gap-2 text-[10.5px] text-gray-500 mt-2.5 pt-2 border-t border-dashed border-gray-100 leading-normal">
-                                        <div>{lang === 'TH' ? 'เป้าหมาย:' : 'Target:'} <strong className="font-mono text-gray-800">{majorTarget} {lang === 'TH' ? 'คน' : 'students'}</strong></div>
-                                        <div>{lang === 'TH' ? 'ตอบแล้ว:' : 'Responded:'} <strong className="font-mono text-emerald-600 font-bold">{mResponded} {lang === 'TH' ? 'คน' : 'students'}</strong></div>
-                                        <div>{lang === 'TH' ? 'ยังไม่ตอบ:' : 'Pending:'} <strong className="font-mono text-rose-600 font-bold">{mNonResponded} {lang === 'TH' ? 'คน' : 'students'}</strong></div>
+                                        <div className="grid grid-cols-3 gap-2 text-[10.5px] text-gray-500 mt-2.5 pt-2 border-t border-dashed border-gray-100 leading-normal">
+                                          <div>{lang === 'TH' ? 'เป้าหมาย:' : 'Target:'} <strong className="font-mono text-gray-800">{majorTarget} {lang === 'TH' ? 'คน' : 'students'}</strong></div>
+                                          <div>{lang === 'TH' ? 'ตอบแล้ว:' : 'Responded:'} <strong className="font-mono text-emerald-600 font-bold">{mResponded} {lang === 'TH' ? 'คน' : 'students'}</strong></div>
+                                          <div>{lang === 'TH' ? 'ยังไม่ตอบ:' : 'Pending:'} <strong className="font-mono text-rose-600 font-bold">{mNonResponded} {lang === 'TH' ? 'คน' : 'students'}</strong></div>
+                                        </div>
+                                        <div className="w-full h-1.5 bg-gray-100 rounded-full overflow-hidden mt-2.5">
+                                          <div className={`h-full ${mProg} rounded-full transition-all duration-500`} style={{ width: `${mRate}%` }} />
+                                        </div>
                                       </div>
-                                      <div className="w-full h-1.5 bg-gray-100 rounded-full overflow-hidden mt-2.5">
-                                        <div className={`h-full ${mProg} rounded-full transition-all duration-500`} style={{ width: `${mRate}%` }} />
-                                      </div>
-                                    </div>
-                                  );
-                                })}
+                                    );
+                                  })}
                               </div>
                             </div>
                           </td>
@@ -3012,6 +3351,15 @@ ${recommendationsText}
               >
                 <FileSpreadsheet className="w-4 h-4 text-emerald-400" />
                 <span>{lang === 'TH' ? 'ส่งออกชุดข้อมูลแบบสอบถาม (CSV)' : 'Export Survey Dataset (CSV)'}</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setShowCurriculumModal(true)}
+                className="w-full bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-300 active:scale-[0.98] transition-all font-bold text-xs py-2.5 rounded-xl flex items-center justify-center gap-2 cursor-pointer shadow-xs"
+              >
+                <Table className="w-4 h-4 text-amber-700" />
+                <span>{lang === 'TH' ? 'รายงาน คณะ / สาขา / หลักสูตร (ตามแบบฟอร์ม)' : 'Curriculum Summary Report (Form)'}</span>
               </button>
             </div>
           </div>
@@ -3998,6 +4346,47 @@ ${recommendationsText}
                           : '38 columns: Demographics + 22 discrete binary columns (1 if checked, 0 if not). Ready for direct import into SPSS, R, Python, or Excel Pivot.'}
                       </p>
                     </button>
+
+                    {/* Format C: Curriculum Respondent Summary (Exact University Template) */}
+                    <button
+                      type="button"
+                      onClick={() => setExportFormat('curriculum')}
+                      className={`w-full p-3.5 rounded-2xl border text-left transition-all cursor-pointer ${
+                        exportFormat === 'curriculum'
+                          ? 'border-[#003366] bg-amber-50/70 ring-2 ring-amber-400'
+                          : 'border-gray-200 bg-white hover:border-gray-300'
+                      }`}
+                    >
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <Table className="w-4 h-4 text-amber-600" />
+                          <span className="font-bold text-gray-900 text-xs">
+                            {lang === 'TH' ? 'รายงานสรุปจำนวนผู้ตอบแยกตาม คณะ / สาขา / หลักสูตร' : 'Curriculum Respondent Count Report'}
+                          </span>
+                        </div>
+                        <span className="text-[10px] font-bold bg-amber-100 text-amber-900 px-2 py-0.5 rounded-full">
+                          {lang === 'TH' ? 'ตรงตามแบบฟอร์ม มหาวิทยาลัย' : 'Exact Official Form'}
+                        </span>
+                      </div>
+                      <p className="text-[11px] text-gray-500 mt-1 pl-6">
+                        {lang === 'TH'
+                          ? '2 คอลัมน์ (คณะ / สาขา / หลักสูตร และ จำนวนผู้ตอบ): จัดเรียง 15 คณะ/วิทยาลัย ตามระดับปริญญาตรี ปริญญาโท ปริญญาเอก พร้อมคำนวณจำนวนผู้ตอบจริงลงในตาราง'
+                          : '2 columns (Curriculum Hierarchy & Respondent Count): Matches the exact official table template with real respondent counts.'}
+                      </p>
+                      <div className="mt-2 pl-6 flex items-center gap-2">
+                        <span
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setShowExportModal(false);
+                            setShowCurriculumModal(true);
+                          }}
+                          className="text-[#003366] underline hover:text-blue-800 text-[11px] font-semibold flex items-center gap-1 cursor-pointer"
+                        >
+                          <Eye className="w-3 h-3" />
+                          {lang === 'TH' ? 'คลิกที่นี่เพื่อเปิดดูตารางตัวอย่างบนหน้าจอ / พิมพ์ PDF' : 'Preview on screen / Print table'}
+                        </span>
+                      </div>
+                    </button>
                   </div>
                 </div>
 
@@ -4006,7 +4395,9 @@ ${recommendationsText}
                   <div className="flex items-center justify-between text-[11px]">
                     <span className="text-gray-500">{lang === 'TH' ? 'จำนวนเรคคอร์ดที่จะส่งออก:' : 'Records to export:'}</span>
                     <strong className="text-gray-900 font-mono">
-                      {exportScope === 'filtered' ? filteredSubmissions.length : submissions.length} {lang === 'TH' ? 'รายการ' : 'rows'}
+                      {exportFormat === 'curriculum' 
+                        ? (lang === 'TH' ? `15 คณะ/วิทยาลัย (ผู้ตอบ ${exportScope === 'filtered' ? filteredSubmissions.length : submissions.length} คน)` : `15 Faculties (${exportScope === 'filtered' ? filteredSubmissions.length : submissions.length} respondents)`)
+                        : `${exportScope === 'filtered' ? filteredSubmissions.length : submissions.length} ${lang === 'TH' ? 'รายการ' : 'rows'}`}
                     </strong>
                   </div>
                   <div className="flex items-center justify-between text-[11px]">
@@ -4018,7 +4409,7 @@ ${recommendationsText}
                   <div className="flex items-center justify-between text-[11px]">
                     <span className="text-gray-500">{lang === 'TH' ? 'จำนวนคอลัมน์ในไฟล์:' : 'Estimated Columns:'}</span>
                     <strong className="text-gray-900 font-mono">
-                      {exportFormat === 'standard' ? '20 Columns' : '38 Columns (22 Binary Items)'}
+                      {exportFormat === 'standard' ? '20 Columns' : exportFormat === 'matrix' ? '38 Columns (22 Binary Items)' : '2 Columns (คณะ / สาขา / หลักสูตร, จำนวนผู้ตอบ)'}
                     </strong>
                   </div>
                   <div className="flex items-center justify-between text-[11px] pt-1 border-t border-slate-200/80">
@@ -4096,6 +4487,15 @@ ${recommendationsText}
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Curriculum Summary Report Modal (Official University Format) */}
+      <CurriculumReportModal
+        isOpen={showCurriculumModal}
+        onClose={() => setShowCurriculumModal(false)}
+        submissions={submissions}
+        filteredSubmissions={filteredSubmissions}
+        lang={lang}
+      />
     </div>
   );
 }
