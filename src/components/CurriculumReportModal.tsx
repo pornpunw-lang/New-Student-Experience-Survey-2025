@@ -427,6 +427,10 @@ export default function CurriculumReportModal({
               <li><strong>จำนวนผู้ตอบ:</strong> จำนวนนักศึกษาที่เข้ามาทำแบบสำรวจเสร็จสิ้นในระบบจริง (ปัจจุบัน {report.grandTotalRespondents.toLocaleString()} คน)</li>
               <li><strong>ตามเพิ่ม:</strong> คำนวณจากสูตร <code>จำนวนผู้ตอบ - กลุ่มตัวอย่าง</code> (หากติดลบ หมายถึงยังคงค้างต้องติดตามเพิ่มตามจำนวนดังกล่าวเพื่อให้ครบกลุ่มตัวอย่าง)</li>
             </ul>
+            <div className="pt-2 border-t border-slate-200/80 text-slate-700 font-medium flex items-start gap-1">
+              <span className="text-amber-600 font-bold">*</span>
+              <span>กลุ่มตัวอย่างที่ใช้ในการวิจัยครั้งนี้คิดเป็นขนาดกลุ่มตัวอย่าง {report.grandTotalSample.toLocaleString()} คน ที่ระดับความเชื่อมั่น 95% (Yamane, 1973)</span>
+            </div>
           </div>
         </div>
       </motion.div>

@@ -290,7 +290,7 @@ export const OFFICIAL_CURRICULUM_STRUCTURE: FacultyCurriculumGroup[] = [
             sampleTarget: 157,
             degreeLevel: 'Bachelor',
             facultyName: 'คณะนิติศาสตร์',
-            matchKeys: ['นิติศาสตร์', 'law'],
+            matchKeys: ['นิติศาสตร์', 'law', 'นิติศาสตรบัณฑิต'],
             excludeKeys: ['มหาบัณฑิต', 'master']
           }
         ]
@@ -517,8 +517,8 @@ export const OFFICIAL_CURRICULUM_STRUCTURE: FacultyCurriculumGroup[] = [
   // 11. คณะการสร้างเจ้าของธุรกิจและการบริหารกิจการ
   {
     facultyName: 'คณะการสร้างเจ้าของธุรกิจและการบริหารกิจการ',
-    studentTarget: 423,
-    sampleTarget: 267,
+    studentTarget: 397,
+    sampleTarget: 242,
     degreeGroups: [
       {
         level: 'Bachelor',
@@ -544,23 +544,6 @@ export const OFFICIAL_CURRICULUM_STRUCTURE: FacultyCurriculumGroup[] = [
             degreeLevel: 'Bachelor',
             facultyName: 'คณะการสร้างเจ้าของธุรกิจและการบริหารกิจการ',
             matchKeys: ['การเป็นเจ้าของธุรกิจ (หลักสูตรนานาชาติ)', 'busem international']
-          }
-        ]
-      },
-      {
-        level: 'Master',
-        titleTh: 'ระดับปริญญาโท',
-        studentTarget: 26,
-        sampleTarget: 25,
-        curricula: [
-          {
-            id: 'busem_m_entrepreneur',
-            name: 'สาขาวิชาความเป็นผู้ประกอบการและธุรกิจเกิดใหม่',
-            studentTarget: 26,
-            sampleTarget: 25,
-            degreeLevel: 'Master',
-            facultyName: 'คณะการสร้างเจ้าของธุรกิจและการบริหารกิจการ',
-            matchKeys: ['ความเป็นผู้ประกอบการและธุรกิจเกิดใหม่', 'ความเป็นผู้ประกอบการ', 'entrepreneurship']
           }
         ]
       }
@@ -625,7 +608,7 @@ export const OFFICIAL_CURRICULUM_STRUCTURE: FacultyCurriculumGroup[] = [
   {
     facultyName: 'วิทยาลัยนานาชาติ',
     studentTarget: 695,
-    sampleTarget: 525,
+    sampleTarget: 546,
     degreeGroups: [
       {
         level: 'Bachelor',
@@ -800,14 +783,14 @@ export const OFFICIAL_CURRICULUM_STRUCTURE: FacultyCurriculumGroup[] = [
   // 15. บัณฑิตวิทยาลัย
   {
     facultyName: 'บัณฑิตวิทยาลัย',
-    studentTarget: 318,
-    sampleTarget: 290,
+    studentTarget: 341,
+    sampleTarget: 312,
     degreeGroups: [
       {
         level: 'Master',
         titleTh: 'ระดับปริญญาโท',
-        studentTarget: 300,
-        sampleTarget: 272,
+        studentTarget: 326,
+        sampleTarget: 297,
         curricula: [
           {
             id: 'grad_m_it_data',
@@ -893,6 +876,15 @@ export const OFFICIAL_CURRICULUM_STRUCTURE: FacultyCurriculumGroup[] = [
             matchKeys: ['นวัตกรรมการจัดการการท่องเที่ยวและการบริการ', 'การจัดการการท่องเที่ยว การบริการ และการจัดงาน', 'tourism']
           },
           {
+            id: 'grad_m_entrepreneur',
+            name: 'สาขาวิชาความเป็นผู้ประกอบการและธุรกิจเกิดใหม่',
+            studentTarget: 26,
+            sampleTarget: 25,
+            degreeLevel: 'Master',
+            facultyName: 'บัณฑิตวิทยาลัย',
+            matchKeys: ['ความเป็นผู้ประกอบการและธุรกิจเกิดใหม่', 'ความเป็นผู้ประกอบการ', 'entrepreneurship']
+          },
+          {
             id: 'grad_m_arch',
             name: 'สาขาวิชาสถาปัตยกรรมศาสตรมหาบัณฑิต',
             studentTarget: 14,
@@ -906,8 +898,8 @@ export const OFFICIAL_CURRICULUM_STRUCTURE: FacultyCurriculumGroup[] = [
       {
         level: 'Doctoral',
         titleTh: 'ระดับปริญญาเอก',
-        studentTarget: 18,
-        sampleTarget: 18,
+        studentTarget: 15,
+        sampleTarget: 15,
         curricula: [
           {
             id: 'grad_d_ece',
@@ -928,22 +920,13 @@ export const OFFICIAL_CURRICULUM_STRUCTURE: FacultyCurriculumGroup[] = [
             matchKeys: ['การสื่อสารสากล', 'การสื่อสาร', 'global communication']
           },
           {
-            id: 'grad_d_dba',
-            name: 'สาขาวิชาบริหารธุรกิจดุษฎีบัณฑิต',
+            id: 'grad_d_brand',
+            name: 'สาขาวิชาการบริหารแบรนด์และการสื่อสารเชิงกลยุทธ์',
             studentTarget: 7,
             sampleTarget: 7,
             degreeLevel: 'Doctoral',
             facultyName: 'บัณฑิตวิทยาลัย',
-            matchKeys: ['บริหารธุรกิจดุษฎีบัณฑิต', 'การบริหารจัดการ', 'doctor of business administration']
-          },
-          {
-            id: 'grad_d_brand',
-            name: 'สาขาวิชาการบริหารแบรนด์และการสื่อสารเชิงกลยุทธ์',
-            studentTarget: 3,
-            sampleTarget: 3,
-            degreeLevel: 'Doctoral',
-            facultyName: 'บัณฑิตวิทยาลัย',
-            matchKeys: ['การบริหารแบรนด์และการสื่อสารเชิงกลยุทธ์', 'strategic brand']
+            matchKeys: ['การบริหารแบรนด์และการสื่อสารเชิงกลยุทธ์', 'การบริหารจัดการ', 'strategic brand', 'บริหารธุรกิจดุษฎีบัณฑิต']
           }
         ]
       }
@@ -1166,6 +1149,14 @@ export const generateCurriculumReportCSV = (submissions: SurveyResponse[]): stri
     `"รวม","${report.grandTotalStudents}","${report.grandTotalSample}","${report.grandTotalRespondents}","${report.grandTotalDiff}"`
   );
 
+  rows.push('');
+  rows.push('"* คำอธิบายสูตรและการคำนวณในตารางรายงาน:"');
+  rows.push(`"* จำนวนนักศึกษา: ยอดเป้าหมายนักศึกษาใหม่ตามหลักสูตรสถาบัน (รวม ${report.grandTotalStudents.toLocaleString()} คน)"`);
+  rows.push(`"* กลุ่มตัวอย่าง: ยอดขนาดกลุ่มตัวอย่างขั้นต่ำสำหรับงานประกันคุณภาพการศึกษา (รวม ${report.grandTotalSample.toLocaleString()} คน)"`);
+  rows.push(`"* จำนวนผู้ตอบ: จำนวนนักศึกษาที่เข้ามาทำแบบสำรวจเสร็จสิ้นในระบบจริง (ปัจจุบัน ${report.grandTotalRespondents.toLocaleString()} คน)"`);
+  rows.push('"* ตามเพิ่ม: คำนวณจากสูตร จำนวนผู้ตอบ - กลุ่มตัวอย่าง (หากติดลบ หมายถึงยังคงค้างต้องติดตามเพิ่มตามจำนวนดังกล่าวเพื่อให้ครบกลุ่มตัวอย่าง)"');
+  rows.push(`"* กลุ่มตัวอย่างที่ใช้ในการวิจัยครั้งนี้คิดเป็นขนาดกลุ่มตัวอย่าง ${report.grandTotalSample.toLocaleString()} คน ที่ระดับความเชื่อมั่น 95% (Yamane, 1973)"`);
+
   // Prefix with UTF-8 BOM so Excel opens with flawless Thai text and numbers
   return '\uFEFF' + rows.join('\r\n');
 };
@@ -1190,6 +1181,8 @@ export const generateCurriculumTabularCSV = (submissions: SurveyResponse[]): str
   });
 
   rows.push(`"รวมทั้งหมด (Grand Total)","-","-","${report.grandTotalStudents}","${report.grandTotalSample}","${report.grandTotalRespondents}","${report.grandTotalDiff}"`);
+  rows.push('');
+  rows.push(`"* หมายเหตุ: กลุ่มตัวอย่างที่ใช้ในการวิจัยครั้งนี้คิดเป็นขนาดกลุ่มตัวอย่าง ${report.grandTotalSample.toLocaleString()} คน ที่ระดับความเชื่อมั่น 95% (Yamane, 1973)"`);
 
   return '\uFEFF' + rows.join('\r\n');
 };

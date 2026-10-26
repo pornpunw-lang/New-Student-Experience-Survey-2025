@@ -232,7 +232,7 @@ const FACULTY_CONTACTS: Record<string, FacultyContact> = {
     coordinator: 'เจ้าหน้าที่ประสานงานบัณฑิตวิทยาลัย',
     coordinatorEmail: 'graduateschool@bu.ac.th',
     viceDeans: [],
-    baseTarget: 318,
+    baseTarget: 341,
     email: 'graduateschool@bu.ac.th'
   }
 };
@@ -272,13 +272,12 @@ const FACULTY_DEGREE_TARGETS: Record<'Bachelor' | 'Master' | 'Doctoral', Record<
     'วิทยาลัยนานาชาติจีน': 147
   },
   Master: {
-    'คณะการสร้างเจ้าของธุรกิจและการบริหารกิจการ': 26,
     'วิทยาลัยนานาชาติ': 18,
-    'บัณฑิตวิทยาลัย': 300
+    'บัณฑิตวิทยาลัย': 326
   },
   Doctoral: {
     'วิทยาลัยนานาชาติ': 3,
-    'บัณฑิตวิทยาลัย': 18
+    'บัณฑิตวิทยาลัย': 15
   }
 };
 
@@ -504,7 +503,7 @@ const MAJOR_TARGETS: Record<string, number> = {
 const getMajorTarget = (majorName: string, degreeLevel?: string, facultyName?: string): number => {
   const normalized = majorName.trim();
 
-  // Handle Doctoral level (วิทยาลัยนานาชาติ: 3, บัณฑิตวิทยาลัย: 18)
+  // Handle Doctoral level (วิทยาลัยนานาชาติ: 3, บัณฑิตวิทยาลัย: 15)
   if (degreeLevel === 'Doctoral' || (facultyName === 'บัณฑิตวิทยาลัย' && (normalized.includes('ดุษฎีบัณฑิต') || normalized.includes('Doctoral')))) {
     if (normalized.includes('วิศวกรรมไฟฟ้าและคอมพิวเตอร์') || normalized.toLowerCase().includes('electrical and computer')) {
       return 4;
@@ -512,10 +511,10 @@ const getMajorTarget = (majorName: string, degreeLevel?: string, facultyName?: s
     if (normalized.includes('การสื่อสาร') || normalized.toLowerCase().includes('communication')) {
       return 4;
     }
-    if (normalized.includes('บริหารธุรกิจ') || normalized.includes('การบริหารจัดการ') || normalized.toLowerCase().includes('management') || normalized.toLowerCase().includes('dba')) {
+    if (normalized.includes('แบรนด์') || normalized.includes('การบริหารแบรนด์และการสื่อสารเชิงกลยุทธ์') || normalized.includes('บริหารธุรกิจ') || normalized.includes('การบริหารจัดการ')) {
       return 7;
     }
-    if (normalized.includes('การจัดการความรู้และนวัตกรรม') || normalized.toLowerCase().includes('knowledge management') || normalized.includes('แบรนด์')) {
+    if (normalized.includes('การจัดการความรู้และนวัตกรรม') || normalized.toLowerCase().includes('knowledge management')) {
       return 3;
     }
     return 4;
@@ -599,6 +598,13 @@ export const isSubmissionMatchingMajor = (subMajor?: string, targetMajor?: strin
   const isAccSub = cleanSub.includes('บัญชี') || cleanSub.includes('account');
   const isAccTarget = cleanTarget.includes('บัญชี') || cleanTarget.includes('account');
   if (isAccSub && isAccTarget) {
+    return true;
+  }
+
+  // Handle Law variants (นิติศาสตร์ vs สาขาวิชานิติศาสตร์ vs นิติศาสตรบัณฑิต)
+  const isLawSub = (cleanSub.includes('นิติศาสตร์') || cleanSub.includes('นิติศาสตรบัณฑิต') || cleanSub.includes('law')) && !cleanSub.includes('มหาบัณฑิต');
+  const isLawTarget = (cleanTarget.includes('นิติศาสตร์') || cleanTarget.includes('นิติศาสตรบัณฑิต') || cleanTarget.includes('law')) && !cleanTarget.includes('มหาบัณฑิต');
+  if (isLawSub && isLawTarget) {
     return true;
   }
 
@@ -757,6 +763,7 @@ export const formatMajorName = (major?: string, degreeLevel?: string): string =>
   if (!major) return '';
   if (major === 'สาขาวิชาบัญชี' || major === 'สาขาวิชาการบัญชี') return 'สาขาวิชาบัญชีบัณฑิต';
   if (major === 'บัญชี' || major === 'การบัญชี') return 'สาขาวิชาบัญชีบัณฑิต';
+  if (major === 'สาขาวิชานิติศาสตร์' || major === 'นิติศาสตรบัณฑิต' || major === 'นิติศาสตร์' || major === 'สาขาวิชานิติศาสตรบัณฑิต') return 'สาขาวิชานิติศาสตรบัณฑิต';
   if (major === 'สาขาวิชาดิจิทัลมีเดีย') return 'สาขาวิชาสื่อดิจิทัล';
   if (major === 'สาขาวิชาการสื่อสารและสื่อใหม่') return 'สาขาวิชาสื่อสารและสื่อใหม่';
   if (major === 'สาขาวิชาการผลิตสื่อนวัตกรรม (หลักสูตรนานาชาติ)') return 'สาขาวิชาการผลิตสื่อและนวัตกรรม (หลักสูตรนานาชาติ)';

@@ -225,10 +225,10 @@ export const BU_FACULTIES_BY_DEGREE: Record<'Bachelor' | 'Master' | 'Doctoral', 
       name: 'คณะนิติศาสตร์',
       nameEn: 'School of Law',
       majors: [
-        'สาขาวิชานิติศาสตร์'
+        'สาขาวิชานิติศาสตรบัณฑิต'
       ],
       majorsEn: [
-        'Law Program'
+        'Bachelor of Laws Program'
       ]
     },
     {
@@ -364,16 +364,6 @@ export const BU_FACULTIES_BY_DEGREE: Record<'Bachelor' | 'Master' | 'Doctoral', 
   ],
   Master: [
     {
-      name: 'คณะการสร้างเจ้าของธุรกิจและการบริหารกิจการ',
-      nameEn: 'School of Entrepreneurship and Management',
-      majors: [
-        'สาขาวิชาความเป็นผู้ประกอบการและธุรกิจเกิดใหม่'
-      ],
-      majorsEn: [
-        'Entrepreneurship and New Ventures'
-      ]
-    },
-    {
       name: 'วิทยาลัยนานาชาติ',
       nameEn: 'Bangkok University International',
       majors: [
@@ -398,6 +388,7 @@ export const BU_FACULTIES_BY_DEGREE: Record<'Bachelor' | 'Master' | 'Doctoral', 
         'สาขาวิชาการบริหารแบรนด์และการสื่อสารเชิงกลยุทธ์',
         'สาขาวิชาการตลาดเชิงข้อมูลและการสื่อสาร',
         'สาขาวิชานวัตกรรมการจัดการการท่องเที่ยวและการบริการ (หลักสูตรนานาชาติ)',
+        'สาขาวิชาความเป็นผู้ประกอบการและธุรกิจเกิดใหม่',
         'สาขาวิชาสถาปัตยกรรมศาสตรมหาบัณฑิต'
       ],
       majorsEn: [
@@ -410,6 +401,7 @@ export const BU_FACULTIES_BY_DEGREE: Record<'Bachelor' | 'Master' | 'Doctoral', 
         'Brand Management and Strategic Communication',
         'Data-Driven Marketing and Communication',
         'Innovative Tourism and Hospitality Management (International Program)',
+        'Entrepreneurship and New Ventures',
         'Master of Architecture'
       ]
     }
@@ -431,13 +423,11 @@ export const BU_FACULTIES_BY_DEGREE: Record<'Bachelor' | 'Master' | 'Doctoral', 
       majors: [
         'สาขาวิชาวิศวกรรมไฟฟ้าและคอมพิวเตอร์ (หลักสูตรนานาชาติ)',
         'สาขาวิชาการสื่อสารสากล (หลักสูตรนานาชาติ)',
-        'สาขาวิชาบริหารธุรกิจดุษฎีบัณฑิต',
         'สาขาวิชาการบริหารแบรนด์และการสื่อสารเชิงกลยุทธ์'
       ],
       majorsEn: [
         'Electrical and Computer Engineering (International Program)',
         'Global Communication (International Program)',
-        'Doctor of Business Administration',
         'Brand Management and Strategic Communication'
       ]
     }
