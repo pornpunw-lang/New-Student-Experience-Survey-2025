@@ -364,18 +364,6 @@ export const BU_FACULTIES_BY_DEGREE: Record<'Bachelor' | 'Master' | 'Doctoral', 
   ],
   Master: [
     {
-      name: 'วิทยาลัยนานาชาติ',
-      nameEn: 'Bangkok University International',
-      majors: [
-        'สาขาวิชาการจัดการความรู้และนวัตกรรม (หลักสูตรนานาชาติ)',
-        'สาขาวิชาการจัดการนวัตกรรม (หลักสูตรนานาชาติ)'
-      ],
-      majorsEn: [
-        'Knowledge Management and Innovation Management (International Program)',
-        'Innovation Management (International Program)'
-      ]
-    },
-    {
       name: 'บัณฑิตวิทยาลัย',
       nameEn: 'Graduate School',
       majors: [
@@ -389,7 +377,9 @@ export const BU_FACULTIES_BY_DEGREE: Record<'Bachelor' | 'Master' | 'Doctoral', 
         'สาขาวิชาการตลาดเชิงข้อมูลและการสื่อสาร',
         'สาขาวิชานวัตกรรมการจัดการการท่องเที่ยวและการบริการ (หลักสูตรนานาชาติ)',
         'สาขาวิชาความเป็นผู้ประกอบการและธุรกิจเกิดใหม่',
-        'สาขาวิชาสถาปัตยกรรมศาสตรมหาบัณฑิต'
+        'สาขาวิชาสถาปัตยกรรมศาสตรมหาบัณฑิต',
+        'สาขาวิชาการจัดการความรู้และนวัตกรรม (หลักสูตรนานาชาติ)',
+        'สาขาวิชาการจัดการนวัตกรรม (หลักสูตรนานาชาติ)'
       ],
       majorsEn: [
         'Information Technology and Data Science',
@@ -402,33 +392,27 @@ export const BU_FACULTIES_BY_DEGREE: Record<'Bachelor' | 'Master' | 'Doctoral', 
         'Data-Driven Marketing and Communication',
         'Innovative Tourism and Hospitality Management (International Program)',
         'Entrepreneurship and New Ventures',
-        'Master of Architecture'
+        'Master of Architecture',
+        'Knowledge Management and Innovation Management (International Program)',
+        'Innovation Management (International Program)'
       ]
     }
   ],
   Doctoral: [
-    {
-      name: 'วิทยาลัยนานาชาติ',
-      nameEn: 'Bangkok University International',
-      majors: [
-        'สาขาวิชาการจัดการความรู้และนวัตกรรม (หลักสูตรนานาชาติ)'
-      ],
-      majorsEn: [
-        'Knowledge Management and Innovation Management (International Program)'
-      ]
-    },
     {
       name: 'บัณฑิตวิทยาลัย',
       nameEn: 'Graduate School',
       majors: [
         'สาขาวิชาวิศวกรรมไฟฟ้าและคอมพิวเตอร์ (หลักสูตรนานาชาติ)',
         'สาขาวิชาการสื่อสารสากล (หลักสูตรนานาชาติ)',
-        'สาขาวิชาการบริหารแบรนด์และการสื่อสารเชิงกลยุทธ์'
+        'สาขาวิชาการบริหารแบรนด์และการสื่อสารเชิงกลยุทธ์',
+        'สาขาวิชาการจัดการความรู้และนวัตกรรม (หลักสูตรนานาชาติ)'
       ],
       majorsEn: [
         'Electrical and Computer Engineering (International Program)',
         'Global Communication (International Program)',
-        'Brand Management and Strategic Communication'
+        'Brand Management and Strategic Communication',
+        'Knowledge Management and Innovation Management (International Program)'
       ]
     }
   ]

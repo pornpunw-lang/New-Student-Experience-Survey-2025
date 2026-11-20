@@ -145,26 +145,63 @@ const isTestSubmission = (sub: any): boolean => {
 };
 
 const normalizeSubmission = (sub: SurveyResponse): SurveyResponse => {
-  const degreeLevel = sub.degreeLevel || 'Bachelor';
+  let degreeLevel = sub.degreeLevel || 'Bachelor';
+  let faculty = sub.faculty;
+  const rawMajor = (sub.major || '').trim();
+  const cleanMajor = rawMajor.replace(/\s+/g, '').toLowerCase();
+
+  // Enforce Bachelor degree level for strictly Bachelor degree titles (e.g. สาขาวิชานิติศาสตรบัณฑิต)
+  if (
+    cleanMajor.includes('นิติศาสตรบัณฑิต') ||
+    cleanMajor.includes('bacheloroflaws') ||
+    cleanMajor.includes('บัญชีบัณฑิต') ||
+    cleanMajor.includes('bachelorofaccountancy') ||
+    cleanMajor.includes('เศรษฐศาสตรบัณฑิต') ||
+    cleanMajor.includes('บริหารธุรกิจบัณฑิต')
+  ) {
+    degreeLevel = 'Bachelor';
+    if (cleanMajor.includes('นิติศาสตรบัณฑิต') || cleanMajor.includes('bacheloroflaws')) {
+      faculty = 'คณะนิติศาสตร์';
+    } else if (cleanMajor.includes('บัญชีบัณฑิต') || cleanMajor.includes('bachelorofaccountancy')) {
+      faculty = 'คณะบัญชี';
+    } else if (cleanMajor.includes('เศรษฐศาสตรบัณฑิต')) {
+      faculty = 'คณะเศรษฐศาสตร์และการลงทุน';
+    }
+  }
 
   let program = sub.program;
   if (program !== 'Thai' && program !== 'International') {
     const isInter =
       (sub as any).isInternational ||
-      sub.faculty?.includes('นานาชาติ') ||
-      sub.faculty?.toLowerCase().includes('international') ||
+      faculty?.includes('นานาชาติ') ||
+      faculty?.toLowerCase().includes('international') ||
       sub.major?.includes('นานาชาติ') ||
       sub.major?.toLowerCase().includes('international');
     program = isInter ? 'International' : 'Thai';
   }
 
-  const faculty = sub.faculty;
+  // Move Master/Doctoral submissions previously stored under วิทยาลัยนานาชาติ (BUI) to บัณฑิตวิทยาลัย
+  if (
+    (degreeLevel === 'Master' || degreeLevel === 'Doctoral') &&
+    faculty &&
+    (faculty === 'วิทยาลัยนานาชาติ' ||
+      faculty.toLowerCase().includes('bangkok university international') ||
+      faculty.trim().toUpperCase() === 'BUI')
+  ) {
+    faculty = 'บัณฑิตวิทยาลัย';
+  }
+
+  let major = sub.major;
+  if (rawMajor === 'สาขาวิชาวิทยุกระจายเสียง วิทยุโทรทัศน์ และ การผลิตสื่อสตรีมมิ่ง' || (rawMajor.includes('วิทยุกระจายเสียง') && rawMajor.includes('และ การผลิตสื่อสตรีมมิ่ง'))) {
+    major = 'สาขาวิชาวิทยุกระจายเสียง วิทยุโทรทัศน์ และการผลิตสื่อสตรีมมิ่ง';
+  }
 
   return {
     ...sub,
     degreeLevel,
     program,
-    faculty
+    faculty,
+    major
   };
 };
 
@@ -359,14 +396,14 @@ export default function App() {
           try {
             const parsed = JSON.parse(saved);
             if (Array.isArray(parsed) && parsed.length > 0) {
-              setSubmissions(parsed);
+              setSubmissions(parsed.filter(s => !isTestSubmission(s)).map(normalizeSubmission));
               return;
             }
           } catch (e) {
             // Ignore
           }
         }
-        const initialMocks = generateMockSubmissions(180);
+        const initialMocks = generateMockSubmissions(180).filter(s => !isTestSubmission(s)).map(normalizeSubmission);
         setSubmissions(initialMocks);
         safeLocalStorage.setItem('bu_new_student_submissions_2569', JSON.stringify(initialMocks));
       } else {

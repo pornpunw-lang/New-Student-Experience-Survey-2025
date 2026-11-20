@@ -607,8 +607,8 @@ export const OFFICIAL_CURRICULUM_STRUCTURE: FacultyCurriculumGroup[] = [
   // 13. วิทยาลัยนานาชาติ
   {
     facultyName: 'วิทยาลัยนานาชาติ',
-    studentTarget: 695,
-    sampleTarget: 546,
+    studentTarget: 674,
+    sampleTarget: 525,
     degreeGroups: [
       {
         level: 'Bachelor',
@@ -698,49 +698,6 @@ export const OFFICIAL_CURRICULUM_STRUCTURE: FacultyCurriculumGroup[] = [
             matchKeys: ['วิทยาการคอมพิวเตอร์ (หลักสูตรนานาชาติ)', 'computer science (international program)']
           }
         ]
-      },
-      {
-        level: 'Master',
-        titleTh: 'ระดับปริญญาโท',
-        studentTarget: 18,
-        sampleTarget: 18,
-        curricula: [
-          {
-            id: 'bui_m_km',
-            name: 'สาขาวิชาการจัดการความรู้และนวัตกรรม (หลักสูตรนานาชาติ)',
-            studentTarget: 0,
-            sampleTarget: 0,
-            degreeLevel: 'Master',
-            facultyName: 'วิทยาลัยนานาชาติ',
-            matchKeys: ['การจัดการความรู้และนวัตกรรม', 'knowledge management']
-          },
-          {
-            id: 'bui_m_im',
-            name: 'สาขาวิชาการจัดการนวัตกรรม (หลักสูตรนานาชาติ)',
-            studentTarget: 18,
-            sampleTarget: 18,
-            degreeLevel: 'Master',
-            facultyName: 'วิทยาลัยนานาชาติ',
-            matchKeys: ['การจัดการนวัตกรรม (หลักสูตรนานาชาติ)', 'innovation management']
-          }
-        ]
-      },
-      {
-        level: 'Doctoral',
-        titleTh: 'ระดับปริญญาเอก',
-        studentTarget: 3,
-        sampleTarget: 3,
-        curricula: [
-          {
-            id: 'bui_d_km',
-            name: 'สาขาวิชาการจัดการความรู้และนวัตกรรม (หลักสูตรนานาชาติ)',
-            studentTarget: 3,
-            sampleTarget: 3,
-            degreeLevel: 'Doctoral',
-            facultyName: 'วิทยาลัยนานาชาติ',
-            matchKeys: ['การจัดการความรู้และนวัตกรรม', 'knowledge management']
-          }
-        ]
       }
     ]
   },
@@ -783,14 +740,14 @@ export const OFFICIAL_CURRICULUM_STRUCTURE: FacultyCurriculumGroup[] = [
   // 15. บัณฑิตวิทยาลัย
   {
     facultyName: 'บัณฑิตวิทยาลัย',
-    studentTarget: 341,
-    sampleTarget: 312,
+    studentTarget: 362,
+    sampleTarget: 333,
     degreeGroups: [
       {
         level: 'Master',
         titleTh: 'ระดับปริญญาโท',
-        studentTarget: 326,
-        sampleTarget: 297,
+        studentTarget: 344,
+        sampleTarget: 315,
         curricula: [
           {
             id: 'grad_m_it_data',
@@ -837,7 +794,8 @@ export const OFFICIAL_CURRICULUM_STRUCTURE: FacultyCurriculumGroup[] = [
             sampleTarget: 23,
             degreeLevel: 'Master',
             facultyName: 'บัณฑิตวิทยาลัย',
-            matchKeys: ['นิติศาสตรมหาบัณฑิต', 'นิติศาสตร์', 'law']
+            matchKeys: ['นิติศาสตรมหาบัณฑิต', 'นิติศาสตร์', 'law'],
+            excludeKeys: ['นิติศาสตรบัณฑิต', 'bachelor']
           },
           {
             id: 'grad_m_global_comm',
@@ -892,14 +850,33 @@ export const OFFICIAL_CURRICULUM_STRUCTURE: FacultyCurriculumGroup[] = [
             degreeLevel: 'Master',
             facultyName: 'บัณฑิตวิทยาลัย',
             matchKeys: ['สถาปัตยกรรมศาสตรมหาบัณฑิต', 'การออกแบบสถาปัตยกรรมและเทคโนโลยีสถาปัตยกรรม', 'สถาปัตยกรรมภายใน']
+          },
+          {
+            id: 'bui_m_km',
+            name: 'สาขาวิชาการจัดการความรู้และนวัตกรรม (หลักสูตรนานาชาติ)',
+            studentTarget: 0,
+            sampleTarget: 0,
+            degreeLevel: 'Master',
+            facultyName: 'บัณฑิตวิทยาลัย',
+            matchKeys: ['การจัดการความรู้และนวัตกรรม', 'knowledge management']
+          },
+          {
+            id: 'bui_m_im',
+            name: 'สาขาวิชาการจัดการนวัตกรรม (หลักสูตรนานาชาติ)',
+            studentTarget: 18,
+            sampleTarget: 18,
+            degreeLevel: 'Master',
+            facultyName: 'บัณฑิตวิทยาลัย',
+            matchKeys: ['การจัดการนวัตกรรม (หลักสูตรนานาชาติ)', 'innovation management'],
+            excludeKeys: ['ความรู้', 'knowledge']
           }
         ]
       },
       {
         level: 'Doctoral',
         titleTh: 'ระดับปริญญาเอก',
-        studentTarget: 15,
-        sampleTarget: 15,
+        studentTarget: 18,
+        sampleTarget: 18,
         curricula: [
           {
             id: 'grad_d_ece',
@@ -917,7 +894,8 @@ export const OFFICIAL_CURRICULUM_STRUCTURE: FacultyCurriculumGroup[] = [
             sampleTarget: 4,
             degreeLevel: 'Doctoral',
             facultyName: 'บัณฑิตวิทยาลัย',
-            matchKeys: ['การสื่อสารสากล', 'การสื่อสาร', 'global communication']
+            matchKeys: ['การสื่อสารสากล', 'global communication'],
+            excludeKeys: ['แบรนด์', 'กลยุทธ์', 'brand', 'strategic']
           },
           {
             id: 'grad_d_brand',
@@ -927,6 +905,15 @@ export const OFFICIAL_CURRICULUM_STRUCTURE: FacultyCurriculumGroup[] = [
             degreeLevel: 'Doctoral',
             facultyName: 'บัณฑิตวิทยาลัย',
             matchKeys: ['การบริหารแบรนด์และการสื่อสารเชิงกลยุทธ์', 'การบริหารจัดการ', 'strategic brand', 'บริหารธุรกิจดุษฎีบัณฑิต']
+          },
+          {
+            id: 'bui_d_km',
+            name: 'สาขาวิชาการจัดการความรู้และนวัตกรรม (หลักสูตรนานาชาติ)',
+            studentTarget: 3,
+            sampleTarget: 3,
+            degreeLevel: 'Doctoral',
+            facultyName: 'บัณฑิตวิทยาลัย',
+            matchKeys: ['การจัดการความรู้และนวัตกรรม', 'knowledge management']
           }
         ]
       }
@@ -934,42 +921,47 @@ export const OFFICIAL_CURRICULUM_STRUCTURE: FacultyCurriculumGroup[] = [
   }
 ];
 
+// Check faculty compatibility between submission and target curriculum
+export const isFacultyCompatibleWithCurriculum = (
+  subFac: string | undefined,
+  targetFac: string,
+  degreeLevel: 'Bachelor' | 'Master' | 'Doctoral'
+): boolean => {
+  if (!subFac || !subFac.trim()) return true;
+  const s = subFac.trim();
+  const t = targetFac.trim();
+  if (s === t) return true;
+
+  // Chinese International College check
+  const isSubChinese = s.includes('นานาชาติจีน') || s.includes('Chinese');
+  const isTargetChinese = t.includes('นานาชาติจีน');
+  if (isSubChinese !== isTargetChinese) return false;
+
+  // Graduate School / Master / Doctoral handling
+  if (degreeLevel === 'Master' || degreeLevel === 'Doctoral') {
+    // If target is Graduate School, allow submissions that chose their discipline faculty, BUI, or Graduate School
+    if (t === 'บัณฑิตวิทยาลัย') return true;
+  }
+
+  // BU International College check (Bachelor only)
+  const isSubInter = (s === 'วิทยาลัยนานาชาติ' || s.includes('Bangkok University International') || s.includes('BUI')) && !isSubChinese;
+  const isTargetInter = t === 'วิทยาลัยนานาชาติ';
+  if (isTargetInter !== isSubInter) return false;
+
+  // Standard bachelor faculties must match faculty name
+  const cleanSub = s.replace(/^(คณะ|วิทยาลัย)/, '').replace(/[\s\(\)\/]/g, '').toLowerCase();
+  const cleanTarget = t.replace(/^(คณะ|วิทยาลัย)/, '').replace(/[\s\(\)\/]/g, '').toLowerCase();
+  return cleanSub === cleanTarget || cleanSub.includes(cleanTarget) || cleanTarget.includes(cleanSub);
+};
+
 // Helper to check if a submission matches a curriculum item
 export const matchesCurriculum = (sub: SurveyResponse, item: CurriculumItem): boolean => {
-  const subDegree = sub.degreeLevel || 'Bachelor';
+  const subDegree = (sub.degreeLevel as 'Bachelor' | 'Master' | 'Doctoral') || 'Bachelor';
   if (subDegree !== item.degreeLevel) return false;
 
-  const subFac = (sub.faculty || '').trim();
-  const targetFac = item.facultyName.trim();
-
-  // If faculties are specified and do not match (except when dealing with Graduate School / Degree level overlaps)
-  if (subFac && subFac !== targetFac) {
-    // Check if subFac is a synonym
-    if (
-      (subFac.includes('นานาชาติจีน') && !targetFac.includes('นานาชาติจีน')) ||
-      (!subFac.includes('นานาชาติจีน') && targetFac.includes('นานาชาติจีน'))
-    ) {
-      return false;
-    }
-
-    if (
-      targetFac === 'วิทยาลัยนานาชาติ' &&
-      !subFac.includes('นานาชาติ')
-    ) {
-      return false;
-    }
-
-    if (
-      subFac === 'บัณฑิตวิทยาลัย' && targetFac !== 'บัณฑิตวิทยาลัย' && targetFac !== 'วิทยาลัยนานาชาติ'
-    ) {
-      return false;
-    }
-
-    if (
-      subFac !== 'บัณฑิตวิทยาลัย' && targetFac === 'บัณฑิตวิทยาลัย' && subDegree === 'Bachelor'
-    ) {
-      return false;
-    }
+  // Faculty compatibility check
+  if (!isFacultyCompatibleWithCurriculum(sub.faculty, item.facultyName, subDegree)) {
+    return false;
   }
 
   const sMajor = (sub.major || '').trim();
@@ -981,14 +973,22 @@ export const matchesCurriculum = (sub: SurveyResponse, item: CurriculumItem): bo
   const cleanTarget = tName.replace(/^สาขาวิชา/, '').replace(/[\s\(\)\/]/g, '').toLowerCase();
   if (cleanSub === cleanTarget) return true;
 
-  // 2. Exclude key check
-  const majorText = ((sub.major || '') + ' ' + (sub.faculty || '')).toLowerCase();
-  if (item.excludeKeys && item.excludeKeys.some(ex => majorText.includes(ex.toLowerCase()))) {
+  // 2. Known canonical variants
+  if ((cleanSub.includes('บัญชี') || cleanSub.includes('account')) && (cleanTarget.includes('บัญชี') || cleanTarget.includes('account'))) {
+    return true;
+  }
+  if (subDegree === 'Bachelor' && (cleanSub.includes('นิติศาสตร') || cleanSub === 'นิติศาสตร์') && (cleanTarget.includes('นิติศาสตร') || cleanTarget === 'นิติศาสตร์')) {
+    return true;
+  }
+
+  // 3. Exclude key check (checked strictly against major text, never faculty)
+  const majorOnly = sMajor.toLowerCase();
+  if (item.excludeKeys && item.excludeKeys.some(ex => majorOnly.includes(ex.toLowerCase()))) {
     return false;
   }
 
-  // 3. Match keys check
-  const hasMatch = item.matchKeys.some(k => majorText.includes(k.toLowerCase()));
+  // 4. Match keys check (checked strictly against major text, never faculty)
+  const hasMatch = item.matchKeys.some(k => majorOnly.includes(k.toLowerCase()));
   return hasMatch;
 };
 
